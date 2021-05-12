@@ -16,14 +16,14 @@ CREATE SCHEMA IF NOT EXISTS `car_rent_db` DEFAULT CHARACTER SET utf8 COLLATE utf
 USE `car_rent_db` ;
 
 -- -----------------------------------------------------
--- Table `car_rent_db`.`role`
+-- Table `car_rent_db`.`user_role`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `car_rent_db`.`role` ;
+DROP TABLE IF EXISTS `car_rent_db`.`user_role` ;
 
-CREATE TABLE IF NOT EXISTS `car_rent_db`.`role` (
-  `id_role` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `car_rent_db`.`user_role` (
+  `id_user_role` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL,
-  PRIMARY KEY (`id_role`))
+  PRIMARY KEY (`id_user_role`))
 ENGINE = InnoDB;
 
 
@@ -36,22 +36,22 @@ CREATE TABLE IF NOT EXISTS `car_rent_db`.`user` (
   `id_user` INT NOT NULL AUTO_INCREMENT,
   `email` VARCHAR(255) NOT NULL,
   `password` CHAR(60) NOT NULL,
-  `id_role` INT NOT NULL,
+  `id_user_role` INT NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `surname` VARCHAR(45) NOT NULL,
   `phone_number` VARCHAR(45) NOT NULL,
   `verified` TINYINT(1) NOT NULL,
   `birth_date` DATE NOT NULL,
   `create_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_user`, `id_role`),
+  PRIMARY KEY (`id_user`),
   CONSTRAINT `fk_user_role`
-    FOREIGN KEY (`id_role`)
-    REFERENCES `car_rent_db`.`role` (`id_role`)
+    FOREIGN KEY (`id_user_role`)
+    REFERENCES `car_rent_db`.`user_role` (`id_user_role`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_user_role_idx` ON `car_rent_db`.`user` (`id_role` ASC);
+CREATE INDEX `fk_user_role_idx` ON `car_rent_db`.`user` (`id_user_role` ASC);
 
 
 -- -----------------------------------------------------
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `car_rent_db`.`car` (
   `weight` INT NULL,
   `fuel_capacity` TINYINT(3) NULL,
   `fuel_consumption` FLOAT NULL,
-  PRIMARY KEY (`id_car`, `id_car_price`),
+  PRIMARY KEY (`id_car`),
   CONSTRAINT `fk_car_rent_price`
     FOREIGN KEY (`id_car_price`)
     REFERENCES `car_rent_db`.`car_price` (`id_car_price`)
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS `car_rent_db`.`rent` (
   `rent_end` DATETIME NULL,
   `id_rent_status` INT NOT NULL,
   `total_price` INT NULL,
-  PRIMARY KEY (`id_rent`, `id_car`, `id_user`, `id_rent_status`),
+  PRIMARY KEY (`id_rent`),
   CONSTRAINT `fk_rent_car`
     FOREIGN KEY (`id_car`)
     REFERENCES `car_rent_db`.`car` (`id_car`)
