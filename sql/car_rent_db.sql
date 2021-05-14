@@ -34,12 +34,13 @@ DROP TABLE IF EXISTS `car_rent_db`.`user` ;
 
 CREATE TABLE IF NOT EXISTS `car_rent_db`.`user` (
   `id_user` INT NOT NULL AUTO_INCREMENT,
+  `login` VARCHAR(45) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
   `password` CHAR(60) NOT NULL,
   `id_user_role` INT NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `surname` VARCHAR(45) NOT NULL,
-  `phone_number` VARCHAR(45) NOT NULL,
+  `phone_number` VARCHAR(15) NOT NULL,
   `verified` TINYINT(1) NOT NULL,
   `birth_date` DATE NOT NULL,
   `create_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
