@@ -37,11 +37,11 @@ CREATE TABLE IF NOT EXISTS `car_rent_db`.`user` (
   `login` VARCHAR(45) NOT NULL,
   `password` CHAR(60) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  `id_user_role` INT NOT NULL,
+  `id_user_role` INT NOT NULL DEFAULT 1,
   `name` VARCHAR(45) NOT NULL,
   `surname` VARCHAR(45) NOT NULL,
   `phone_number` VARCHAR(15) NOT NULL,
-  `verified` TINYINT(1) NOT NULL,
+  `verified` TINYINT(1) NOT NULL DEFAULT 0,
   `birth_date` DATE NOT NULL,
   `create_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_user`),
@@ -171,7 +171,8 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `car_rent_db`;
-INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (1, 'admin');
+INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (1, 'user');
+INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (2, 'admin');
 
 COMMIT;
 
@@ -181,7 +182,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `car_rent_db`;
-INSERT INTO `car_rent_db`.`user` (`id_user`, `login`, `password`, `email`, `id_user_role`, `name`, `surname`, `phone_number`, `verified`, `birth_date`, `create_time`) VALUES (1, 'admin', '$2y$10$ISBE2oOvQMaElBqCtYxy8O0GK7QJNMw8ijEKKX6VJNaYugGbc493C', 'admin@gmail.com', 1, 'Kamil', 'Wesołowski', '48123456789', 1, '1999-09-04', '2021-05-17 13:12:10');
+INSERT INTO `car_rent_db`.`user` (`id_user`, `login`, `password`, `email`, `id_user_role`, `name`, `surname`, `phone_number`, `verified`, `birth_date`, `create_time`) VALUES (1, 'admin', '$2y$10$ISBE2oOvQMaElBqCtYxy8O0GK7QJNMw8ijEKKX6VJNaYugGbc493C', 'admin@gmail.com', 2, 'Kamil', 'Wesołowski', '48123456789', 1, '1999-09-04', '2021-05-17 13:12:10');
 
 COMMIT;
 
