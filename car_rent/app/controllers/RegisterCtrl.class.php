@@ -64,7 +64,7 @@ class RegisterCtrl {
                 try {
                     App::getDB()->insert("user", [
                         "login" => $this->form->login,
-                        "password" => $this->form->password,
+                        "password" => password_hash($this->form->password, PASSWORD_BCRYPT),
                         "email" => $this->form->email,
                         "name" => $this->form->name,
                         "surname" => $this->form->surname,
