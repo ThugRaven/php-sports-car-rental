@@ -12,7 +12,7 @@
             <label for="id_login" class="label">Login: </label>
             <input id="id_login" type="text" name="login" value="{$form->login}"/>
             <label for="id_pass" class="label">Hasło: </label>
-            <input id="id_pass" type="password" name="pwd" value="{$form->pwd}" />
+            <input id="id_pass" type="password" name="password" value="{$form->password}" />
             <br />
             <input type="submit" value="Zaloguj" class="primary">
         </form>

@@ -6,6 +6,7 @@ use core\App;
 use core\Utils;
 use core\ParamUtils;
 use core\RoleUtils;
+use core\SessionUtils;
 use app\transfer\User;
 use app\forms\LoginForm;
 
@@ -19,11 +20,11 @@ class LoginCtrl {
 
     public function getParams() {
         $this->form->login = ParamUtils::getFromRequest('login');
-        $this->form->pwd = ParamUtils::getFromRequest('pwd');
+        $this->form->password = ParamUtils::getFromRequest('password');
     }
 
     public function validate() {
-        if (!(isset($this->form->login) && isset($this->form->pwd))) {
+        if (!(isset($this->form->login) && isset($this->form->password))) {
             return false;
         }
 
@@ -31,7 +32,7 @@ class LoginCtrl {
             if ($this->form->login == "") {
                 Utils::addErrorMessage('Nie podano loginu');
             }
-            if ($this->form->pwd == "") {
+            if ($this->form->password == "") {
                 Utils::addErrorMessage('Nie podano hasła');
             }
         }
@@ -45,7 +46,7 @@ class LoginCtrl {
                 getMessages()->addError('Wystąpił błąd podczas pobierania rekordów');
             }
 
-            if (password_verify($this->form->pwd, $hashed_pwd)) {
+            if (password_verify($this->form->password, $hashed_pwd)) {
                 //TODO: Get here all the user info and put it in session
 
                 $role = App::getDB()->get("user", [
@@ -54,11 +55,8 @@ class LoginCtrl {
                     "login" => $this->form->login
                 ]);
 
-                print_r($role);
-
                 $user = new User($this->form->login, $role);
-                //TODO: Change to SessionUtils
-                $_SESSION['user'] = serialize($user);
+                SessionUtils::storeObject("user", $user);
                 RoleUtils::addRole($role);
             } else {
                 Utils::addErrorMessage("Niepoprawny login lub hasło!");
@@ -82,18 +80,14 @@ class LoginCtrl {
         session_unset();
         session_destroy();
 
-        Utils::addInfoMessage('Poprawnie wylogowano z systemu');
+//        Utils::addInfoMessage('Poprawnie wylogowano z systemu');
 
-        $this->generateView();
+        App::getRouter()->redirectTo("main");
     }
 
     public function generateView() {
         App::getSmarty()->assign('form', $this->form);
-        if (isset($_SESSION['user'])) {
-            App::getSmarty()->assign('user', unserialize($_SESSION['user']));
-        } else {
-            App::getSmarty()->assign('user', null);
-        }
+        App::getSmarty()->assign('user', SessionUtils::loadObject("user", true));
 
         App::getSmarty()->display("LoginView.tpl");
     }
