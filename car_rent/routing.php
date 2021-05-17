@@ -11,4 +11,6 @@ Utils::addRoute('main', 'MainCtrl');
 Utils::addRoute('login', 'LoginCtrl');
 Utils::addRoute('logout', 'LoginCtrl');
 
+Utils::addRoute('register', 'RegisterCtrl');
+
 //Utils::addRoute('action_name', 'controller_class_name');

@@ -17,6 +17,8 @@
             {/if}
 
         <a href="{url action='login'}">Zaloguj się</a>
+        <a href="{url action='register'}">Zarejestruj się</a>
+
 
         {include file='messages.tpl'}
 
