@@ -171,7 +171,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `car_rent_db`;
-INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (1, 'Admin');
+INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (1, 'admin');
 
 COMMIT;
 
