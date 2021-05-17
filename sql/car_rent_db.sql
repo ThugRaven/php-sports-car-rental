@@ -35,8 +35,8 @@ DROP TABLE IF EXISTS `car_rent_db`.`user` ;
 CREATE TABLE IF NOT EXISTS `car_rent_db`.`user` (
   `id_user` INT NOT NULL AUTO_INCREMENT,
   `login` VARCHAR(45) NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
   `password` CHAR(60) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
   `id_user_role` INT NOT NULL,
   `name` VARCHAR(45) NOT NULL,
   `surname` VARCHAR(45) NOT NULL,
@@ -165,3 +165,23 @@ CREATE INDEX `fk_rent_status_idx` ON `car_rent_db`.`rent` (`id_rent_status` ASC)
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `car_rent_db`.`user_role`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `car_rent_db`;
+INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (1, 'Admin');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `car_rent_db`.`user`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `car_rent_db`;
+INSERT INTO `car_rent_db`.`user` (`id_user`, `login`, `password`, `email`, `id_user_role`, `name`, `surname`, `phone_number`, `verified`, `birth_date`, `create_time`) VALUES (1, 'admin', '$2y$10$ISBE2oOvQMaElBqCtYxy8O0GK7QJNMw8ijEKKX6VJNaYugGbc493C', 'admin@gmail.com', 1, 'Kamil', 'Wesołowski', '48123456789', 1, '1999-09-04', '2021-05-17 13:12:10');
+
+COMMIT;
+
