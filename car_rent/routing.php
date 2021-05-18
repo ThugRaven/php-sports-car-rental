@@ -17,8 +17,8 @@ Utils::addRoute('logout', 'LoginCtrl');
 Utils::addRoute('registration', 'RegisterCtrl');
 Utils::addRoute('register', 'RegisterCtrl');
 
-//Utils::addRoute('cars', 'CarListCtrl');
-//Utils::addRoute('carDetails', 'CarDetailsCtrl');
+Utils::addRoute('cars', 'CarsCtrl');
+//Utils::addRoute('car', 'CarsCtrl');
 
 //Utils::addRoute('rent', 'RentCtrl');
 
