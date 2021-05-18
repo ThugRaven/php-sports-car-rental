@@ -67,11 +67,16 @@ class RegisterCtrl {
             'max_length' => 15,
             'validator_message' => 'Maksymalna długość numeru telefonu to 15 znaków!'
         ]);
-        $this->form->birth_date = $this->v->validateFromRequest('birth_date', [
+        $birth_date = $this->v->validateFromRequest('birth_date', [
             'trim' => true,
             'required' => true,
-            'required_message' => 'Pole Data urodzenia jest wymagane',
+            'required_message' => "Pole Data urodzenia jest wymagane",
+            'date_format' => 'Y-m-d',
+            'validator_message' => "Niepoprawny format daty. Przykład: 2001-04-15"
         ]);
+        if ($this->v->isLastOK()) {
+            $this->form->birth_date = $birth_date->format('Y-m-d');
+        }
     }
 
     public function validate() {
