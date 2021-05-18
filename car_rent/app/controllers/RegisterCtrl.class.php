@@ -7,46 +7,78 @@ use core\Utils;
 use core\ParamUtils;
 use core\RoleUtils;
 use core\SessionUtils;
+use core\Validator;
 use app\transfer\User;
 use app\forms\RegisterForm;
 
 class RegisterCtrl {
 
     private $form;
+    private $v;
 
     public function __construct() {
         $this->form = new RegisterForm();
+        $this->v = new Validator();
     }
 
-    public function getParams() {
-        $this->form->login = ParamUtils::getFromRequest('login');
-        $this->form->password = ParamUtils::getFromRequest('password');
-        $this->form->email = ParamUtils::getFromRequest('email');
-        $this->form->name = ParamUtils::getFromRequest('name');
-        $this->form->surname = ParamUtils::getFromRequest('surname');
-        $this->form->phone_number = ParamUtils::getFromRequest('phone_number');
-        $this->form->birth_date = ParamUtils::getFromRequest('birth_date');
+    public function getParamsValid() {
+        $this->form->login = $this->v->validateFromRequest('login', [
+            'trim' => true,
+            'required' => true,
+            'required_message' => 'Pole Login jest wymagane',
+            'max_length' => 45,
+            'validator_message' => 'Maksymalna długość loginu to 45 znaków!'
+        ]);
+        $this->form->password = $this->v->validateFromRequest('password', [
+            'trim' => true,
+            'required' => true,
+            'required_message' => 'Pole Hasło jest wymagane',
+            'max_length' => 72,
+            'validator_message' => 'Maksymalna długość hasła to 72 znaków!'
+        ]);
+        $this->form->password_v = $this->v->validateFromRequest('password_v', [
+            'trim' => true,
+        ]);
+        $this->form->email = $this->v->validateFromRequest('email', [
+            'trim' => true,
+            'required' => true,
+            'required_message' => 'Pole Email jest wymagane',
+            'email' => true,
+            'validator_message' => 'Podano zły format email!'
+        ]);
+        $this->form->name = $this->v->validateFromRequest('name', [
+            'trim' => true,
+            'required' => true,
+            'required_message' => 'Pole Imię jest wymagane',
+            'max_length' => 45,
+            'validator_message' => 'Maksymalna długość imienia to 45 znaków!'
+        ]);
+        $this->form->surname = $this->v->validateFromRequest('surname', [
+            'trim' => true,
+            'required' => true,
+            'required_message' => 'Pole Nazwisko jest wymagane',
+            'max_length' => 45,
+            'validator_message' => 'Maksymalna długość nazwiska to 45 znaków!'
+        ]);
+        $this->form->phone_number = $this->v->validateFromRequest('phone_number', [
+            'trim' => true,
+            'required' => true,
+            'required_message' => 'Pole Numer telefonu jest wymagane',
+            'max_length' => 15,
+            'validator_message' => 'Maksymalna długość numeru telefonu to 15 znaków!'
+        ]);
+        $this->form->birth_date = $this->v->validateFromRequest('birth_date', [
+            'trim' => true,
+            'required' => true,
+            'required_message' => 'Pole Data urodzenia jest wymagane',
+        ]);
     }
 
     public function validate() {
-        foreach ($this->form as $val) {
-            echo $val;
-            if (!(isset($val))) {
-                return false;
-            } else if (empty($val)) {
-                Utils::addErrorMessage("Nie podano argumentu");
-                return false;
-            }
+        if (strcmp($this->form->password_v, $this->form->password) != 0) {
+            Utils::addErrorMessage('Hasła nie są takie same!');
+            return false;
         }
-
-//        if (!App::getMessages()->isError()) {
-//            if ($this->form->login == "") {
-//                Utils::addErrorMessage('Nie podano loginu');
-//            }
-//            if ($this->form->password == "") {
-//                Utils::addErrorMessage('Nie podano hasła');
-//            }
-//        }
 
         if (!App::getMessages()->isError()) {
             try {
@@ -59,8 +91,6 @@ class RegisterCtrl {
 
 
             if ($isAvailable) {
-                //TODO: Validator, validate values before putting it inside DB
-
                 try {
                     App::getDB()->insert("user", [
                         "login" => $this->form->login,
@@ -78,33 +108,20 @@ class RegisterCtrl {
             } else {
                 Utils::addErrorMessage("Konto o podanej nazwie już istnieje!");
             }
-
-//            if($login)
-//            if (password_verify($this->form->pwd, $hashed_pwd)) {
-//                //TODO: Get here all the user info and put it in session
-//
-//                $role = App::getDB()->get("user", [
-//                    "[><]user_role" => "id_user_role"
-//                        ], "user_role.name", [
-//                    "login" => $this->form->login
-//                ]);
-//
-//                $user = new User($this->form->login, $role);
-//                SessionUtils::storeObject("user", $user);
-//                RoleUtils::addRole($role);
-//            } else {
-//                Utils::addErrorMessage("Niepoprawny login lub hasło!");
-//            }
         }
 
         return !App::getMessages()->isError();
     }
 
+    public function action_registration() {
+        $this->generateView();
+    }
+
     public function action_register() {
-        $this->getParams();
+        $this->getParamsValid();
 
         if ($this->validate()) {
-//            App::getRouter()->redirectTo("main");
+            App::getRouter()->redirectTo("main");
         } else {
             $this->generateView();
         }

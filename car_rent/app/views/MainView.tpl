@@ -15,9 +15,9 @@
             {else}
             <li><a href="{url action='login'}">Zaloguj się</a></li>
             {/if}
-
+        <hr />
         <a href="{url action='login'}">Zaloguj się</a>
-        <a href="{url action='register'}">Zarejestruj się</a>
+        <a href="{url action='registration'}">Zarejestruj się</a>
 
 
         {include file='messages.tpl'}

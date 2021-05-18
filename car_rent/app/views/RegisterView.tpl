@@ -13,6 +13,8 @@
             <input id="id_login" type="text" name="login" value="{$form->login}"/><br />
             <label for="id_pass" class="label">Hasło: </label>
             <input id="id_pass" type="password" name="password" value="{$form->password}" /><br />
+            <label for="id_pass_v" class="label">Powtórz hasło: </label>
+            <input id="id_pass_v" type="password" name="password_v" value="{$form->password_v}" /><br />
             <label for="id_email" class="label">E-Mail: </label>
             <input id="id_email" type="email" name="email" value="{$form->email}" /><br />
             <label for="id_name" class="label">Imię: </label>
