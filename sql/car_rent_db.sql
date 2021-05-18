@@ -186,3 +186,25 @@ INSERT INTO `car_rent_db`.`user` (`id_user`, `login`, `password`, `email`, `id_u
 
 COMMIT;
 
+
+-- -----------------------------------------------------
+-- Data for table `car_rent_db`.`car_price`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `car_rent_db`;
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (1, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (2, 1, 1, 1, 1, 1, 1);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `car_rent_db`.`car`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `car_rent_db`;
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `production_year`, `eng_power`, `eng_torque`, `eng_type`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (1, 1, 'S0RENT01', 32000, 'Seat', 'Leon Cupra R', 2018, 310, 380, 'TSI', 2.0, 'FWD', 5.8, 250, 'Petrol', 'Manual', 5, 5, 1930, 50, 6.07);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `production_year`, `eng_power`, `eng_torque`, `eng_type`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (2, 2, 'S0RENT02', 65000, 'Ford', 'Focus RS', 2017, 350, 470, 'EcoBoost', 2.3, 'AWD', 4.7, 265, 'Petrol', 'Manual', 5, 5, 2025, 51, 6.4);
+
+COMMIT;
+
