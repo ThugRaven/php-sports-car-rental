@@ -8,7 +8,7 @@ use core\ParamUtils;
 use core\RoleUtils;
 use core\SessionUtils;
 use app\transfer\User;
-use app\forms\LoginForm;
+use app\forms\CarsForm;
 
 class CarsCtrl {
 
@@ -16,11 +16,11 @@ class CarsCtrl {
     private $records;
 
     public function __construct() {
-        $this->form = new LoginForm();
+        $this->form = new CarsForm();
     }
 
     public function getParams() {
-//        $this->form->amount = getFromRequest('amount');
+        $this->form->model = ParamUtils::getFromRequest('model');
     }
 
     public function validate() {
@@ -35,6 +35,7 @@ class CarsCtrl {
 //        if (isset($this->form->amount) && !empty($this->form->amount) && is_numeric($this->form->amount)) {
 //            $search_params['amount'] = $this->form->amount;
 //        }
+        $search_params['model[~]'] = $this->form->model;
 
         $num_params = sizeof($search_params);
         if ($num_params > 1) {
@@ -42,7 +43,7 @@ class CarsCtrl {
         } else {
             $where = &$search_params;
         }
-        $where["ORDER"] = ["brand","model"];
+        $where["ORDER"] = ["brand", "model"];
 
         try {
             $this->records = App::getDB()->select("car", [
@@ -63,12 +64,21 @@ class CarsCtrl {
     }
 
     public function action_car() {
-        session_unset();
-        session_destroy();
+        $this->form->id_car = ParamUtils::getFromCleanURL(1);
+        $where["id_car"] = $this->form->id_car;
+        $this->records = App::getDB()->get("car", [
+            "id_car",
+            "brand",
+            "model",
+            "eng_power",
+            "eng_torque"
+                ], $where);
 
-//        Utils::addInfoMessage('Poprawnie wylogowano z systemu');
+        App::getSmarty()->assign('form', $this->form);
+        App::getSmarty()->assign('user', SessionUtils::loadObject("user", true));
+        App::getSmarty()->assign('records', $this->records);
 
-        App::getRouter()->redirectTo("main");
+        App::getSmarty()->display("CarView.tpl");
     }
 
     public function generateView() {

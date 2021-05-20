@@ -7,6 +7,12 @@
     </head>
 
     <body>
+        <form action="{url action='cars'}" method="post">
+            <label for="id_model" class="label">Model: </label>
+            <input id="id_model" type="text" name="model" value="{$form->model}"/>
+            <br />
+            <input type="submit" value="Szukaj" class="primary">
+        </form>
 
         <div>
             <table>
@@ -28,6 +34,7 @@
                                 <td>{$r["model"]}</td>
                                 <td>{$r["eng_power"]}</td>
                                 <td>{$r["eng_torque"]}</td>
+                                <td><a href="{url action='car' id=$r["id_car"] brand=$r["brand"] model=$r["model"]}">Zarezerwuj</a></td>
                             </tr>
                         {/strip}
                     {/foreach}

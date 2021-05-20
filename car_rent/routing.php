@@ -18,7 +18,7 @@ Utils::addRoute('registration', 'RegisterCtrl');
 Utils::addRoute('register', 'RegisterCtrl');
 
 Utils::addRoute('cars', 'CarsCtrl');
-//Utils::addRoute('car', 'CarsCtrl');
+Utils::addRoute('car', 'CarsCtrl');
 
 //Utils::addRoute('rent', 'RentCtrl');
 

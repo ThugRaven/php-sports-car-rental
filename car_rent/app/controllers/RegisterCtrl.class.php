@@ -85,7 +85,17 @@ class RegisterCtrl {
             return false;
         }
 
-        if (!App::getMessages()->isError()) {
+        return !App::getMessages()->isError();
+    }
+
+    public function action_registration() {
+        $this->generateView();
+    }
+
+    public function action_register() {
+        $this->getParamsValid();
+
+        if ($this->validate()) {
             try {
                 $isAvailable = !(App::getDB()->has("user", [
                             "login" => $this->form->login
@@ -113,19 +123,7 @@ class RegisterCtrl {
             } else {
                 Utils::addErrorMessage("Konto o podanej nazwie już istnieje!");
             }
-        }
 
-        return !App::getMessages()->isError();
-    }
-
-    public function action_registration() {
-        $this->generateView();
-    }
-
-    public function action_register() {
-        $this->getParamsValid();
-
-        if ($this->validate()) {
             App::getRouter()->redirectTo("main");
         } else {
             $this->generateView();
