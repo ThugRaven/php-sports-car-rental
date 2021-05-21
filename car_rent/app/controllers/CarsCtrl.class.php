@@ -9,6 +9,7 @@ use core\RoleUtils;
 use core\SessionUtils;
 use app\transfer\User;
 use app\forms\CarsForm;
+use app\forms\RentForm;
 
 class CarsCtrl {
 
@@ -17,6 +18,7 @@ class CarsCtrl {
 
     public function __construct() {
         $this->form = new CarsForm();
+        $this->form_rent = new RentForm();
     }
 
     public function getParams() {
@@ -71,15 +73,15 @@ class CarsCtrl {
     }
 
     public function action_car() {
-        $this->form->id_car = ParamUtils::getFromCleanURL(1);
-        $where["id_car"] = $this->form->id_car;
+        $this->form_rent->id_car = ParamUtils::getFromCleanURL(1);
+        $where["id_car"] = $this->form_rent->id_car;
         $this->records = App::getDB()->get("car", [
             "[><]car_price" => "id_car_price"
                 ], "*", $where);
-        
-        print_r($this->records);
 
-        App::getSmarty()->assign('form', $this->form);
+        $this->form_rent->id_car_price = $this->records["id_car_price"];
+
+        App::getSmarty()->assign('form', $this->form_rent);
         App::getSmarty()->assign('user', SessionUtils::loadObject("user", true));
         App::getSmarty()->assign('records', $this->records);
 

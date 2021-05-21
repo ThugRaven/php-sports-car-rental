@@ -20,6 +20,6 @@ Utils::addRoute('register', 'RegisterCtrl');
 Utils::addRoute('cars', 'CarsCtrl');
 Utils::addRoute('car', 'CarsCtrl');
 
-//Utils::addRoute('rent', 'RentCtrl');
+Utils::addRoute('rent', 'RentCtrl');
 
 //Utils::addRoute('dashboard', 'DashboardCtrl');
