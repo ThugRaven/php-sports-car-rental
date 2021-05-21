@@ -34,7 +34,7 @@
                                 <td>{$r["model"]}</td>
                                 <td>{$r["eng_power"]}</td>
                                 <td>{$r["eng_torque"]}</td>
-                                <td><a href="{url action='car' id=$r["id_car"] brand=$r["brand"] model=$r["model"]}">Zarezerwuj</a></td>
+                                <td><a href="{url action='car' id=$r["id_car"] brand=$r["brand_url"] model=$r["model_url"]}">Zarezerwuj</a></td>
                             </tr>
                         {/strip}
                     {/foreach}

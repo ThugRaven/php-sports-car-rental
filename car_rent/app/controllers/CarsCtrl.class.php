@@ -37,7 +37,7 @@ class CarsCtrl {
 //        }
         $search_params['model[~]'] = $this->form->model;
 
-        $num_params = sizeof($search_params);
+        $num_params = count($search_params);
         if ($num_params > 1) {
             $where = ["AND" => &$search_params];
         } else {
@@ -59,7 +59,14 @@ class CarsCtrl {
                 Utils::addErrorMessage($ex->getMessage());
             }
         }
-
+        for ($i = 0; $i < count($this->records); $i++) {
+            $this->records[$i]["brand_url"] = trim($this->records[$i]["brand"]);
+            $this->records[$i]["model_url"] = trim($this->records[$i]["model"]);
+            $this->records[$i]["brand_url"] = strtolower($this->records[$i]["brand_url"]);
+            $this->records[$i]["model_url"] = strtolower($this->records[$i]["model_url"]);
+            $this->records[$i]["brand_url"] = preg_replace("/\s+/", "-", $this->records[$i]["brand_url"]);
+            $this->records[$i]["model_url"] = preg_replace("/\s+/", "-", $this->records[$i]["model_url"]);
+        }
         $this->generateView();
     }
 
@@ -67,12 +74,10 @@ class CarsCtrl {
         $this->form->id_car = ParamUtils::getFromCleanURL(1);
         $where["id_car"] = $this->form->id_car;
         $this->records = App::getDB()->get("car", [
-            "id_car",
-            "brand",
-            "model",
-            "eng_power",
-            "eng_torque"
-                ], $where);
+            "[><]car_price" => "id_car_price"
+                ], "*", $where);
+        
+        print_r($this->records);
 
         App::getSmarty()->assign('form', $this->form);
         App::getSmarty()->assign('user', SessionUtils::loadObject("user", true));
