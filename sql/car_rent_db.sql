@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `car_rent_db`.`car` (
   `drive` VARCHAR(10) NOT NULL,
   `100_time` FLOAT NULL,
   `top_speed` SMALLINT(3) NULL,
-  `fuel_type` VARCHAR(5) NOT NULL,
+  `fuel_type` VARCHAR(10) NOT NULL,
   `transmission_type` VARCHAR(15) NOT NULL,
   `doors` TINYINT(1) NULL,
   `seats` TINYINT(1) NULL,
