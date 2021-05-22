@@ -59,7 +59,14 @@ class RentCtrl {
             echo "\n";
 
             $where["id_car_price"] = $this->form->id_car_price;
-            $this->records = App::getDB()->get("car_price", "*", $where);
+            try {
+                $this->records = App::getDB()->get("car_price", "*", $where);
+            } catch (PDOException $ex) {
+                Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
+                if (App::getConf()->debug) {
+                    Utils::addErrorMessage($ex->getMessage());
+                }
+            }
             print_r($this->records);
 
             $this->form->total_price = $this->records["price_deposit"] * $hours;
