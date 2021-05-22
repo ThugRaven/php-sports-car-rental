@@ -39,6 +39,7 @@ class CarsCtrl {
 
         try {
             $brands = App::getDB()->select("car", "@brand");
+//            print_r(App::getDB()->debug()->select("car", "@brand"));
         } catch (PDOException $ex) {
             Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             if (App::getConf()->debug) {
@@ -92,7 +93,7 @@ class CarsCtrl {
             $this->records[$i]["brand_url"] = preg_replace("/\s+/", "-", $this->records[$i]["brand_url"]);
             $this->records[$i]["model_url"] = preg_replace("/\s+/", "-", $this->records[$i]["model_url"]);
         }
-        print_r($this->records);
+//        print_r($this->records);
         $this->generateView();
     }
 

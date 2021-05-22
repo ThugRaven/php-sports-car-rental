@@ -14,7 +14,7 @@
                 <option value="">Wszystkie modele</option>
                 {foreach $brands as $b}
                     {strip}
-                        <option value={$b} {if $form->brand == $b}selected{else}""{/if}>{$b}</option>
+                        <option value="{$b}" {if $form->brand == $b}selected{else}{/if}>{$b}</option>
                     {/strip}
                 {/foreach}
             </select>
