@@ -10,6 +10,14 @@
         <form action="{url action='cars'}" method="post">
             <label for="id_model" class="label">Model: </label>
             <input id="id_model" type="text" name="model" value="{$form->model}"/>
+            <select name="brand" id="id_brand">
+                <option value="">Wszystkie modele</option>
+                {foreach $brands as $b}
+                    {strip}
+                        <option value={$b} {if $form->brand == $b}selected{else}""{/if}>{$b}</option>
+                    {/strip}
+                {/foreach}
+            </select>
             <br />
             <input type="submit" value="Szukaj" class="primary">
         </form>

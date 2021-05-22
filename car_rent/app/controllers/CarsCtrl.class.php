@@ -14,15 +14,19 @@ use app\forms\RentForm;
 class CarsCtrl {
 
     private $form;
+    private $form_rent;
     private $records;
+    private $search_params;
 
     public function __construct() {
         $this->form = new CarsForm();
         $this->form_rent = new RentForm();
+        $this->search_params = [];
     }
 
     public function getParams() {
         $this->form->model = ParamUtils::getFromRequest('model');
+        $this->form->brand = ParamUtils::getFromRequest('brand');
     }
 
     public function validate() {
@@ -33,19 +37,38 @@ class CarsCtrl {
         $this->getParams();
         $this->validate();
 
-        $search_params = [];
+        try {
+            $brands = App::getDB()->select("car", "@brand");
+        } catch (PDOException $ex) {
+            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
+            if (App::getConf()->debug) {
+                Utils::addErrorMessage($ex->getMessage());
+            }
+        }
+
+        print_r($brands);
+        print_r($this->form->brand);
+        App::getSmarty()->assign('brands', $brands);
+        if (isset($this->form->brand) && !$this->form->brand == "") {
+            $this->search_params['brand'] = $this->form->brand;
+        }
+
 //        if (isset($this->form->amount) && !empty($this->form->amount) && is_numeric($this->form->amount)) {
 //            $search_params['amount'] = $this->form->amount;
 //        }
-        $search_params['model[~]'] = $this->form->model;
+        if (isset($this->form->model) && !$this->form->model == "") {
+            $this->search_params['model[~]'] = $this->form->model;
+        }
 
-        $num_params = count($search_params);
+        $num_params = count($this->search_params);
         if ($num_params > 1) {
-            $where = ["AND" => &$search_params];
+            $where = ["AND" => &$this->search_params];
         } else {
-            $where = &$search_params;
+            $where = &$this->search_params;
         }
         $where["ORDER"] = ["brand", "model"];
+
+        print_r($where);
 
         try {
             $this->records = App::getDB()->select("car", [
@@ -69,15 +92,24 @@ class CarsCtrl {
             $this->records[$i]["brand_url"] = preg_replace("/\s+/", "-", $this->records[$i]["brand_url"]);
             $this->records[$i]["model_url"] = preg_replace("/\s+/", "-", $this->records[$i]["model_url"]);
         }
+        print_r($this->records);
         $this->generateView();
     }
 
     public function action_car() {
         $this->form_rent->id_car = ParamUtils::getFromCleanURL(1);
         $where["id_car"] = $this->form_rent->id_car;
-        $this->records = App::getDB()->get("car", [
-            "[><]car_price" => "id_car_price"
-                ], "*", $where);
+
+        try {
+            $this->records = App::getDB()->get("car", [
+                "[><]car_price" => "id_car_price"
+                    ], "*", $where);
+        } catch (PDOException $ex) {
+            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
+            if (App::getConf()->debug) {
+                Utils::addErrorMessage($ex->getMessage());
+            }
+        }
 
         $this->form_rent->id_car_price = $this->records["id_car_price"];
 
