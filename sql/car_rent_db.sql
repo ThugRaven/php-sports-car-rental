@@ -84,10 +84,9 @@ CREATE TABLE IF NOT EXISTS `car_rent_db`.`car` (
   `mileage` INT NOT NULL,
   `brand` VARCHAR(45) NOT NULL,
   `model` VARCHAR(45) NOT NULL,
-  `production_year` YEAR(4) NOT NULL,
   `eng_power` INT NOT NULL,
   `eng_torque` INT NOT NULL,
-  `eng_type` VARCHAR(45) NOT NULL,
+  `eng_info` VARCHAR(45) NOT NULL,
   `eng_displacement` FLOAT NOT NULL,
   `drive` VARCHAR(10) NOT NULL,
   `100_time` FLOAT NULL,
@@ -173,6 +172,7 @@ START TRANSACTION;
 USE `car_rent_db`;
 INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (1, 'user');
 INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (2, 'admin');
+INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (3, 'employee');
 
 COMMIT;
 
@@ -194,6 +194,24 @@ START TRANSACTION;
 USE `car_rent_db`;
 INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (1, 1, 1, 1, 1, 1, 1);
 INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (2, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (3, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (4, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (5, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (6, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (7, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (8, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (9, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (10, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (11, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (12, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (13, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (14, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (15, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (16, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (17, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (18, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (19, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (20, 1, 1, 1, 1, 1, 1);
 
 COMMIT;
 
@@ -203,8 +221,26 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `car_rent_db`;
-INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `production_year`, `eng_power`, `eng_torque`, `eng_type`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (1, 1, 'S0RENT01', 32000, 'Seat', 'Leon Cupra R', 2018, 310, 380, 'TSI', 2.0, 'FWD', 5.8, 250, 'Petrol', 'Manual', 5, 5, 1930, 50, 6.07);
-INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `production_year`, `eng_power`, `eng_torque`, `eng_type`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (2, 2, 'S0RENT02', 65000, 'Ford', 'Focus RS', 2017, 350, 470, 'EcoBoost', 2.3, 'AWD', 4.7, 265, 'Petrol', 'Manual', 5, 5, 2025, 51, 6.4);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (1, 1, 'S0RENT01', 32000, 'Seat', 'Leon Cupra R', 310, 380, 'TSI Turbo', 2.0, 'FWD', 5.8, 250, 'Petrol', 'Manual', 5, 5, 1378, 50, 6.07);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (2, 2, 'S0RENT02', 65000, 'Ford', 'Focus RS', 350, 470, 'EcoBoost Turbo', 2.3, 'AWD', 4.7, 265, 'Petrol', 'Manual', 5, 5, 1524, 51, 6.4);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (3, 3, 'S0RENT03', 53520, 'Ford', 'Mustang 5.0 V8 GT', 416, 530, 'V8', 5.0, 'RWD', 4.8, 250, 'Petrol', 'Manual', 2, 4, 1645, 61, 11.3);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (4, 4, 'S0RENT04', 23000, 'Renault', 'Megane R.S. Trophy', 300, 400, 'Turbo', 1.8, 'FWD', 5.7, 260, 'Petrol', 'Manual', 5, 5, 1419, 50, 6.8);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (5, 5, 'S0RENT05', 45200, 'Subaru', 'Impreza WRX STI', 280, 392, 'Turbo', 2.5, 'AWD', 5.4, 254, 'Petrol', 'Manual', 4, 5, 1495, 60, 9);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (6, 6, 'S0RENT06', 36780, 'Toyota', 'Supra GR', 340, 500, 'Twin-Scroll Turbo', 3.0, 'RWD', 4.3, 250, 'Petrol', 'Automatic', 2, 2, 1530, 52, 7.2);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (7, 7, 'S0RENT07', 7800, 'Toyota', 'GR Yaris', 261, 360, 'R3 Turbo', 1.6, 'AWD', 5.5, 230, 'Petrol', 'Manual', 2, 4, 1280, 50, 8.2);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (8, 8, 'S0RENT08', 25000, 'BMW', 'M2 Competition', 410, 550, 'Twin-Turbo', 3.0, 'RWD', 4.2, 250, 'Petrol', 'Automatic', 2, 4, 1575, 52, 7.6);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (9, 9, 'S0RENT09', 9600, 'Audi', 'RS6', 600, 800, 'V8 TFSI Twin-Turbo', 4.0, 'AWD', 3.6, 280, 'Petrol', 'Automatic', 5, 4, 2075, 73, 11.6);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (10, 10, 'S0RENT10', 13450, 'Porsche', 'Taycan', 761, 1050, DEFAULT, DEFAULT, 'AWD', 2.8, 260, 'Electric', 'Automatic', 4, 4, 2370, NULL, NULL);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (11, 11, 'S0RENT11', 37650, 'Toyota', 'GT86', 200, 205, DEFAULT, 2.0, 'RWD', 7.6, 225, 'Petrol', 'Manual', 2, 4, 1270, 50, 7.2);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (12, 12, 'S0RENT12', 45500, 'Mercedes', 'AMG A45 S', 421, 500, 'Twin-Turbo', 2.0, 'AWD', 3.9, 270, 'Petrol', 'Automatic', 5, 5, 1550, 51, 8.3);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (13, 13, 'S0RENT13', 27865, 'Porsche', '718 Cayman GTS', 400, 420, 'Turbo', 4.0, 'RWD', 4.5, 292, 'Petrol', 'Automatic', 2, 2, 1405, 64, 10.8);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (14, 14, 'S0RENT14', 16500, 'Mercedes', 'AMG A35', 306, 400, 'Turbo', 2.0, 'AWD', 4.7, 250, 'Petrol', 'Automatic', 5, 5, 1555, 51, 6.1);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (15, 15, 'S0RENT15', 19252, 'Nissan', 'GT-R', 570, 637, 'V6 Twin-Turbo', 3.8, 'AWD', 2.7, 315, 'Petrol', 'Automatic', 2, 4, 1752, 74, 9.8);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (16, 16, 'S0RENT16', 12900, 'Chevrolet', 'Camaro SS', 455, 614, 'V8', 6.2, 'RWD', 4.6, 290, 'Petrol', 'Automatic', 2, 4, 1697, 72, 11.7);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (17, 17, 'S0RENT17', 12525, 'Volkswagen', 'Golf R', 310, 380, 'TSI Turbo', 2.0, 'AWD', 5.1, 250, 'Petrol', 'Automatic', 5, 5, 1408, 50, 6.5);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (18, 18, 'S0RENT18', 16250, 'Volkswagen', 'Golf GTI', 245, 370, 'TSI Turbo', 2.0, 'FWD', 6.2, 250, 'Petrol', 'Automatic', 5, 5, 1340, 50, 8.7);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (19, 19, 'S0RENT19', 13000, 'Porsche', '911 Turbo S', 650, 800, 'Flat-6 Twin-Turbo', 3.8, 'AWD', 2.7, 330, 'Petrol', 'Automatic', 2, 4, 1715, 67, 11.1);
+INSERT INTO `car_rent_db`.`car` (`id_car`, `id_car_price`, `license_plate`, `mileage`, `brand`, `model`, `eng_power`, `eng_torque`, `eng_info`, `eng_displacement`, `drive`, `100_time`, `top_speed`, `fuel_type`, `transmission_type`, `doors`, `seats`, `weight`, `fuel_capacity`, `fuel_consumption`) VALUES (20, 20, 'S0RENT20', 7900, 'Alfa Romeo', 'Giulia Quadrifoglio', 510, 600, 'V6 Twin-Turbo', 2.9, 'RWD', 3.9, 307, 'Petrol', 'Automatic', 4, 4, 1580, 58, 8.5);
 
 COMMIT;
 
