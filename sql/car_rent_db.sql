@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS `car_rent_db`.`user_role` ;
 
 CREATE TABLE IF NOT EXISTS `car_rent_db`.`user_role` (
   `id_user_role` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_user_role`))
 ENGINE = InnoDB;
 
@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `car_rent_db`.`user` (
   `name` VARCHAR(45) NOT NULL,
   `surname` VARCHAR(45) NOT NULL,
   `phone_number` VARCHAR(15) NOT NULL,
+  `rents` SMALLINT NOT NULL DEFAULT 0,
   `verified` TINYINT(1) NOT NULL DEFAULT 0,
   `birth_date` DATE NOT NULL,
   `create_time` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
@@ -62,12 +63,11 @@ DROP TABLE IF EXISTS `car_rent_db`.`car_price` ;
 
 CREATE TABLE IF NOT EXISTS `car_rent_db`.`car_price` (
   `id_car_price` INT NOT NULL AUTO_INCREMENT,
-  `price_deposit` TINYINT(5) NOT NULL,
-  `price_no_deposit` TINYINT(5) NOT NULL,
-  `multiplier` FLOAT NOT NULL,
-  `km_limit` TINYINT(5) NOT NULL,
-  `deposit` TINYINT(5) NOT NULL,
-  `additional_km` TINYINT(1) NOT NULL,
+  `price_deposit` SMALLINT NOT NULL,
+  `price_no_deposit` SMALLINT NOT NULL,
+  `km_limit` SMALLINT NOT NULL,
+  `deposit` SMALLINT NOT NULL,
+  `additional_km` TINYINT NOT NULL,
   PRIMARY KEY (`id_car_price`))
 ENGINE = InnoDB;
 
@@ -90,13 +90,13 @@ CREATE TABLE IF NOT EXISTS `car_rent_db`.`car` (
   `eng_displacement` FLOAT NOT NULL,
   `drive` VARCHAR(10) NOT NULL,
   `100_time` FLOAT NULL,
-  `top_speed` SMALLINT(3) NULL,
+  `top_speed` SMALLINT NULL,
   `fuel_type` VARCHAR(10) NOT NULL,
   `transmission_type` VARCHAR(15) NOT NULL,
-  `doors` TINYINT(1) NULL,
-  `seats` TINYINT(1) NULL,
+  `doors` TINYINT NULL,
+  `seats` TINYINT NULL,
   `weight` INT NULL,
-  `fuel_capacity` TINYINT(3) NULL,
+  `fuel_capacity` TINYINT NULL,
   `fuel_consumption` FLOAT NULL,
   PRIMARY KEY (`id_car`),
   CONSTRAINT `fk_car_rent_price`
@@ -118,7 +118,7 @@ DROP TABLE IF EXISTS `car_rent_db`.`rent_status` ;
 
 CREATE TABLE IF NOT EXISTS `car_rent_db`.`rent_status` (
   `id_rent_status` INT NOT NULL AUTO_INCREMENT,
-  `status` VARCHAR(45) NULL,
+  `status` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_rent_status`))
 ENGINE = InnoDB;
 
@@ -132,10 +132,10 @@ CREATE TABLE IF NOT EXISTS `car_rent_db`.`rent` (
   `id_rent` INT NOT NULL AUTO_INCREMENT,
   `id_car` INT NOT NULL,
   `id_user` INT NOT NULL,
-  `rent_start` DATETIME NULL,
-  `rent_end` DATETIME NULL,
+  `rent_start` DATETIME NOT NULL,
+  `rent_end` DATETIME NOT NULL,
   `id_rent_status` INT NOT NULL,
-  `total_price` INT NULL,
+  `total_price` INT NOT NULL,
   PRIMARY KEY (`id_rent`),
   CONSTRAINT `fk_rent_car`
     FOREIGN KEY (`id_car`)
@@ -170,9 +170,9 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `car_rent_db`;
-INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (1, 'user');
-INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (2, 'admin');
-INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (3, 'employee');
+INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (1, 'customer');
+INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (2, 'employee');
+INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (3, 'admin');
 
 COMMIT;
 
@@ -182,7 +182,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `car_rent_db`;
-INSERT INTO `car_rent_db`.`user` (`id_user`, `login`, `password`, `email`, `id_user_role`, `name`, `surname`, `phone_number`, `verified`, `birth_date`, `create_time`) VALUES (1, 'admin', '$2y$10$ISBE2oOvQMaElBqCtYxy8O0GK7QJNMw8ijEKKX6VJNaYugGbc493C', 'admin@gmail.com', 2, 'Kamil', 'Wesołowski', '48123456789', 1, '1999-09-04', '2021-05-17 13:12:10');
+INSERT INTO `car_rent_db`.`user` (`id_user`, `login`, `password`, `email`, `id_user_role`, `name`, `surname`, `phone_number`, `rents`, `verified`, `birth_date`, `create_time`) VALUES (1, 'admin', '$2y$10$ISBE2oOvQMaElBqCtYxy8O0GK7QJNMw8ijEKKX6VJNaYugGbc493C', 'admin@gmail.com', 3, 'Kamil', 'Wesołowski', '48123456789', 0, 1, '1999-09-04', '2021-05-17 13:12:10');
 
 COMMIT;
 
@@ -192,26 +192,26 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `car_rent_db`;
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (1, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (2, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (3, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (4, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (5, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (6, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (7, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (8, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (9, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (10, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (11, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (12, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (13, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (14, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (15, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (16, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (17, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (18, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (19, 1, 1, 1, 1, 1, 1);
-INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `multiplier`, `km_limit`, `deposit`, `additional_km`) VALUES (20, 1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (1, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (2, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (3, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (4, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (5, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (6, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (7, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (8, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (9, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (10, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (11, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (12, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (13, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (14, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (15, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (16, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (17, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (18, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (19, 1, 1, 1, 1, 1);
+INSERT INTO `car_rent_db`.`car_price` (`id_car_price`, `price_deposit`, `price_no_deposit`, `km_limit`, `deposit`, `additional_km`) VALUES (20, 1, 1, 1, 1, 1);
 
 COMMIT;
 
