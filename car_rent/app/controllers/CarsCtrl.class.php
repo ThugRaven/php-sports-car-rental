@@ -17,16 +17,27 @@ class CarsCtrl {
     private $form_rent;
     private $records;
     private $search_params;
+    private $orders;
 
     public function __construct() {
         $this->form = new CarsForm();
         $this->form_rent = new RentForm();
         $this->search_params = [];
+        $this->orders = [
+            array("", "Domyślne"),
+            array("car.eng_power-desc", "Moc silnika malejąco"),
+            array("car.eng_power-asc", "Moc silnika rosnąco"),
+            array("car.eng_torque-desc", "Moment obrotowy malejąco"),
+            array("car.eng_torque-asc", "Moment obrotowy rosnąco"),
+            array("car_price.price_deposit-desc", "Cena od największej"),
+            array("car_price.price_deposit-asc", "Cena od najmniejszej")
+        ];
     }
 
     public function getParams() {
         $this->form->model = ParamUtils::getFromRequest('model');
         $this->form->brand = ParamUtils::getFromRequest('brand');
+        $this->form->order = ParamUtils::getFromRequest('order');
     }
 
     public function validate() {
@@ -50,6 +61,7 @@ class CarsCtrl {
         print_r($brands);
         print_r($this->form->brand);
         App::getSmarty()->assign('brands', $brands);
+        App::getSmarty()->assign('orders', $this->orders);
         if (isset($this->form->brand) && !$this->form->brand == "") {
             $this->search_params['brand'] = $this->form->brand;
         }
@@ -61,23 +73,51 @@ class CarsCtrl {
             $this->search_params['model[~]'] = $this->form->model;
         }
 
+//        print_r($this->form->order);
+        if (!empty($this->form->order)) {
+            $order_params = explode("-", $this->form->order);
+//            print_r($order_params);
+            $order_params[$order_params[0]] = strtoupper($order_params[1]);
+            unset($order_params[0]);
+            unset($order_params[1]);
+//            print_r($order_params);
+        }
+
         $num_params = count($this->search_params);
         if ($num_params > 1) {
             $where = ["AND" => &$this->search_params];
         } else {
             $where = &$this->search_params;
         }
-        $where["ORDER"] = ["brand", "model"];
 
+        if (isset($order_params) && count($order_params) > 0) {
+            $where["ORDER"] = $order_params;
+        } else {
+            $where["ORDER"] = ["brand", "model"];
+        }
         print_r($where);
 
         try {
+            print_r(App::getDB()->debug()->select("car", [
+                        "[><]car_price" => "id_car_price"
+                            ], [
+                        "car.id_car",
+                        "car.brand",
+                        "car.model",
+                        "car.eng_power",
+                        "car.eng_torque",
+                        "car_price.price_deposit"
+                            ], $where));
+
             $this->records = App::getDB()->select("car", [
-                "id_car",
-                "brand",
-                "model",
-                "eng_power",
-                "eng_torque"
+                "[><]car_price" => "id_car_price"
+                    ], [
+                "car.id_car",
+                "car.brand",
+                "car.model",
+                "car.eng_power",
+                "car.eng_torque",
+                "car_price.price_deposit"
                     ], $where);
         } catch (PDOException $ex) {
             Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');

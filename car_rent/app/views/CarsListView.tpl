@@ -18,6 +18,14 @@
                     {/strip}
                 {/foreach}
             </select>
+            <select name="order" id="id_order">
+                {foreach $orders as $o}
+                    {strip}
+                        <option value="{$o[0]}" {if $form->order == $o[0]}selected{else}{/if}>{$o[1]}</option>
+                    {/strip}
+                {/foreach}
+
+            </select>
             <br />
             <input type="submit" value="Szukaj" class="primary">
         </form>
