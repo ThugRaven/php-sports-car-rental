@@ -8,26 +8,41 @@
 
     <body>
         <form action="{url action='cars'}" method="post">
-            <label for="id_model" class="label">Model: </label>
-            <input id="id_model" type="text" name="model" value="{$form->model}"/>
+            <label for="id_brand">Marka pojazdu: </label>
             <select name="brand" id="id_brand">
-                <option value="">Wszystkie modele</option>
+                <option value="">Wszystkie marki</option>
                 {foreach $brands as $b}
                     {strip}
                         <option value="{$b}" {if $form->brand == $b}selected{else}{/if}>{$b}</option>
                     {/strip}
                 {/foreach}
             </select>
+            <label for="id_model">Model pojazdu: </label>
+            <input id="id_model" type="text" name="model" value="{$form->model}"/>
+            <label for="id_transmission_type">Skrzynia biegów: </label>
+            <select name="transmission_type" id="id_transmission_type">
+                <option value="" {if $form->type == ""}selected{else}{/if}>Wszystkie</option>
+                <option value="manual" {if $form->type == "manual"}selected{else}{/if}>Manualna</option>
+                <option value="automatic" {if $form->type == "automatic"}selected{else}{/if}>Automatyczna</option>
+            </select>
+            <label for="id_drive">Napęd: </label>
+            <select name="drive" id="id_drive">
+                <option value="" {if $form->drive == ""}selected{else}{/if}>Wszystkie</option>
+                <option value="FWD" {if $form->drive == "FWD"}selected{else}{/if}>Na przednie koła</option>
+                <option value="RWD" {if $form->drive == "RWD"}selected{else}{/if}>Na tylne koła</option>
+                <option value="AWD" {if $form->drive == "AWD"}selected{else}{/if}>Napęd 4x4</option>
+            </select>
+            <label for="id_order">Sortuj: </label>
             <select name="order" id="id_order">
                 {foreach $orders as $o}
                     {strip}
                         <option value="{$o[0]}" {if $form->order == $o[0]}selected{else}{/if}>{$o[1]}</option>
                     {/strip}
                 {/foreach}
-
             </select>
             <br />
             <input type="submit" value="Szukaj" class="primary">
+            <input type="reset" value="Wyczyść" class="primary">
         </form>
 
         <div>

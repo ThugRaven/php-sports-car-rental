@@ -24,13 +24,13 @@ class CarsCtrl {
         $this->form_rent = new RentForm();
         $this->search_params = [];
         $this->orders = [
-            array("", "Domyślne"),
+            array("", "Alfabetycznie"),
+            array("car_price.price_deposit-desc", "Cena od największej"),
+            array("car_price.price_deposit-asc", "Cena od najmniejszej"),
             array("car.eng_power-desc", "Moc silnika malejąco"),
             array("car.eng_power-asc", "Moc silnika rosnąco"),
             array("car.eng_torque-desc", "Moment obrotowy malejąco"),
-            array("car.eng_torque-asc", "Moment obrotowy rosnąco"),
-            array("car_price.price_deposit-desc", "Cena od największej"),
-            array("car_price.price_deposit-asc", "Cena od najmniejszej")
+            array("car.eng_torque-asc", "Moment obrotowy rosnąco")
         ];
     }
 
@@ -38,6 +38,8 @@ class CarsCtrl {
         $this->form->model = ParamUtils::getFromRequest('model');
         $this->form->brand = ParamUtils::getFromRequest('brand');
         $this->form->order = ParamUtils::getFromRequest('order');
+        $this->form->type = ParamUtils::getFromRequest('transmission_type');
+        $this->form->drive = ParamUtils::getFromRequest('drive');
     }
 
     public function validate() {
@@ -62,15 +64,21 @@ class CarsCtrl {
         print_r($this->form->brand);
         App::getSmarty()->assign('brands', $brands);
         App::getSmarty()->assign('orders', $this->orders);
+
         if (isset($this->form->brand) && !$this->form->brand == "") {
             $this->search_params['brand'] = $this->form->brand;
         }
 
-//        if (isset($this->form->amount) && !empty($this->form->amount) && is_numeric($this->form->amount)) {
-//            $search_params['amount'] = $this->form->amount;
-//        }
         if (isset($this->form->model) && !$this->form->model == "") {
             $this->search_params['model[~]'] = $this->form->model;
+        }
+
+        if (isset($this->form->type) && !$this->form->type == "") {
+            $this->search_params['transmission_type'] = $this->form->type;
+        }
+
+        if (isset($this->form->drive) && !$this->form->drive == "") {
+            $this->search_params['drive'] = $this->form->drive;
         }
 
 //        print_r($this->form->order);

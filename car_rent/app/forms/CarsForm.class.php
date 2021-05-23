@@ -8,5 +8,7 @@ class CarsForm {
     public $brand;
     public $model;
     public $order;
+    public $transmission_type;
+    public $drive;
 
 }
