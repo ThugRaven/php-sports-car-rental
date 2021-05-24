@@ -55,6 +55,8 @@ ENGINE = InnoDB;
 
 CREATE INDEX `fk_user_role_idx` ON `car_rent_db`.`user` (`id_user_role` ASC);
 
+CREATE UNIQUE INDEX `login_UNIQUE` ON `car_rent_db`.`user` (`login` ASC);
+
 
 -- -----------------------------------------------------
 -- Table `car_rent_db`.`car_price`
@@ -136,6 +138,7 @@ CREATE TABLE IF NOT EXISTS `car_rent_db`.`rent` (
   `rent_end` DATETIME NOT NULL,
   `id_rent_status` INT NOT NULL,
   `total_price` INT NOT NULL,
+  `payment_type` VARCHAR(15) NOT NULL,
   PRIMARY KEY (`id_rent`),
   CONSTRAINT `fk_rent_car`
     FOREIGN KEY (`id_car`)
@@ -183,6 +186,7 @@ COMMIT;
 START TRANSACTION;
 USE `car_rent_db`;
 INSERT INTO `car_rent_db`.`user` (`id_user`, `login`, `password`, `email`, `id_user_role`, `name`, `surname`, `phone_number`, `rents`, `verified`, `birth_date`, `create_time`) VALUES (1, 'admin', '$2y$10$ISBE2oOvQMaElBqCtYxy8O0GK7QJNMw8ijEKKX6VJNaYugGbc493C', 'admin@gmail.com', 3, 'Kamil', 'Wesołowski', '48123456789', 0, 1, '1999-09-04', '2021-05-17 13:12:10');
+INSERT INTO `car_rent_db`.`user` (`id_user`, `login`, `password`, `email`, `id_user_role`, `name`, `surname`, `phone_number`, `rents`, `verified`, `birth_date`, `create_time`) VALUES (2, 'user', '$2y$10$4tJiE9qJ2YQpSQ3lFY82CeJxF6No1h4prsagK51bmivYF4Pl0r1Aa', 'user@gmail.com', 1, 'UserName', 'UserSurname', '48987654321', 0, 0, '2000-01-01', '2021-05-24 22:37:00');
 
 COMMIT;
 
