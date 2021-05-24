@@ -9,6 +9,7 @@ class RentForm {
     public $rent_start;
     public $rent_end;
     public $total_price;
+    public $deposit;
     public $step;
 
 }

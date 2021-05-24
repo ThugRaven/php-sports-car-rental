@@ -11,17 +11,25 @@
         {include file='messages.tpl'}
         <ul>
             <li>{$form->id_car}</li>
-            <li>{$form->total_price}</li>
+            <li>Cena za dzień</li>
         </ul>
         <h1>Podsumowanie rezerwacji</h1>
+        <form action="{url action='rent' step="step-1"}" method="post">
+            <input type="checkbox" id="id_deposit" name="deposit" {if $form->deposit}checked{/if}/>
+            <label for="id_deposit">Brak kaucji</label>
 
-        <form action="{url action='rent' step="step-2"}" method="post">
-            <label for="id_rent_start" class="label">Od: </label>
-            <input id="id_rent_start" type="datetime-local" step="900" name="rent_start" value="{$form->rent_start}"/><br />
-            <label for="id_rent_end" class="label">Do: </label>
-            <input id="id_rent_end" type="datetime-local" step="900" name="rent_end" value="{$form->rent_end}" />
             <input type="hidden" name="id_car" value="{$form->id_car}" />
-            <br />
+            <input type="hidden" name="id_car_price" value="{$form->id_car_price}" />
+            <input type="hidden" name="rent_start" value="{$form->rent_start}" />
+            <input type="hidden" name="rent_end" value="{$form->rent_end}" />
+
+            <input type="submit" value="Potwierdz" class="primary"/>
+        </form>
+        <p>Cena: {$form->total_price}</p>
+        <form action="{url action='rent' step="step-2"}" method="post">
+            <input type="hidden" name="id_car" value="{$form->id_car}" />
+            <input type="hidden" name="rent_start" value="{$form->rent_start}" />
+            <input type="hidden" name="rent_end" value="{$form->rent_end}" />
             <input type="submit" value="Wynajmij pojazd" class="primary">
         </form>
     </body>
