@@ -12,6 +12,7 @@
         {if !empty($user->role)}
             <li>Zalogowano jako {$user->role}</li>
             <li><a href="{url action='logout'}">Wyloguj się</a></li>
+            <li><a href="{url action='account' login=$user->login}">Moje konto</a></li>
             {else}
             <li><a href="{url action='login'}">Zaloguj się</a></li>
             {/if}
