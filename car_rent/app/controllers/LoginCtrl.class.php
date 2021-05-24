@@ -49,15 +49,14 @@ class LoginCtrl {
             if (password_verify($this->form->password, $hashed_pwd)) {
                 //TODO: Get here all the user info and put it in session
 
-                $role = App::getDB()->get('user', [
+                $user_info = App::getDB()->select('user', [
                     '[><]user_role' => 'id_user_role'
-                        ], 'user_role.name', [
+                        ], ['user.id_user', 'user_role.name'], [
                     'login' => $this->form->login
                 ]);
-
-                $user = new User($this->form->login, $role);
+                $user = new User($user_info[0]['id_user'], $this->form->login, $user_info[0]['name']);
                 SessionUtils::storeObject('user', $user);
-                RoleUtils::addRole($role);
+                RoleUtils::addRole($user_info[0]['name']);
             } else {
                 Utils::addErrorMessage('Niepoprawny login lub hasło!');
             }
