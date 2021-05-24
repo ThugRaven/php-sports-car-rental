@@ -29,18 +29,18 @@ class LoginCtrl {
         }
 
         if (!App::getMessages()->isError()) {
-            if ($this->form->login == "") {
+            if ($this->form->login == '') {
                 Utils::addErrorMessage('Nie podano loginu');
             }
-            if ($this->form->password == "") {
+            if ($this->form->password == '') {
                 Utils::addErrorMessage('Nie podano hasła');
             }
         }
 
         if (!App::getMessages()->isError()) {
             try {
-                $hashed_pwd = App::getDB()->get("user", "password", [
-                    "login" => $this->form->login
+                $hashed_pwd = App::getDB()->get('user', 'password', [
+                    'login' => $this->form->login
                 ]);
             } catch (PDOException $ex) {
                 getMessages()->addError('Wystąpił błąd podczas pobierania rekordów');
@@ -49,17 +49,17 @@ class LoginCtrl {
             if (password_verify($this->form->password, $hashed_pwd)) {
                 //TODO: Get here all the user info and put it in session
 
-                $role = App::getDB()->get("user", [
-                    "[><]user_role" => "id_user_role"
-                        ], "user_role.name", [
-                    "login" => $this->form->login
+                $role = App::getDB()->get('user', [
+                    '[><]user_role' => 'id_user_role'
+                        ], 'user_role.name', [
+                    'login' => $this->form->login
                 ]);
 
                 $user = new User($this->form->login, $role);
-                SessionUtils::storeObject("user", $user);
+                SessionUtils::storeObject('user', $user);
                 RoleUtils::addRole($role);
             } else {
-                Utils::addErrorMessage("Niepoprawny login lub hasło!");
+                Utils::addErrorMessage('Niepoprawny login lub hasło!');
             }
         }
 
@@ -70,7 +70,7 @@ class LoginCtrl {
         $this->getParams();
 
         if ($this->validate()) {
-            App::getRouter()->redirectTo("main");
+            App::getRouter()->redirectTo('main');
         } else {
             $this->generateView();
         }
@@ -82,14 +82,14 @@ class LoginCtrl {
 
 //        Utils::addInfoMessage('Poprawnie wylogowano z systemu');
 
-        App::getRouter()->redirectTo("main");
+        App::getRouter()->redirectTo('main');
     }
 
     public function generateView() {
         App::getSmarty()->assign('form', $this->form);
-        App::getSmarty()->assign('user', SessionUtils::loadObject("user", true));
+        App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
 
-        App::getSmarty()->display("LoginView.tpl");
+        App::getSmarty()->display('LoginView.tpl');
     }
 
 }

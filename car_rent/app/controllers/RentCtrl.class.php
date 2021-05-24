@@ -39,11 +39,11 @@ class RentCtrl {
         if (!$this->validate()) {
             return false;
         }
-        if ($this->form->step == "step-1") {
+        if ($this->form->step == 'step-1') {
             $this->rent_step_1();
-        } else if ($this->form->step == "step-2") {
+        } else if ($this->form->step == 'step-2') {
             $this->rent_step_2();
-        } else if ($this->form->step == "step-3") {
+        } else if ($this->form->step == 'step-3') {
             $this->rent_step_3();
         }
     }
@@ -53,7 +53,7 @@ class RentCtrl {
 //            $end = strtotime($this->form->rent_end);
 //            $date_diff = abs($start - $end)/(60*60);
 //            print_r($date_diff);
-//            echo "Godziny: ".$date_diff."\n";
+//            echo 'Godziny: '.$date_diff.'\n';
 
         $start = new DateTime($this->form->rent_start);
         $end = new DateTime($this->form->rent_end);
@@ -72,12 +72,12 @@ class RentCtrl {
             $days++;
         }
         echo $days;
-        echo "\n";
+        echo '\n';
         print_r($this->form);
 
-        $where["id_car_price"] = $this->form->id_car_price;
+        $where['id_car_price'] = $this->form->id_car_price;
         try {
-            $this->records = App::getDB()->get("car_price", "*", $where);
+            $this->records = App::getDB()->get('car_price', '*', $where);
         } catch (PDOException $ex) {
             Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             if (App::getConf()->debug) {
@@ -87,30 +87,30 @@ class RentCtrl {
         print_r($this->records);
 
         if (!isset($this->form->deposit)) {
-            $this->form->total_price = $this->records["price_deposit"] * $days;
+            $this->form->total_price = $this->records['price_deposit'] * $days;
         } else {
-            $this->form->total_price = $this->records["price_no_deposit"] * $days;
+            $this->form->total_price = $this->records['price_no_deposit'] * $days;
         }
-        echo "step-1";
+        echo 'step-1';
         $this->assignSmarty();
-        App::getSmarty()->display("RentSummaryView.tpl");
+        App::getSmarty()->display('RentSummaryView.tpl');
     }
 
     public function rent_step_2() {
-        echo "step-2";
+        echo 'step-2';
         $this->assignSmarty();
-        App::getSmarty()->display("RentPaymentView.tpl");
+        App::getSmarty()->display('RentPaymentView.tpl');
     }
 
     public function rent_step_3() {
-        echo "step-3";
+        echo 'step-3';
         $this->assignSmarty();
-        App::getSmarty()->display("RentPaymentView.tpl");
+        App::getSmarty()->display('RentPaymentView.tpl');
     }
 
     public function assignSmarty() {
         App::getSmarty()->assign('form', $this->form);
-        App::getSmarty()->assign('user', SessionUtils::loadObject("user", true));
+        App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
         App::getSmarty()->assign('records', $this->records);
     }
 

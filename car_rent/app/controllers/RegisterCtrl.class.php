@@ -70,9 +70,9 @@ class RegisterCtrl {
         $birth_date = $this->v->validateFromRequest('birth_date', [
             'trim' => true,
             'required' => true,
-            'required_message' => "Pole Data urodzenia jest wymagane",
+            'required_message' => 'Pole Data urodzenia jest wymagane',
             'date_format' => 'Y-m-d',
-            'validator_message' => "Niepoprawny format daty. Przykład: 2001-04-15"
+            'validator_message' => 'Niepoprawny format daty. Przykład: 2001-04-15'
         ]);
         if ($this->v->isLastOK()) {
             $this->form->birth_date = $birth_date->format('Y-m-d');
@@ -97,34 +97,34 @@ class RegisterCtrl {
 
         if ($this->validate()) {
             try {
-                $isAvailable = !(App::getDB()->has("user", [
-                            "login" => $this->form->login
+                $isAvailable = !(App::getDB()->has('user', [
+                            'login' => $this->form->login
                 ]));
             } catch (PDOException $ex) {
-                Utils::addErrorMessage("Wystąpił błąd podczas pobierania rekordów");
+                Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             }
 
 
             if ($isAvailable) {
                 try {
-                    App::getDB()->insert("user", [
-                        "login" => $this->form->login,
-                        "password" => password_hash($this->form->password, PASSWORD_BCRYPT),
-                        "email" => $this->form->email,
-                        "name" => $this->form->name,
-                        "surname" => $this->form->surname,
-                        "phone_number" => $this->form->phone_number,
-                        "birth_date" => $this->form->birth_date,
+                    App::getDB()->insert('user', [
+                        'login' => $this->form->login,
+                        'password' => password_hash($this->form->password, PASSWORD_BCRYPT),
+                        'email' => $this->form->email,
+                        'name' => $this->form->name,
+                        'surname' => $this->form->surname,
+                        'phone_number' => $this->form->phone_number,
+                        'birth_date' => $this->form->birth_date,
                     ]);
-                    Utils::addInfoMessage("Pomyślnie zarejestrowano!");
+                    Utils::addInfoMessage('Pomyślnie zarejestrowano!');
                 } catch (PDOException $ex) {
-                    Utils::addErrorMessage("Wystąpił błąd podczas pobierania rekordów");
+                    Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
                 }
             } else {
-                Utils::addErrorMessage("Konto o podanej nazwie już istnieje!");
+                Utils::addErrorMessage('Konto o podanej nazwie już istnieje!');
             }
 
-            App::getRouter()->redirectTo("main");
+            App::getRouter()->redirectTo('main');
         } else {
             $this->generateView();
         }
@@ -132,9 +132,9 @@ class RegisterCtrl {
 
     public function generateView() {
         App::getSmarty()->assign('form', $this->form);
-        App::getSmarty()->assign('user', SessionUtils::loadObject("user", true));
+        App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
 
-        App::getSmarty()->display("RegisterView.tpl");
+        App::getSmarty()->display('RegisterView.tpl');
     }
 
 }
