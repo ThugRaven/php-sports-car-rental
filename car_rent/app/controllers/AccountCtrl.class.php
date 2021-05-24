@@ -28,7 +28,7 @@ class AccountCtrl {
         }
 
         try {
-            $this->records = App::getDB()->select('user', [
+            $this->records = App::getDB()->get('user', [
                 '[><]user_role' => 'id_user_role'
                     ], [
                 'user.login',
@@ -62,7 +62,7 @@ class AccountCtrl {
 
     public function generateView() {
         App::getSmarty()->assign('form', $this->form);
-        App::getSmarty()->assign('records', $this->records[0]);
+        App::getSmarty()->assign('records', $this->records);
         App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
 
         App::getSmarty()->display('AccountView.tpl');
