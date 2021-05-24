@@ -26,7 +26,9 @@ class RentCtrl {
         $this->form->rent_start = ParamUtils::getFromRequest('rent_start');
         $this->form->rent_end = ParamUtils::getFromRequest('rent_end');
         $this->form->rent_end = ParamUtils::getFromRequest('rent_end');
+        $this->form->total_price = ParamUtils::getFromRequest('total_price');
         $this->form->deposit = ParamUtils::getFromRequest('deposit');
+        $this->form->payment_type = ParamUtils::getFromRequest('payment_type');
         $this->form->step = ParamUtils::getFromCleanURL(1);
     }
 
@@ -48,7 +50,7 @@ class RentCtrl {
         }
     }
 
-    public function rent_step_1() {
+    private function rent_step_1() {
 //          $start = strtotime($this->form->rent_start);
 //            $end = strtotime($this->form->rent_end);
 //            $date_diff = abs($start - $end)/(60*60);
@@ -93,19 +95,20 @@ class RentCtrl {
         }
         echo 'step-1';
         $this->assignSmarty();
+        App::getSmarty()->display('RentOptionsView.tpl');
+    }
+
+    private function rent_step_2() {
+        echo 'step-2';
+        print_r($this->form);
+        $this->assignSmarty();
         App::getSmarty()->display('RentSummaryView.tpl');
     }
 
-    public function rent_step_2() {
-        echo 'step-2';
-        $this->assignSmarty();
-        App::getSmarty()->display('RentPaymentView.tpl');
-    }
-
-    public function rent_step_3() {
+    private function rent_step_3() {
         echo 'step-3';
         $this->assignSmarty();
-        App::getSmarty()->display('RentPaymentView.tpl');
+        App::getSmarty()->display('RentSummaryView.tpl');
     }
 
     public function assignSmarty() {
