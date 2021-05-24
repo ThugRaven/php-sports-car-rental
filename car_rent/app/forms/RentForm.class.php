@@ -10,6 +10,7 @@ class RentForm {
     public $rent_end;
     public $total_price;
     public $deposit;
+    public $payment_type;
     public $step;
 
 }
