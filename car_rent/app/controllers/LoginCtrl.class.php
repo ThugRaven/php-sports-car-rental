@@ -27,6 +27,11 @@ class LoginCtrl {
         if (!(isset($this->form->login) && isset($this->form->password))) {
             return false;
         }
+        if (SessionUtils::loadObject('user', true) !== null) {
+            Utils::addErrorMessage('Jesteś już zalogowany');
+            SessionUtils::storeMessages();
+            return false;
+        }
 
         if (!App::getMessages()->isError()) {
             if ($this->form->login == '') {
@@ -43,7 +48,7 @@ class LoginCtrl {
                     'login' => $this->form->login
                 ]);
             } catch (PDOException $ex) {
-                getMessages()->addError('Wystąpił błąd podczas pobierania rekordów');
+                Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             }
 
             if (password_verify($this->form->password, $hashed_pwd)) {
