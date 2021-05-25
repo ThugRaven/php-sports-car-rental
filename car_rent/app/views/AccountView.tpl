@@ -20,6 +20,7 @@
             <li>{$records['birth_date']}</li>
         </ul>
 
+        <a href="{url action='accountEdit' login=$user->login}">Edytuj dane</a>
         <a href="{url action='main'}">Wróć na stronę główną</a>
 
         {include file='messages.tpl'}
