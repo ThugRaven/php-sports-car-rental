@@ -10,6 +10,7 @@ use core\SessionUtils;
 use app\transfer\User;
 use app\forms\CarsForm;
 use app\forms\RentForm;
+use core\Validator;
 
 class CarsCtrl {
 
@@ -18,8 +19,10 @@ class CarsCtrl {
     private $records;
     private $search_params;
     private $orders;
+    private $v;
 
     public function __construct() {
+        $this->v = new Validator();
         $this->form = new CarsForm();
         $this->form_rent = new RentForm();
         $this->search_params = [];
@@ -42,13 +45,57 @@ class CarsCtrl {
         $this->form->drive = ParamUtils::getFromRequest('drive');
     }
 
-    public function validate() {
-//        return !getMessages()->hasErrors();
+    public function processCar() {
+        $this->form_rent->id_car = $this->v->validateFromCleanURL(1, [
+            'required' => true,
+        ]);
+
+        if (!App::getMessages()->isError()) {
+            $where['id_car'] = $this->form_rent->id_car;
+
+            $brand = ParamUtils::getFromCleanURL(2);
+            $model = ParamUtils::getFromCleanURL(3);
+
+            $this->form_rent->rent_start = (new \DateTime('now', new \DateTimeZone('Europe/Warsaw')))->format('Y-m-d\TH:i');
+            $this->form_rent->rent_end = (new \DateTime('+1 day', new \DateTimeZone('Europe/Warsaw')))->format('Y-m-d\TH:i');
+
+            try {
+                $this->records = App::getDB()->get('car', [
+                    '[><]car_price' => 'id_car_price'
+                        ], '*', $where);
+
+                if (empty($this->records)) {
+                    Utils::addErrorMessage('Brak pojazdu o podanym ID!');
+                    SessionUtils::storeMessages();
+                    return false;
+                }
+
+                $this->records['brand_url'] = trim($this->records['brand']);
+                $this->records['model_url'] = trim($this->records['model']);
+                $this->records['brand_url'] = strtolower($this->records['brand_url']);
+                $this->records['model_url'] = strtolower($this->records['model_url']);
+                $this->records['brand_url'] = preg_replace('/\s+/', '-', $this->records['brand_url']);
+                $this->records['model_url'] = preg_replace('/\s+/', '-', $this->records['model_url']);
+
+                if ($brand !== $this->records['brand_url'] || $model !== $this->records['model_url']) {
+                    App::getRouter()->redirectTo("car/{$this->form_rent->id_car}/{$this->records['brand_url']}/{$this->records['model_url']}");
+                }
+                App::getSmarty()->assign('form', $this->form_rent);
+                App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
+                App::getSmarty()->assign('records', $this->records);
+            } catch (PDOException $ex) {
+                Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
+                if (App::getConf()->debug) {
+                    Utils::addErrorMessage($ex->getMessage());
+                }
+            }
+        }
+
+        return !App::getMessages()->isError();
     }
 
     public function action_cars() {
         $this->getParams();
-        $this->validate();
 
         try {
             $brands = App::getDB()->select('car', '@brand');
@@ -146,30 +193,11 @@ class CarsCtrl {
     }
 
     public function action_car() {
-        $this->form_rent->id_car = ParamUtils::getFromCleanURL(1);
-        $where['id_car'] = $this->form_rent->id_car;
-
-        $this->form_rent->rent_start = (new \DateTime('now', new \DateTimeZone('Europe/Warsaw')))->format('Y-m-d\TH:i');
-        $this->form_rent->rent_end = (new \DateTime('+1 day', new \DateTimeZone('Europe/Warsaw')))->format('Y-m-d\TH:i');
-
-        try {
-            $this->records = App::getDB()->get('car', [
-                '[><]car_price' => 'id_car_price'
-                    ], '*', $where);
-        } catch (PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
-            }
+        if ($this->processCar()) {
+            App::getSmarty()->display('CarView.tpl');
+        } else {
+            App::getRouter()->redirectTo('cars');
         }
-
-        $this->form_rent->id_car_price = $this->records['id_car_price'];
-
-        App::getSmarty()->assign('form', $this->form_rent);
-        App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
-        App::getSmarty()->assign('records', $this->records);
-
-        App::getSmarty()->display('CarView.tpl');
     }
 
     public function generateView() {

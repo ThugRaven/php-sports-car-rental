@@ -19,7 +19,6 @@
             <label for="id_deposit">Brak kaucji</label>
 
             <input type="hidden" name="id_car" value="{$form->id_car}" />
-            <input type="hidden" name="id_car_price" value="{$form->id_car_price}" />
             <input type="hidden" name="rent_start" value="{$form->rent_start}" />
             <input type="hidden" name="rent_end" value="{$form->rent_end}" />
             <input type="hidden" name="payment_type" value="{$form->payment_type}" />
@@ -36,7 +35,6 @@
             <input type="hidden" name="id_car" value="{$form->id_car}" />
             <input type="hidden" name="rent_start" value="{$form->rent_start}" />
             <input type="hidden" name="rent_end" value="{$form->rent_end}" />
-            <input type="hidden" name="total_price" value="{$form->total_price}" />
 
             <input type="submit" value="Wynajmij pojazd" class="primary">
         </form>

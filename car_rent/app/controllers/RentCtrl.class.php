@@ -77,9 +77,22 @@ class RentCtrl {
         echo '\n';
         print_r($this->form);
 
-        $where['id_car_price'] = $this->form->id_car_price;
+        $where['id_car'] = $this->form->id_car;
         try {
-            $this->records = App::getDB()->get('car_price', '*', $where);
+            $this->records = App::getDB()->get('car', [
+                '[><]car_price' => 'id_car_price'
+                    ], [
+                'car.id_car',
+                'car.brand',
+                'car.model',
+                'car.eng_power',
+                'car.eng_torque',
+                'car_price.price_deposit',
+                'car_price.price_no_deposit',
+                'car_price.km_limit',
+                'car_price.deposit',
+                'car_price.additional_km'
+                    ], $where);
         } catch (PDOException $ex) {
             Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             if (App::getConf()->debug) {
