@@ -45,7 +45,7 @@ class AccountCtrl {
                     ], [
                 'login' => $this->form->login
             ]);
-        } catch (PDOException $ex) {
+        } catch (\PDOException $ex) {
             Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             if (App::getConf()->debug) {
                 Utils::addErrorMessage($ex->getMessage());
@@ -89,7 +89,7 @@ class AccountCtrl {
             $this->form->surname = $this->records['surname'];
             $this->form->phone_number = $this->records['phone_number'];
             $this->form->birth_date = $this->records['birth_date'];
-        } catch (PDOException $ex) {
+        } catch (\PDOException $ex) {
             Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             if (App::getConf()->debug) {
                 Utils::addErrorMessage($ex->getMessage());
@@ -161,7 +161,7 @@ class AccountCtrl {
             $columns = &$column_params;
 
             print_r($columns);
-        } catch (PDOException $ex) {
+        } catch (\PDOException $ex) {
             Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             if (App::getConf()->debug) {
                 Utils::addErrorMessage($ex->getMessage());
@@ -176,7 +176,7 @@ class AccountCtrl {
                             'login' => $this->form->login
                 ]));
             }
-        } catch (PDOException $ex) {
+        } catch (\PDOException $ex) {
             Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             if (App::getConf()->debug) {
                 Utils::addErrorMessage($ex->getMessage());
@@ -187,21 +187,22 @@ class AccountCtrl {
         }
         if (count($columns) < 1) {
             Utils::addInfoMessage('Brak zmian');
-        }
-        if (!App::getMessages()->isError()) {
-            try {
-                print_r(App::getDB()->update('user', $columns, [
-                            'login' => $this->form->login_old
-                ]));
-                Utils::addInfoMessage('Zapisano!');
+        } else {
+            if (!App::getMessages()->isError()) {
+                try {
+                    App::getDB()->update('user', $columns, [
+                                'login' => $this->form->login_old
+                    ]);
+                    Utils::addInfoMessage('Zapisano!');
 
-                $user = SessionUtils::loadObject('user', true);
-                $user->login = $this->form->login;
-                SessionUtils::storeObject('user', $user);
-            } catch (PDOException $ex) {
-                Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-                if (App::getConf()->debug) {
-                    Utils::addErrorMessage($ex->getMessage());
+                    $user = SessionUtils::loadObject('user', true);
+                    $user->login = $this->form->login;
+                    SessionUtils::storeObject('user', $user);
+                } catch (\PDOException $ex) {
+                    Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
+                    if (App::getConf()->debug) {
+                        Utils::addErrorMessage($ex->getMessage());
+                    }
                 }
             }
         }
