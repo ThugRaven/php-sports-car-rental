@@ -114,12 +114,9 @@ class RentCtrl {
     private function rent_step_2() {
         echo 'step-2';
         print_r($this->form);
-        $this->assignSmarty();
-        App::getSmarty()->display('RentSummaryView.tpl');
-    }
-
-    private function rent_step_3() {
-        echo 'step-3';
+        
+        
+        
         $this->assignSmarty();
         App::getSmarty()->display('RentSummaryView.tpl');
     }

@@ -3,14 +3,14 @@
 use core\App;
 use core\Utils;
 
-App::getRouter()->setDefaultRoute('main'); #default action
-App::getRouter()->setLoginRoute('login'); #action to forward if no permissions
+App::getRouter()->setDefaultRoute('main');
+App::getRouter()->setLoginRoute('login');
 
 Utils::addRoute('main', 'MainCtrl');
 
-Utils::addRoute('account', 'AccountCtrl');
-Utils::addRoute('accountEdit', 'AccountCtrl');
-Utils::addRoute('accountSave', 'AccountCtrl');
+Utils::addRoute('account', 'AccountCtrl', ['customer','employee','admin']);
+Utils::addRoute('accountEdit', 'AccountCtrl', ['customer','employee','admin']);
+Utils::addRoute('accountSave', 'AccountCtrl', ['customer','employee','admin']);
 
 Utils::addRoute('login', 'LoginCtrl');
 Utils::addRoute('logout', 'LoginCtrl');
@@ -23,4 +23,10 @@ Utils::addRoute('car', 'CarsCtrl');
 
 Utils::addRoute('rent', 'RentCtrl', ['customer','employee','admin']);
 
-//Utils::addRoute('dashboard', 'DashboardCtrl');
+Utils::addRoute('dashboard', 'DashboardCtrl');
+Utils::addRoute('dashboardStats', 'DashboardCtrl');
+Utils::addRoute('dashboardRents', 'DashboardCtrl');
+Utils::addRoute('dashboardCars', 'DashboardCarsCtrl');
+Utils::addRoute('dashboardCarsEdit', 'DashboardCarsCtrl');
+Utils::addRoute('dashboardCarsSave', 'DashboardCarsCtrl');
+Utils::addRoute('dashboardUsers', 'DashboardCtrl');

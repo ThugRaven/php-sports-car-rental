@@ -191,7 +191,7 @@ class AccountCtrl {
             if (!App::getMessages()->isError()) {
                 try {
                     App::getDB()->update('user', $columns, [
-                                'login' => $this->form->login_old
+                        'login' => $this->form->login_old
                     ]);
                     Utils::addInfoMessage('Zapisano!');
 

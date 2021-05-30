@@ -20,6 +20,7 @@
         <a href="{url action='login'}">Zaloguj się</a>
         <a href="{url action='registration'}">Zarejestruj się</a>
         <a href="{url action='cars'}">Samochody</a>
+        {if \core\RoleUtils::inRole('admin')}<a href="{url action='dashboard'}">Dashboard</a>{/if}
 
 
         {include file='messages.tpl'}
