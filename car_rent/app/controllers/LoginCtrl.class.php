@@ -54,7 +54,7 @@ class LoginCtrl {
             if (password_verify($this->form->password, $hashed_pwd)) {
                 $role = App::getDB()->get('user', [
                     '[><]user_role' => 'id_user_role'
-                        ], 'user_role.name', [
+                        ], 'user_role.role_name', [
                     'login' => $this->form->login
                 ]);
                 $user = new User($this->form->login, $role);

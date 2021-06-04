@@ -9,7 +9,7 @@ use core\RoleUtils;
 use core\SessionUtils;
 use app\transfer\User;
 use app\forms\CarsForm;
-use app\forms\CarsEditForm;
+use app\forms\CarEditForm;
 use core\Validator;
 
 class DashboardCarsCtrl {
@@ -23,7 +23,7 @@ class DashboardCarsCtrl {
 
     public function __construct() {
         $this->form = new CarsForm();
-        $this->form_edit = new CarsEditForm();
+        $this->form_edit = new CarEditForm();
         $this->search_params = [];
         $this->orders = [
             array('', 'Alfabetycznie'),
@@ -171,7 +171,7 @@ class DashboardCarsCtrl {
         return !App::getMessages()->isError();
     }
 
-    public function processDashCarsEdit() {
+    public function processDashCarEdit() {
         $this->form_edit->id_car = $this->v->validateFromCleanURL(1, [
             'trim' => true,
             'required' => true,
@@ -214,7 +214,7 @@ class DashboardCarsCtrl {
         return !App::getMessages()->isError();
     }
 
-    public function processDashCarsSave() {
+    public function processDashCarSave() {
         $this->type = $this->v->validateFromCleanURL(1, [
             'trim' => true,
             'required' => true,
@@ -247,6 +247,7 @@ class DashboardCarsCtrl {
                 'id_car' => $this->form_edit->id_car
             ]);
         } else if ($this->type === 'car_price') {
+            // TODO: Add select for id_car_price
             $this->form_edit->id_car_price = ParamUtils::getFromRequest('id_car_price');
             $this->form_edit->price_deposit = ParamUtils::getFromRequest('price_deposit');
             $this->form_edit->price_no_deposit = ParamUtils::getFromRequest('price_no_deposit');
@@ -364,17 +365,17 @@ class DashboardCarsCtrl {
         }
     }
 
-    public function action_dashboardCarsEdit() {
-        if ($this->processDashCarsEdit()) {
-            App::getSmarty()->display('DashboardCarsEditView.tpl');
+    public function action_dashboardCarEdit() {
+        if ($this->processDashCarEdit()) {
+            App::getSmarty()->display('DashboardCarEditView.tpl');
         } else {
 //            App::getRouter()->redirectTo('dashboardCars');
         }
     }
 
-    public function action_dashboardCarsSave() {
-        if ($this->processDashCarsSave()) {
-//            App::getSmarty()->display('DashboardCarsEditView.tpl');
+    public function action_dashboardCarSave() {
+        if ($this->processDashCarSave()) {
+//            App::getSmarty()->display('DashboardCarEditView.tpl');
         } else {
 //            App::getRouter()->redirectTo('dashboardCars');
         }

@@ -73,7 +73,7 @@
                                             <td>{$r['eng_power']}</td>
                                             <td>{$r['eng_torque']}</td>
                                             <td><a href="{url action='car' id=$r['id_car'] brand=$r['brand_url'] model=$r['model_url']}">Strona pojazdu</a></td>
-                                            <td><a href="{url action='dashboardCarsEdit' id=$r['id_car']}">Edytuj</a></td>
+                                            <td><a href="{url action='dashboardCarEdit' id=$r['id_car']}">Edytuj</a></td>
                                         </tr>
                                     {/strip}
                                 {/foreach}
