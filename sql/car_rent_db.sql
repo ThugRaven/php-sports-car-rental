@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS `car_rent_db`.`user_role` ;
 
 CREATE TABLE IF NOT EXISTS `car_rent_db`.`user_role` (
   `id_user_role` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
+  `role_name` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_user_role`))
 ENGINE = InnoDB;
 
@@ -138,6 +138,8 @@ CREATE TABLE IF NOT EXISTS `car_rent_db`.`rent` (
   `rent_start` DATETIME NOT NULL,
   `rent_end` DATETIME NOT NULL,
   `id_rent_status` INT NOT NULL,
+  `distance` INT NOT NULL,
+  `base_price` INT NOT NULL,
   `total_price` INT NOT NULL,
   `payment_type` VARCHAR(15) NOT NULL,
   PRIMARY KEY (`id_rent`),
@@ -174,9 +176,9 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `car_rent_db`;
-INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (1, 'customer');
-INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (2, 'employee');
-INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `name`) VALUES (3, 'admin');
+INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `role_name`) VALUES (1, 'customer');
+INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `role_name`) VALUES (2, 'employee');
+INSERT INTO `car_rent_db`.`user_role` (`id_user_role`, `role_name`) VALUES (3, 'admin');
 
 COMMIT;
 
