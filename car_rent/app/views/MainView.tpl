@@ -15,7 +15,7 @@
             <li><a href="{url action='account' login=$user->login}">Moje konto</a></li>
             {else}
             <li><a href="{url action='login'}">Zaloguj się</a></li>
-            {/if}
+        {/if}
         <hr />
         <a href="{url action='login'}">Zaloguj się</a>
         <a href="{url action='registration'}">Zarejestruj się</a>
