@@ -13,6 +13,7 @@
         <a href="{url action='dashboardRents'}">Wynajmy</a>
         <a href="{url action='dashboardCars'}">Samochody</a>
         <a href="{url action='dashboardUsers'}">Użytkownicy</a>
+        <a href="{url action='dashboardMock'}">Dane</a>
 
 
         {include file='messages.tpl'}
