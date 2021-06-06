@@ -24,6 +24,7 @@ Utils::addRoute('car', 'CarsCtrl');
 Utils::addRoute('rent', 'RentCtrl', ['customer','employee','admin']);
 
 Utils::addRoute('dashboard', 'DashboardCtrl');
+Utils::addRoute('dashboardMock', 'DashboardMockCtrl');
 Utils::addRoute('dashboardStats', 'DashboardCtrl');
 Utils::addRoute('dashboardRents', 'DashboardCtrl');
 Utils::addRoute('dashboardCars', 'DashboardCarsCtrl');
