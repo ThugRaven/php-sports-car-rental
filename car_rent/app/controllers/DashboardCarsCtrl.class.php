@@ -75,8 +75,12 @@ class DashboardCarsCtrl {
         $this->form->drive = ParamUtils::getFromRequest('drive');
 
         try {
-            $brands = App::getDB()->select('car', '@brand');
-//            print_r(App::getDB()->debug()->select('car', '@brand'));
+            $brands = App::getDB()->select('car', '@brand', [
+                'ORDER' => 'brand'
+            ]);
+//            print_r(App::getDB()->debug()->select('car', '@brand', [
+//                        'ORDER' => 'brand'
+//            ]));
         } catch (PDOException $ex) {
             Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             if (App::getConf()->debug) {
@@ -197,8 +201,11 @@ class DashboardCarsCtrl {
                 'id_car_price' => $this->car['id_car_price']
             ]);
 
+            $car_prices = App::getDB()->select('car_price', 'id_car_price');
+
             print_r($this->car);
             print_r($this->car_price);
+            print_r($car_prices);
         } catch (\PDOException $ex) {
             Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             if (App::getConf()->debug) {
@@ -209,6 +216,7 @@ class DashboardCarsCtrl {
         App::getSmarty()->assign('inputs', $this->inputs);
         App::getSmarty()->assign('car', $this->car);
         App::getSmarty()->assign('car_price', $this->car_price);
+        App::getSmarty()->assign('car_prices', $car_prices);
         print_r($this->inputs);
         $this->assignSmarty();
         return !App::getMessages()->isError();
@@ -247,7 +255,6 @@ class DashboardCarsCtrl {
                 'id_car' => $this->form_edit->id_car
             ]);
         } else if ($this->type === 'car_price') {
-            // TODO: Add select for id_car_price
             $this->form_edit->id_car_price = ParamUtils::getFromRequest('id_car_price');
             $this->form_edit->price_deposit = ParamUtils::getFromRequest('price_deposit');
             $this->form_edit->price_no_deposit = ParamUtils::getFromRequest('price_no_deposit');
@@ -375,6 +382,7 @@ class DashboardCarsCtrl {
 
     public function action_dashboardCarSave() {
         if ($this->processDashCarSave()) {
+            App::getRouter()->redirectTo('dashboardCars');
 //            App::getSmarty()->display('DashboardCarEditView.tpl');
         } else {
 //            App::getRouter()->redirectTo('dashboardCars');
