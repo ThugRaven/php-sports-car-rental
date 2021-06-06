@@ -39,8 +39,12 @@ class DashboardCtrl {
         $this->form->drive = ParamUtils::getFromRequest('drive');
 
         try {
-            $brands = App::getDB()->select('car', '@brand');
-//            print_r(App::getDB()->debug()->select('car', '@brand'));
+            $brands = App::getDB()->select('car', '@brand', [
+                'ORDER' => 'brand'
+            ]);
+//            print_r(App::getDB()->debug()->select('car', '@brand', [
+//                        'ORDER' => 'brand'
+//            ]));
         } catch (PDOException $ex) {
             Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             if (App::getConf()->debug) {

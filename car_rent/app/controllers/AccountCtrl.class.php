@@ -35,7 +35,7 @@ class AccountCtrl {
                     ], [
                 'user.login',
                 'user.email',
-                'user_role.name(role_name)',
+                'user_role.role_name',
                 'user.name',
                 'user.surname',
                 'user.phone_number',

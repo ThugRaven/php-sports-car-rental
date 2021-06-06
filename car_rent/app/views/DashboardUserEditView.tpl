@@ -24,7 +24,7 @@
                                     <option value="{$r}" {if $users['role_name'] === $r}selected{/if}>{$r}</option>
                                 {/strip}
                             {/foreach}
-                        </select>
+                        </select><br />
                         {continue}
                     {/if}
                     <label for="id_{$k}" class="label">{$inputs[$k][0]}: </label>
