@@ -58,24 +58,24 @@ class CarsCtrl {
             }
         }
 
-        print_r($brands);
-        print_r($this->form->brand);
+//        print_r($brands);
+//        print_r($this->form->brand);
         App::getSmarty()->assign('brands', $brands);
         App::getSmarty()->assign('orders', $this->orders);
 
-        if (isset($this->form->brand) && !$this->form->brand == '') {
+        if (isset($this->form->brand) && !empty($this->form->brand)) {
             $this->search_params['brand'] = $this->form->brand;
         }
 
-        if (isset($this->form->model) && !$this->form->model == '') {
+        if (isset($this->form->model) && !empty($this->form->model)) {
             $this->search_params['model[~]'] = $this->form->model;
         }
 
-        if (isset($this->form->type) && !$this->form->type == '') {
+        if (isset($this->form->type) && !empty($this->form->type)) {
             $this->search_params['transmission_type'] = $this->form->type;
         }
 
-        if (isset($this->form->drive) && !$this->form->drive == '') {
+        if (isset($this->form->drive) && !empty($this->form->drive)) {
             $this->search_params['drive'] = $this->form->drive;
         }
 
@@ -101,19 +101,19 @@ class CarsCtrl {
         } else {
             $where['ORDER'] = ['brand', 'model'];
         }
-        print_r($where);
+//        print_r($where);
 
         try {
-            print_r(App::getDB()->debug()->select('car', [
-                        '[><]car_price' => 'id_car_price'
-                            ], [
-                        'car.id_car',
-                        'car.brand',
-                        'car.model',
-                        'car.eng_power',
-                        'car.eng_torque',
-                        'car_price.price_deposit'
-                            ], $where));
+//            print_r(App::getDB()->debug()->select('car', [
+//                        '[><]car_price' => 'id_car_price'
+//                            ], [
+//                        'car.id_car',
+//                        'car.brand',
+//                        'car.model',
+//                        'car.eng_power',
+//                        'car.eng_torque',
+//                        'car_price.price_deposit'
+//                            ], $where));
 
             $this->records = App::getDB()->select('car', [
                 '[><]car_price' => 'id_car_price'
@@ -196,6 +196,14 @@ class CarsCtrl {
     public function action_cars() {
         if ($this->processCars()) {
             App::getSmarty()->display('CarsListView.tpl');
+        } else {
+            App::getRouter()->redirectTo('main');
+        }
+    }
+
+    public function action_carsList() {
+        if ($this->processCars()) {
+            App::getSmarty()->display('CarsListTable.tpl');
         } else {
             App::getRouter()->redirectTo('main');
         }

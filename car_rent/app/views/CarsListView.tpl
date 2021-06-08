@@ -4,10 +4,13 @@
     <head>
         <meta charset="utf-8"/>
         <title>Samochody</title>
+        <script type="text/javascript" src="{$conf->app_url}/js/functions.js"></script>
     </head>
 
     <body>
-        <form action="{url action='cars'}" method="post">
+        {*        <form action="{url action='cars'}" method="post">*}
+        <form id="cars_form" onsubmit="ajaxPostForm('cars_form', '{url action='carsList'}', 'table');
+                return false;">
             <label for="id_brand">Marka pojazdu: </label>
             <select name="brand" id="id_brand">
                 <option value="">Wszystkie marki</option>
@@ -41,36 +44,12 @@
                 {/foreach}
             </select>
             <br />
-            <input type="submit" value="Szukaj" class="primary">
-            <input type="reset" value="Wyczyść" class="primary">
+            <input type="submit" value="Szukaj" class="primary"/>
+            <input type="reset" value="Wyczyść" class="primary"/>
         </form>
 
-        <div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID Samochodu</th>
-                        <th>Marka</th>
-                        <th>Model</th>
-                        <th>Moc silnika</th>
-                        <th>Moment obrotowy</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {foreach $records as $r}
-                        {strip}
-                            <tr>
-                                <td>{$r['id_car']}</td>
-                                <td>{$r['brand']}</td>
-                                <td>{$r['model']}</td>
-                                <td>{$r['eng_power']}</td>
-                                <td>{$r['eng_torque']}</td>
-                                <td><a href="{url action='car' id=$r['id_car'] brand=$r['brand_url'] model=$r['model_url']}">Zarezerwuj</a></td>
-                            </tr>
-                        {/strip}
-                    {/foreach}
-                </tbody>
-            </table>
+        <div id='table'>
+            {include file="CarsListTable.tpl"}
         </div>
 
         {include file='messages.tpl'}
