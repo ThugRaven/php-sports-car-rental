@@ -17,7 +17,7 @@
 
         {include file='messages.tpl'}
 
-        <form action="{url action='rent' step="step-1"}" method="post">
+        <form action="{url action='rent'}" method="post">
             <label for="id_rent_start" class="label">Od: </label>
             <input id="id_rent_start" type="datetime-local" name="rent_start" value="{$form->rent_start}"/><br />
             <label for="id_rent_end" class="label">Do: </label>

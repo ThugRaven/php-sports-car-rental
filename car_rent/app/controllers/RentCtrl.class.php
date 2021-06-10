@@ -7,68 +7,49 @@ use core\Utils;
 use core\ParamUtils;
 use core\RoleUtils;
 use core\SessionUtils;
-use app\transfer\User;
+use app\transfer\Rent;
 use app\forms\RentForm;
 use DateTime;
+use PDOException;
 
 class RentCtrl {
 
     private $form;
     private $records;
+    private $rent;
 
     public function __construct() {
         $this->form = new RentForm();
     }
 
-    public function getParams() {
+    public function action_rent() {
+        if ($this->processRent()) {
+            $this->assignSmarty();
+            App::getSmarty()->display('RentOptionsView.tpl');
+        } else {
+            App::getRouter()->redirectTo('main');
+        }
+    }
+
+    public function action_rented() {
+        if ($this->processRented()) {
+            $this->assignSmarty();
+            App::getSmarty()->display('RentSummaryView.tpl');
+        } else {
+            App::getRouter()->redirectTo('main');
+        }
+    }
+
+    private function processRent() {
         $this->form->id_car = ParamUtils::getFromRequest('id_car');
-        $this->form->id_car_price = ParamUtils::getFromRequest('id_car_price');
         $this->form->rent_start = ParamUtils::getFromRequest('rent_start');
         $this->form->rent_end = ParamUtils::getFromRequest('rent_end');
-        $this->form->rent_end = ParamUtils::getFromRequest('rent_end');
-        $this->form->total_price = ParamUtils::getFromRequest('total_price');
         $this->form->deposit = ParamUtils::getFromRequest('deposit');
         $this->form->payment_type = ParamUtils::getFromRequest('payment_type');
-        $this->form->step = ParamUtils::getFromCleanURL(1);
-    }
-
-    public function validate() {
-        return !App::getMessages()->isError();
-    }
-
-    public function action_rent() {
-        $this->getParams();
-        if (!$this->validate()) {
-            return false;
-        }
-        if ($this->form->step == 'step-1') {
-            $this->rent_step_1();
-        } else if ($this->form->step == 'step-2') {
-            $this->rent_step_2();
-        } else if ($this->form->step == 'step-3') {
-            $this->rent_step_3();
-        }
-    }
-
-    private function rent_step_1() {
-//          $start = strtotime($this->form->rent_start);
-//            $end = strtotime($this->form->rent_end);
-//            $date_diff = abs($start - $end)/(60*60);
-//            print_r($date_diff);
-//            echo 'Godziny: '.$date_diff.'\n';
-
+        
         $start = new DateTime($this->form->rent_start);
         $end = new DateTime($this->form->rent_end);
         $date_diff = $start->diff($end);
-        print_r($date_diff);
-
-//            $hours = $date_diff->h;
-//            $hours = $hours + ($date_diff->days * 24);
-//            if ($date_diff->i > 0) {
-//                $hours++;
-//            }
-//
-//            echo $hours;
         $days = $date_diff->days;
         if ($date_diff->h > 0) {
             $days++;
@@ -93,6 +74,8 @@ class RentCtrl {
                 'car_price.deposit',
                 'car_price.additional_km'
                     ], $where);
+
+            $this->form->id_user = App::getDB()->get('user', 'id_user', ['login' => SessionUtils::loadObject('user', true)->login]);
         } catch (PDOException $ex) {
             Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
             if (App::getConf()->debug) {
@@ -101,24 +84,91 @@ class RentCtrl {
         }
         print_r($this->records);
 
-        if (!isset($this->form->deposit)) {
+        if (!isset($this->form->deposit) || $this->form->deposit === 'deposit') {
             $this->form->total_price = $this->records['price_deposit'] * $days;
-        } else {
+            $this->form->deposit = 'deposit';
+            $deposit = 1;
+        } else if ($this->form->deposit === 'no_deposit') {
             $this->form->total_price = $this->records['price_no_deposit'] * $days;
+            $this->form->deposit = 'no_deposit';
+            $deposit = 0;
         }
-        echo 'step-1';
-        $this->assignSmarty();
-        App::getSmarty()->display('RentOptionsView.tpl');
+
+        if (!isset($this->form->payment_type)) {
+            $this->form->payment_type = 'card';
+        }
+
+        $rent = new Rent($this->form->id_car, $this->form->id_user, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s'), $deposit, $this->form->total_price, $this->form->payment_type);
+        SessionUtils::storeObject('rent', $rent);
+        print_r($rent);
+
+        SessionUtils::storeMessages();
+        return !App::getMessages()->isError();
     }
 
-    private function rent_step_2() {
-        echo 'step-2';
+    private function processRented() {
+        $this->rent = SessionUtils::loadObject('rent');
+        if (!isset($this->rent)) {
+            Utils::addErrorMessage('Wystąpił błąd');
+            return false;
+        }
+
         print_r($this->form);
-        
-        
-        
-        $this->assignSmarty();
-        App::getSmarty()->display('RentSummaryView.tpl');
+
+        try {
+            $db = App::getDB();
+            $db->action(function($db) {
+                print_r($db->debug()->insert('rent', [
+                            'id_car' => $this->rent->id_car,
+                            'id_user' => $this->rent->id_user,
+                            'rent_start' => $this->rent->rent_start,
+                            'rent_end' => $this->rent->rent_end,
+                            'distance' => 0,
+                            'deposit' => $this->rent->deposit,
+                            'total_price' => $this->rent->total_price,
+                            'payment_type' => $this->rent->payment_type,
+                ]));
+
+                $db->insert('rent', [
+                    'id_car' => $this->rent->id_car,
+                    'id_user' => $this->rent->id_user,
+                    'rent_start' => $this->rent->rent_start,
+                    'rent_end' => $this->rent->rent_end,
+                    'id_rent_status' => 1,
+                    'distance' => 0,
+                    'deposit' => $this->rent->deposit,
+                    'total_price' => $this->rent->total_price,
+                    'payment_type' => $this->rent->payment_type,
+                ]);
+
+                $db->update('user', [
+                    'rents[+]' => 1
+                        ], [
+                    'id_user' => $this->rent->id_user
+                ]);
+
+                $user = $db->get('user', ['rents', 'verified'], [
+                    'id_user' => $this->rent->id_user
+                ]);
+                if ($user['rents'] >= 5 && $user['verified'] == 0) {
+                    $db->update('user', [
+                        'verified' => 1
+                            ], [
+                        'id_user' => $this->rent->id_user
+                    ]);
+                }
+
+                Utils::addInfoMessage('Pomyślnie wynajęto pojazd!');
+            });
+        } catch (PDOException $ex) {
+            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
+            if (App::getConf()->debug) {
+                Utils::addErrorMessage($ex->getMessage());
+            }
+        }
+
+        SessionUtils::storeMessages();
+        return !App::getMessages()->isError();
     }
 
     public function assignSmarty() {

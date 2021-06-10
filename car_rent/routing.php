@@ -23,20 +23,21 @@ Utils::addRoute('carsList', 'CarsCtrl');
 Utils::addRoute('car', 'CarsCtrl');
 
 Utils::addRoute('rent', 'RentCtrl', ['customer', 'employee', 'admin']);
+Utils::addRoute('rented', 'RentCtrl', ['customer', 'employee', 'admin']);
 
-Utils::addRoute('dashboard', 'DashboardCtrl');
-Utils::addRoute('dashboardMock', 'DashboardMockCtrl');
+Utils::addRoute('dashboard', 'DashboardCtrl', ['employee', 'admin']);
+Utils::addRoute('dashboardMock', 'DashboardMockCtrl', ['admin']);
 
-Utils::addRoute('dashboardStats', 'DashboardCtrl');
+Utils::addRoute('dashboardStats', 'DashboardCtrl', ['employee', 'admin']);
 
-Utils::addRoute('dashboardRents', 'DashboardRentsCtrl');
-Utils::addRoute('dashboardRentEdit', 'DashboardRentsCtrl');
-Utils::addRoute('dashboardRentSave', 'DashboardRentsCtrl');
+Utils::addRoute('dashboardRents', 'DashboardRentsCtrl', ['employee', 'admin']);
+Utils::addRoute('dashboardRentEdit', 'DashboardRentsCtrl', ['employee', 'admin']);
+Utils::addRoute('dashboardRentSave', 'DashboardRentsCtrl', ['employee', 'admin']);
 
-Utils::addRoute('dashboardCars', 'DashboardCarsCtrl');
-Utils::addRoute('dashboardCarEdit', 'DashboardCarsCtrl');
-Utils::addRoute('dashboardCarSave', 'DashboardCarsCtrl');
+Utils::addRoute('dashboardCars', 'DashboardCarsCtrl', ['employee', 'admin']);
+Utils::addRoute('dashboardCarEdit', 'DashboardCarsCtrl', ['employee', 'admin']);
+Utils::addRoute('dashboardCarSave', 'DashboardCarsCtrl', ['employee', 'admin']);
 
-Utils::addRoute('dashboardUsers', 'DashboardUsersCtrl');
-Utils::addRoute('dashboardUserEdit', 'DashboardUsersCtrl');
-Utils::addRoute('dashboardUserSave', 'DashboardUsersCtrl');
+Utils::addRoute('dashboardUsers', 'DashboardUsersCtrl', ['employee', 'admin']);
+Utils::addRoute('dashboardUserEdit', 'DashboardUsersCtrl', ['employee', 'admin']);
+Utils::addRoute('dashboardUserSave', 'DashboardUsersCtrl', ['employee', 'admin']);
