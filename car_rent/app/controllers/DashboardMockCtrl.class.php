@@ -82,7 +82,7 @@ class DashboardMockCtrl {
                 $user_raw[$rent_raw[$i]['id_user'] - 1]['verified'] = 1;
             }
 
-            $rent_sql .= "INSERT INTO `car_rent_db`.`rent` (`id_car`, `id_user`, `rent_start`, `rent_end`, `id_rent_status`, `distance`, `deposit`, `total_price`, `payment_type`) VALUES ({$rent_raw[$i]['id_car']}, {$rent_raw[$i]['id_user']}, '{$rent_raw[$i]['rent_start']}', '{$rent_raw[$i]['rent_end']}', {$rent_raw[$i]['id_rent_status']}, {$rent_raw[$i]['distance']}, {$rent_raw[$i]['deposit']}, {$rent_raw[$i]['total_price']}, '{$rent_raw[$i]['payment_type']}');\n";
+            $rent_sql .= "INSERT INTO `car_rent_db`.`rent` (`id_car`, `id_user`, `rent_start`, `rent_end`, `id_rent_status`, `distance`, `deposit`, `total_price`, `payment_type`, `create_time`) VALUES ({$rent_raw[$i]['id_car']}, {$rent_raw[$i]['id_user']}, '{$rent_raw[$i]['rent_start']}', '{$rent_raw[$i]['rent_end']}', {$rent_raw[$i]['id_rent_status']}, {$rent_raw[$i]['distance']}, {$rent_raw[$i]['deposit']}, {$rent_raw[$i]['total_price']}, '{$rent_raw[$i]['payment_type']}', '{$rent_raw[$i]['rent_start']}');\n";
         }
 
         // Create mock user data
