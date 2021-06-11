@@ -5,12 +5,11 @@ namespace app\controllers;
 use core\App;
 use core\Utils;
 use core\ParamUtils;
-use core\RoleUtils;
 use core\SessionUtils;
-use app\transfer\User;
 use app\forms\RentsForm;
 use app\forms\RentEditForm;
 use core\Validator;
+use core\DBUtils;
 
 class DashboardRentsCtrl {
 
@@ -52,83 +51,31 @@ class DashboardRentsCtrl {
     }
 
     public function processDashRents() {
-        $this->form->id_car = ParamUtils::getFromRequest('id_car');
         $this->form->id_rent = ParamUtils::getFromRequest('id_rent');
+        $this->form->id_car = ParamUtils::getFromRequest('id_car');
+        $this->form->id_user = ParamUtils::getFromRequest('id_user');
         $this->form->status = ParamUtils::getFromRequest('status');
         $this->form->order = ParamUtils::getFromRequest('order');
         $this->form->deposit = ParamUtils::getFromRequest('deposit');
         $this->form->payment_type = ParamUtils::getFromRequest('payment_type');
 
-        try {
-            $cars = App::getDB()->select('car', ['id_car', 'brand', 'model']);
-        } catch (PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
-            }
-        }
+        $cars = DBUtils::select('car', null, ['id_car', 'brand', 'model'], null, true);
 
         App::getSmarty()->assign('cars', $cars);
         App::getSmarty()->assign('orders', $this->orders);
 
-        if (isset($this->form->id_car) && $this->form->id_car != '') {
-            $this->search_params['id_car'] = $this->form->id_car;
-        }
+        $this->search_params = DBUtils::prepareParam($this->form->id_rent, 'id_rent', $this->search_params);
+        $this->search_params = DBUtils::prepareParam($this->form->id_car, 'id_car', $this->search_params);
+        $this->search_params = DBUtils::prepareParam($this->form->id_user, 'id_user', $this->search_params);
+        $this->search_params = DBUtils::prepareParam($this->form->status, 'status', $this->search_params);
+        $this->search_params = DBUtils::prepareParam($this->form->deposit, 'deposit', $this->search_params);
+        $this->search_params = DBUtils::prepareParam($this->form->payment_type, 'payment_type', $this->search_params);
 
-        if (isset($this->form->id_rent) && $this->form->id_rent != '') {
-            $this->search_params['id_rent'] = $this->form->id_rent;
-        }
+        $where = DBUtils::prepareWhere($this->search_params, $this->form->order, 'id_rent', true);
 
-        if (isset($this->form->status) && $this->form->status != '') {
-            $this->search_params['status'] = $this->form->status;
-        }
-
-        if (isset($this->form->deposit) && $this->form->deposit != '') {
-            $this->search_params['deposit'] = $this->form->deposit;
-        }
-
-        if (isset($this->form->payment_type) && $this->form->payment_type != '') {
-            $this->search_params['payment_type'] = $this->form->payment_type;
-        }
-
-//        print_r($this->form->order);
-        if (!empty($this->form->order)) {
-            $order_params = explode('-', $this->form->order);
-//            print_r($order_params);
-            $order_params[$order_params[0]] = strtoupper($order_params[1]);
-            unset($order_params[0]);
-            unset($order_params[1]);
-//            print_r($order_params);
-        }
-
-        $num_params = count($this->search_params);
-        if ($num_params > 1) {
-            $where = ['AND' => &$this->search_params];
-        } else {
-            $where = &$this->search_params;
-        }
-
-        if (isset($order_params) && count($order_params) > 0) {
-            $where['ORDER'] = $order_params;
-        } else {
-            $where['ORDER'] = ['id_rent'];
-        }
-        print_r($where);
-
-        try {
-            print_r(App::getDB()->debug()->select('rent', [
-                        '[><]rent_status' => 'id_rent_status'
-                            ], '*', $where));
-
-            $this->records = App::getDB()->select('rent', [
-                '[><]rent_status' => 'id_rent_status'
-                    ], '*', $where);
-        } catch (PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
-            }
-        }
+        $this->records = DBUtils::select('rent', [
+                    '[><]rent_status' => 'id_rent_status'
+                        ], '*', $where, true);
 
         App::getSmarty()->assign('form', $this->form);
         $this->assignSmarty();
@@ -144,29 +91,34 @@ class DashboardRentsCtrl {
             'validator_message' => 'ID wynajmu musi być liczbą całkowitą'
         ]);
 
-        $isValid = App::getDB()->has('rent', [
-            'id_rent' => $this->form_edit->id_rent
-        ]);
+        $isValid = DBUtils::has('rent', null, [
+                    'id_rent' => $this->form_edit->id_rent
+                        ], true);
+
         if (!$isValid) {
-            Utils::addErrorMessage('Brak podanego samochodu');
+            Utils::addErrorMessage('Brak podanego wynajmu');
             return false;
         }
 
-        try {
-            $this->rent = App::getDB()->get('rent', '*', [
-                'id_rent' => $this->form_edit->id_rent
-            ]);
+        $this->rent = DBUtils::get('rent', null, [
+                    'id_rent',
+                    'id_car',
+                    'id_user',
+                    'rent_start',
+                    'rent_end',
+                    'id_rent_status',
+                    'distance',
+                    'deposit',
+                    'total_price',
+                    'payment_type',
+                        ], [
+                    'id_rent' => $this->form_edit->id_rent
+                        ], true);
 
-            $rent_statuses = App::getDB()->select('rent_status', ['id_rent_status', 'status']);
+        $rent_statuses = DBUtils::select('rent_status', null, ['id_rent_status', 'status'], true);
 
-            print_r($this->rent);
-            print_r($rent_statuses);
-        } catch (\PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
-            }
-        }
+        print_r($this->rent);
+        print_r($rent_statuses);
 
         App::getSmarty()->assign('inputs', $this->inputs);
         App::getSmarty()->assign('rent', $this->rent);
@@ -186,9 +138,9 @@ class DashboardRentsCtrl {
         $this->form_edit->total_price = ParamUtils::getFromRequest('total_price');
         $this->form_edit->payment_type = ParamUtils::getFromRequest('payment_type');
 
-        $isValid = App::getDB()->has('rent', [
-            'id_rent' => $this->form_edit->id_rent
-        ]);
+        $isValid = DBUtils::has('rent', null, [
+                    'id_rent' => $this->form_edit->id_rent
+                        ], true);
 
         print_r($this->form_edit);
 
@@ -197,69 +149,47 @@ class DashboardRentsCtrl {
             return false;
         }
 
-        try {
-            $rent_old = App::getDB()->get('rent', '*', [
-                'id_rent' => $this->form_edit->id_rent
-            ]);
+        $rent_old = DBUtils::get('rent', null, '*', [
+                    'id_rent' => $this->form_edit->id_rent
+                        ], true);
 
-            if (isset($this->form_edit->deposit) && $this->form_edit->deposit === 'on') {
-                $this->form_edit->deposit = 1;
-            } else if (!isset($this->form_edit->deposit)) {
-                $this->form_edit->deposit = 0;
+        $this->form_edit->deposit = DBUtils::getCheckbox($this->form_edit->deposit);
+
+        $column_params = [];
+        print_r($rent_old);
+        echo "<pre>";
+        foreach ($rent_old as $key => $value) {
+            if ($key === 'id_car' || $key === 'id_user' || $key === 'create_time') {
+                continue;
             }
-
-            $column_params = [];
-            print_r($rent_old);
-            echo "<pre>";
-            foreach ($rent_old as $key => $value) {
-                if ($key === 'id_car' || $key === 'id_user') {
-                    continue;
-                }
-                $form_value = $this->form_edit->$key;
-                echo "value: $value, key: $key, form: " . $form_value . "\n";
-                if ($value != $form_value && $key === 'deposit') {
-                    echo "1 $value is different, key: $key\n";
-                    $column_params[$key] = $form_value;
-                } else if ($value != $form_value && $this->inputs[$key][1]) {
-                    echo "2 $value is different, key: $key\n";
-                    $column_params[$key] = $form_value;
-                } else if ($value != $form_value && isset($form_value) && !empty($form_value)) {
-                    echo "3 $value is different, key: $key\n";
-                    $column_params[$key] = $form_value;
-                }
-            }
-            echo "</pre>";
-
-            $columns = &$column_params;
-
-            print_r($columns);
-        } catch (\PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
+            $form_value = $this->form_edit->$key;
+            echo "value: $value, key: $key, form: " . $form_value . "\n";
+            if ($value != $form_value && $key === 'deposit') {
+                echo "1 $value is different, key: $key\n";
+                $column_params[$key] = $form_value;
+            } else if ($value != $form_value && $this->inputs[$key][1]) {
+                echo "2 $value is different, key: $key\n";
+                $column_params[$key] = $form_value;
+            } else if ($value != $form_value && isset($form_value) && !empty($form_value)) {
+                echo "3 $value is different, key: $key\n";
+                $column_params[$key] = $form_value;
             }
         }
+        echo "</pre>";
+
+        $columns = &$column_params;
+
+        print_r($columns);
+
 
         if (count($columns) < 1) {
             Utils::addInfoMessage('Brak zmian');
         } else {
             if (!App::getMessages()->isError()) {
-                try {
-                    print_r(App::getDB()->debug()->update('rent', $columns, [
-                                'id_rent' => $this->form_edit->id_rent
-                    ]));
-
-                    App::getDB()->update('rent', $columns, [
-                        'id_rent' => $this->form_edit->id_rent
-                    ]);
-
-                    Utils::addInfoMessage('Zapisano!');
-                } catch (\PDOException $ex) {
-                    Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-                    if (App::getConf()->debug) {
-                        Utils::addErrorMessage($ex->getMessage());
-                    }
-                }
+                DBUtils::update('rent', $columns, [
+                    'id_rent' => $this->form_edit->id_rent
+                        ], true);
+                Utils::addInfoMessage('Zapisano!');
             }
         }
 

@@ -26,6 +26,8 @@
             </select>
             <label for="id_id_rent">ID Wynajmu: </label>
             <input id="id_id_rent" type="number" name="id_rent" value="{$form->id_rent}"/>
+            <label for="id_id_user">ID Użytkownika: </label>
+            <input id="id_id_user" type="number" name="id_user" value="{$form->id_user}"/>
             <label for="id_status">Status: </label>
             <select name="status" id="id_status">
                 <option value="" {if $form->status == ''}selected{/if}>Wszystkie</option>
@@ -53,52 +55,52 @@
                 {/foreach}
             </select>
             <br />
-            <input type="submit" value="Szukaj" class="primary">
-                <input type="reset" value="Wyczyść" class="primary">
-                    </form>
+            <input type="submit" value="Szukaj" class="primary"/>
+            <input type="reset" value="Wyczyść" class="primary"/>
+        </form>
 
-                    <div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID Wynajmu</th>
-                                    <th>ID Samochodu</th>
-                                    <th>ID Użytkownika</th>
-                                    <th>Początek wynajmu</th>
-                                    <th>Koniec wynajmu</th>
-                                    <th>Status</th>
-                                    <th>Dystans</th>
-                                    <th>Kaucja</th>
-                                    <th>Kwota</th>
-                                    <th>Rodzaj płatności</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {foreach $records as $r}
-                                    {strip}
-                                        <tr>
-                                            <td>{$r['id_rent']}</td>
-                                            <td>{$r['id_car']}</td>
-                                            <td>{$r['id_user']}</td>
-                                            <td>{$r['rent_start']}</td>
-                                            <td>{$r['rent_end']}</td>
-                                            <td>{$r['status']}</td>
-                                            <td>{$r['distance']}</td>
-                                            <td>{$r['deposit']}</td>
-                                            <td>{$r['total_price']}</td>
-                                            <td>{$r['payment_type']}</td>
-                                            {*                                            <td><a href="{url action='car' id=$r['id_car'] brand=$r['brand_url'] model=$r['model_url']}">Strona pojazdu</a></td>*}
-                                            <td><a href="{url action='dashboardRentEdit' id=$r['id_rent']}">Edytuj</a></td>
-                                        </tr>
-                                    {/strip}
-                                {/foreach}
-                            </tbody>
-                        </table>
-                    </div>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Wynajmu</th>
+                        <th>ID Samochodu</th>
+                        <th>ID Użytkownika</th>
+                        <th>Początek wynajmu</th>
+                        <th>Koniec wynajmu</th>
+                        <th>Status</th>
+                        <th>Dystans</th>
+                        <th>Kaucja</th>
+                        <th>Kwota</th>
+                        <th>Rodzaj płatności</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach $records as $r}
+                        {strip}
+                            <tr>
+                                <td>{$r['id_rent']}</td>
+                                <td>{$r['id_car']}</td>
+                                <td>{$r['id_user']}</td>
+                                <td>{$r['rent_start']}</td>
+                                <td>{$r['rent_end']}</td>
+                                <td>{$r['status']}</td>
+                                <td>{$r['distance']}</td>
+                                <td>{$r['deposit']}</td>
+                                <td>{$r['total_price']}</td>
+                                <td>{$r['payment_type']}</td>
+                                {*                                            <td><a href="{url action='car' id=$r['id_car'] brand=$r['brand_url'] model=$r['model_url']}">Strona pojazdu</a></td>*}
+                                <td><a href="{url action='dashboardRentEdit' id=$r['id_rent']}">Edytuj</a></td>
+                            </tr>
+                        {/strip}
+                    {/foreach}
+                </tbody>
+            </table>
+        </div>
 
-                    {include file='messages.tpl'}
+        {include file='messages.tpl'}
 
 
-                    </body>
+    </body>
 
-                    </html>
+</html>
