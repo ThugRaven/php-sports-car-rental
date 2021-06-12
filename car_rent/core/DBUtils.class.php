@@ -102,6 +102,21 @@ class DBUtils {
             }
         }
     }
+    
+    public static function delete($table, $where, $debug = false) {
+        try {
+            App::getDB()->delete($table, $where);
+
+            if ($debug) {
+                print_r(App::getDB()->last());
+            }
+        } catch (\PDOException $ex) {
+            Utils::addErrorMessage('Wystąpił błąd podczas aktualizowania rekordów');
+            if (App::getConf()->debug) {
+                Utils::addErrorMessage($ex->getMessage());
+            }
+        }
+    }
 
     public static function get($table, $join, $columns, $where = null, $debug = false) {
         try {
