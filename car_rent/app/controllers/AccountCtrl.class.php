@@ -184,6 +184,29 @@ class AccountCtrl {
         App::getRouter()->redirectTo('main');
     }
 
+//    public function action_accountDelete() {
+//        $this->form->login = ParamUtils::getFromCleanURL(1);
+//        print_r($this->form->login);
+//
+//        if (!(isset($this->form->login))) {
+//            return false;
+//        }
+//        if ($this->form->login !== (SessionUtils::loadObject('user', true)->login)) {
+//            Utils::addErrorMessage('Brak dostępu');
+//            return false;
+//        }
+//
+////        DBUtils::delete('user', [
+////            'login' => $this->form->login
+////        ]);
+//        App::getDB()->delete('user', [
+//            'login' => $this->form->login
+//        ]);
+//        Utils::addInfoMessage('Pomyślnie usunięto konto!');
+//
+////        App::getRouter()->redirectTo('main');
+//    }
+
     public function generateView() {
         App::getSmarty()->assign('form', $this->form);
         App::getSmarty()->assign('records', $this->records);

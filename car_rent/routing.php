@@ -11,6 +11,7 @@ Utils::addRoute('main', 'MainCtrl');
 Utils::addRoute('account', 'AccountCtrl', ['customer', 'employee', 'admin']);
 Utils::addRoute('accountEdit', 'AccountCtrl', ['customer', 'employee', 'admin']);
 Utils::addRoute('accountSave', 'AccountCtrl', ['customer', 'employee', 'admin']);
+//Utils::addRoute('accountDelete', 'AccountCtrl', ['customer', 'employee', 'admin']);
 
 Utils::addRoute('login', 'LoginCtrl');
 Utils::addRoute('logout', 'LoginCtrl');
