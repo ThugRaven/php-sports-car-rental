@@ -43,14 +43,23 @@
                     {/strip}
                 {/foreach}
             </select>
+            <label for="id_page_size">Liczba rekordów na stronę: </label>
+            <select name="page_size" id="id_page_size">
+                <option value="10" {if $form->page_size == '10'}selected{/if}>10</option>
+                <option value="25" {if $form->page_size == '25'}selected{/if}>25</option>
+                <option value="50" {if $form->page_size == '50'}selected{/if}>50</option>
+                <option value="100" {if $form->page_size == '100'}selected{/if}>100</option>
+            </select>
             <br />
             <input type="submit" value="Szukaj" class="primary"/>
             <input type="reset" value="Wyczyść" class="primary"/>
         </form>
 
-        <div id='table'>
-            {include file="CarsListTable.tpl"}
-        </div>
+        {if $numOfRecords > 0}
+            <div id='table'>
+                {include file="CarsListTable.tpl"}
+            </div>
+        {/if}
 
         {include file='messages.tpl'}
 

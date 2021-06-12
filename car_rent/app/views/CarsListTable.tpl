@@ -23,3 +23,19 @@
         {/foreach}
     </tbody>
 </table>
+
+<form method="post">
+    <div>
+        Liczba rekordów {$pageRecords} z {$numOfRecords}
+        <br />
+        <button onclick="ajaxPostForm('cars_form', '{url action='carsList' p=$pagination->firstPage}', 'table');
+                return false;">|<</button>
+        <button onclick="ajaxPostForm('cars_form', '{url action='carsList' p=$pagination->page - 1}', 'table');
+                return false;"><</button>
+        Strona {$pagination->page} z {$pagination->lastPage}
+        <button onclick="ajaxPostForm('cars_form', '{url action='carsList' p=$pagination->page + 1}', 'table');
+                return false;">></button>
+        <button onclick="ajaxPostForm('cars_form', '{url action='carsList' p=$pagination->lastPage}', 'table');
+                return false;">>|</button>
+    </div>
+</form>

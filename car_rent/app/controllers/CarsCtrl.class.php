@@ -44,6 +44,7 @@ class CarsCtrl {
         $this->form->order = ParamUtils::getFromRequest('order');
         $this->form->type = ParamUtils::getFromRequest('transmission_type');
         $this->form->drive = ParamUtils::getFromRequest('drive');
+        $this->form->page_size = ParamUtils::getFromRequest('page_size');
 
         $brands = DBUtils::select('car', null, '@brand', [
                     'ORDER' => 'brand'
@@ -61,6 +62,9 @@ class CarsCtrl {
 
         $where = DBUtils::prepareWhere($this->search_params, $this->form->order, ['brand', 'model']);
 
+        $numOfRecords = DBUtils::count('car', $where);
+        $where['LIMIT'] = DBUtils::preparePagination($numOfRecords, $this->form->page_size);
+
         $this->records = DBUtils::select('car', [
                     '[><]car_price' => 'id_car_price'
                         ], [
@@ -71,6 +75,8 @@ class CarsCtrl {
                     'car.eng_torque',
                     'car_price.price_deposit'
                         ], $where);
+
+        App::getSmarty()->assign('pageRecords', count($this->records));
 
         for ($i = 0; $i < count($this->records); $i++) {
             $this->records[$i]['brand_url'] = trim($this->records[$i]['brand']);
