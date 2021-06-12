@@ -10,6 +10,7 @@ use core\SessionUtils;
 use core\Validator;
 use app\transfer\User;
 use app\forms\RegisterForm;
+use core\DBUtils;
 
 class RegisterCtrl {
 
@@ -96,34 +97,27 @@ class RegisterCtrl {
         $this->getParamsValid();
 
         if ($this->validate()) {
-            try {
-                $isAvailable = !(App::getDB()->has('user', [
-                            'login' => $this->form->login
-                ]));
-            } catch (PDOException $ex) {
-                Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            }
-
+            $isAvailable = !(DBUtils::has('user', null, [
+                        'login' => $this->form->login
+            ]));
 
             if ($isAvailable) {
-                try {
-                    App::getDB()->insert('user', [
-                        'login' => $this->form->login,
-                        'password' => password_hash($this->form->password, PASSWORD_BCRYPT),
-                        'email' => $this->form->email,
-                        'name' => $this->form->name,
-                        'surname' => $this->form->surname,
-                        'phone_number' => $this->form->phone_number,
-                        'birth_date' => $this->form->birth_date,
-                    ]);
-                    Utils::addInfoMessage('Pomyślnie zarejestrowano!');
-                } catch (PDOException $ex) {
-                    Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-                }
+                DBUtils::insert('user', [
+                    'login' => $this->form->login,
+                    'password' => password_hash($this->form->password, PASSWORD_BCRYPT),
+                    'email' => $this->form->email,
+                    'name' => $this->form->name,
+                    'surname' => $this->form->surname,
+                    'phone_number' => $this->form->phone_number,
+                    'birth_date' => $this->form->birth_date,
+                ]);
+
+                Utils::addInfoMessage('Pomyślnie zarejestrowano!');
             } else {
                 Utils::addErrorMessage('Konto o podanej nazwie już istnieje!');
             }
 
+            SessionUtils::storeMessages();
             App::getRouter()->redirectTo('main');
         } else {
             $this->generateView();

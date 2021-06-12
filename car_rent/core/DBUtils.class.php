@@ -4,15 +4,9 @@ namespace core;
 
 class DBUtils {
 
-    public static function prepareParam($param, $column, $search_params, $type = 'normal') {
-        if (isset($param) && $param != '') {
-            if ($type === 'normal') {
-                $search_params[$column] = $param;
-            } else if ($type === 'like') {
-                $search_params[$column . '[~]'] = $param;
-            } else {
-                Utils::addErrorMessage('Wystąpił błąd przy sprawdzaniu parametru');
-            }
+    public static function prepareParam($param, $column, $search_params) {
+        if (isset($param) && !empty($param)) {
+            $search_params[$column] = $param;
         }
 
         return $search_params;
@@ -77,6 +71,21 @@ class DBUtils {
         }
 
         return $records;
+    }
+
+    public static function insert($table, $values, $debug = false) {
+        try {
+            App::getDB()->insert($table, $values);
+
+            if ($debug) {
+                print_r(App::getDB()->last());
+            }
+        } catch (\PDOException $ex) {
+            Utils::addErrorMessage('Wystąpił błąd podczas dodawania rekordów');
+            if (App::getConf()->debug) {
+                Utils::addErrorMessage($ex->getMessage());
+            }
+        }
     }
 
     public static function update($table, $columns, $where, $debug = false) {

@@ -9,6 +9,7 @@ use core\RoleUtils;
 use core\SessionUtils;
 use app\transfer\User;
 use app\forms\LoginForm;
+use core\DBUtils;
 
 class LoginCtrl {
 
@@ -43,20 +44,17 @@ class LoginCtrl {
         }
 
         if (!App::getMessages()->isError()) {
-            try {
-                $hashed_pwd = App::getDB()->get('user', 'password', [
-                    'login' => $this->form->login
-                ]);
-            } catch (PDOException $ex) {
-                Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            }
+            $hashed_pwd = DBUtils::get('user', null, 'password', [
+                        'login' => $this->form->login
+            ]);
 
             if (password_verify($this->form->password, $hashed_pwd)) {
-                $role = App::getDB()->get('user', [
-                    '[><]user_role' => 'id_user_role'
-                        ], 'user_role.role_name', [
-                    'login' => $this->form->login
+                $role = DBUtils::get('user', [
+                            '[><]user_role' => 'id_user_role'
+                                ], 'user_role.role_name', [
+                            'login' => $this->form->login
                 ]);
+
                 $user = new User($this->form->login, $role);
                 SessionUtils::storeObject('user', $user);
                 RoleUtils::addRole($role);

@@ -10,7 +10,7 @@ use core\SessionUtils;
 use app\transfer\Rent;
 use app\forms\RentForm;
 use DateTime;
-use PDOException;
+use core\DBUtils;
 
 class RentCtrl {
 
@@ -46,7 +46,7 @@ class RentCtrl {
         $this->form->rent_end = ParamUtils::getFromRequest('rent_end');
         $this->form->deposit = ParamUtils::getFromRequest('deposit');
         $this->form->payment_type = ParamUtils::getFromRequest('payment_type');
-        
+
         $start = new DateTime($this->form->rent_start);
         $end = new DateTime($this->form->rent_end);
         $date_diff = $start->diff($end);
@@ -59,29 +59,26 @@ class RentCtrl {
         print_r($this->form);
 
         $where['id_car'] = $this->form->id_car;
-        try {
-            $this->records = App::getDB()->get('car', [
-                '[><]car_price' => 'id_car_price'
-                    ], [
-                'car.id_car',
-                'car.brand',
-                'car.model',
-                'car.eng_power',
-                'car.eng_torque',
-                'car_price.price_deposit',
-                'car_price.price_no_deposit',
-                'car_price.km_limit',
-                'car_price.deposit',
-                'car_price.additional_km'
-                    ], $where);
 
-            $this->form->id_user = App::getDB()->get('user', 'id_user', ['login' => SessionUtils::loadObject('user', true)->login]);
-        } catch (PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
-            }
-        }
+        $this->records = DBUtils::get('car', [
+                    '[><]car_price' => 'id_car_price'
+                        ], [
+                    'car.id_car',
+                    'car.brand',
+                    'car.model',
+                    'car.eng_power',
+                    'car.eng_torque',
+                    'car_price.price_deposit',
+                    'car_price.price_no_deposit',
+                    'car_price.km_limit',
+                    'car_price.deposit',
+                    'car_price.additional_km'
+                        ], $where);
+
+        $this->form->id_user = DBUtils::get('user', null, 'id_user', [
+                    'login' => SessionUtils::loadObject('user', true)->login]
+        );
+
         print_r($this->records);
 
         if (!isset($this->form->deposit) || $this->form->deposit === 'deposit') {
@@ -150,6 +147,7 @@ class RentCtrl {
                 $user = $db->get('user', ['rents', 'verified'], [
                     'id_user' => $this->rent->id_user
                 ]);
+
                 if ($user['rents'] >= 5 && $user['verified'] == 0) {
                     $db->update('user', [
                         'verified' => 1

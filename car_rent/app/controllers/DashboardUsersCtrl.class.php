@@ -11,6 +11,7 @@ use app\transfer\User;
 use app\forms\UserForm;
 use app\forms\UserEditForm;
 use core\Validator;
+use core\DBUtils;
 
 class DashboardUsersCtrl {
 
@@ -56,91 +57,33 @@ class DashboardUsersCtrl {
         $this->form->verified = ParamUtils::getFromRequest('verified');
         $this->form->role_name = ParamUtils::getFromRequest('role_name');
 
-
-        try {
-            $roles = App::getDB()->select('user_role', 'role_name');
-        } catch (PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
-            }
-        }
+        $roles = DBUtils::select('user_role', null, 'role_name');
 
         print_r($roles);
         print_r($this->form->role_name);
         App::getSmarty()->assign('roles', $roles);
         App::getSmarty()->assign('orders', $this->orders);
 
-        if (isset($this->form->login) && !$this->form->login == '') {
-            $this->search_params['login[~]'] = $this->form->login;
-        }
+        $this->search_params = DBUtils::prepareParam($this->form->login, 'login[~]', $this->search_params);
+        $this->search_params = DBUtils::prepareParam($this->form->verified, 'verified', $this->search_params);
+        $this->search_params = DBUtils::prepareParam($this->form->role_name, 'role_name', $this->search_params);
 
-        if (isset($this->form->verified) && !$this->form->verified == '') {
-            $this->search_params['verified'] = $this->form->verified;
-        }
+        $where = DBUtils::prepareWhere($this->search_params, $this->form->order, 'id_user');
 
-        if (isset($this->form->role_name) && !$this->form->role_name == '') {
-            $this->search_params['role_name'] = $this->form->role_name;
-        }
+        $this->records = DBUtils::select('user', [
+                    '[><]user_role' => 'id_user_role'
+                        ], [
+                    'user.id_user',
+                    'user.login',
+                    'user.name',
+                    'user.surname',
+                    'user.phone_number',
+                    'user.rents',
+                    'user.verified',
+                    'user.create_time',
+                    'user_role.role_name'
+                        ], $where);
 
-//        print_r($this->form->order);
-        if (!empty($this->form->order)) {
-            $order_params = explode('-', $this->form->order);
-//            print_r($order_params);
-            $order_params[$order_params[0]] = strtoupper($order_params[1]);
-            unset($order_params[0]);
-            unset($order_params[1]);
-//            print_r($order_params);
-        }
-
-        $num_params = count($this->search_params);
-        if ($num_params > 1) {
-            $where = ['AND' => &$this->search_params];
-        } else {
-            $where = &$this->search_params;
-        }
-
-        if (isset($order_params) && count($order_params) > 0) {
-            $where['ORDER'] = $order_params;
-        } else {
-            $where['ORDER'] = ['id_user'];
-        }
-        print_r($where);
-
-        try {
-            print_r(App::getDB()->debug()->select('user', [
-                        '[><]user_role' => 'id_user_role'
-                            ], [
-                        'user.id_user',
-                        'user.login',
-                        'user.name',
-                        'user.surname',
-                        'user.phone_number',
-                        'user.rents',
-                        'user.verified',
-                        'user.create_time',
-                        'user_role.role_name'
-                            ], $where));
-
-            $this->records = App::getDB()->select('user', [
-                '[><]user_role' => 'id_user_role'
-                    ], [
-                'user.id_user',
-                'user.login',
-                'user.name',
-                'user.surname',
-                'user.phone_number',
-                'user.rents',
-                'user.verified',
-                'user.create_time',
-                'user_role.role_name'
-                    ], $where);
-        } catch (PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
-            }
-        }
         App::getSmarty()->assign('form', $this->form);
         $this->assignSmarty();
         return !App::getMessages()->isError();
@@ -155,53 +98,35 @@ class DashboardUsersCtrl {
             'validator_message' => 'ID użytkownika musi być liczbą całkowitą'
         ]);
 
-        $isValid = App::getDB()->has('user', [
-            'id_user' => $this->form_edit->id_user
+        $isValid = DBUtils::has('user', null, [
+                    'id_user' => $this->form_edit->id_user
         ]);
         if (!$isValid) {
             Utils::addErrorMessage('Brak podanego użytkownika');
             return false;
         }
 
-        try {
-            $this->user = App::getDB()->get('user', [
-                '[><]user_role' => 'id_user_role'
-                    ], [
-                'user.id_user',
-                'user.id_user_role',
-                'user.login',
-                'user.email',
-                'user.name',
-                'user.surname',
-                'user.phone_number',
-                'user.rents',
-                'user.verified',
-                'user.birth_date',
-                'user_role.role_name'
-                    ], [
-                'id_user' => $this->form_edit->id_user
-            ]);
+        $this->user = DBUtils::get('user', [
+                    '[><]user_role' => 'id_user_role'
+                        ], [
+                    'user.id_user',
+                    'user.id_user_role',
+                    'user.login',
+                    'user.email',
+                    'user.name',
+                    'user.surname',
+                    'user.phone_number',
+                    'user.rents',
+                    'user.verified',
+                    'user.birth_date',
+                    'user_role.role_name'
+                        ], [
+                    'id_user' => $this->form_edit->id_user
+        ]);
+        print_r($this->user);
 
-//            $this->car_price = App::getDB()->get('car_price', '*', [
-//                'id_car_price' => $this->car['id_car_price']
-//            ]);
+        $roles = DBUtils::select('user_role', null, 'role_name');
 
-            print_r($this->user);
-        } catch (\PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
-            }
-        }
-
-        try {
-            $roles = App::getDB()->select('user_role', 'role_name');
-        } catch (PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
-            }
-        }
         App::getSmarty()->assign('roles', $roles);
         App::getSmarty()->assign('inputs', $this->inputs);
         App::getSmarty()->assign('users', $this->user);
@@ -225,117 +150,83 @@ class DashboardUsersCtrl {
 
         print_r($this->form_edit);
 
-        $isValid = App::getDB()->has('user', [
-            'id_user' => $this->form_edit->id_user
+        $isValid = DBUtils::has('user', null, [
+                    'id_user' => $this->form_edit->id_user
         ]);
         if (!$isValid) {
             Utils::addErrorMessage('Brak podanego użytkownika');
             return false;
         }
 
-        try {
-            $user_old = App::getDB()->get('user', [
-                '[><]user_role' => 'id_user_role'
-                    ], [
-                'user.id_user',
-                'user.id_user_role',
-                'user.login',
-                'user.email',
-                'user.name',
-                'user.surname',
-                'user.phone_number',
-                'user.rents',
-                'user.verified',
-                'user.birth_date',
-                'user_role.role_name'
-                    ], [
-                'id_user' => $this->form_edit->id_user
-            ]);
+        $user_old = DBUtils::get('user', [
+                    '[><]user_role' => 'id_user_role'
+                        ], [
+                    'user.id_user',
+                    'user.id_user_role',
+                    'user.login',
+                    'user.email',
+                    'user.name',
+                    'user.surname',
+                    'user.phone_number',
+                    'user.rents',
+                    'user.verified',
+                    'user.birth_date',
+                    'user_role.role_name'
+                        ], [
+                    'id_user' => $this->form_edit->id_user
+        ]);
 
-            if (isset($this->form_edit->verified) && $this->form_edit->verified === 'on') {
-                $this->form_edit->verified = 1;
-            } else if (!isset($this->form_edit->verified)) {
-                $this->form_edit->verified = 0;
-            }
+        $this->form_edit->verified = DBUtils::getCheckbox($this->form_edit->verified);
 
-            $column_params = [];
-            print_r($user_old);
-            echo "<pre>";
-            foreach ($user_old as $key => $value) {
-                $form_value = $this->form_edit->$key;
-                echo "value: $value, key: $key, form: " . $form_value . "\n";
-                if ($value != $form_value && $key === 'verified') {
-                    echo "1 $value is different, key: $key\n";
-                    $column_params[$key] = $form_value;
-                } else if ($value != $form_value && $this->inputs[$key][1]) {
-                    echo "2 $value is different, key: $key\n";
-                    $column_params[$key] = $form_value;
-                } else if ($value != $form_value && isset($form_value) && !empty($form_value)) {
-                    echo "3 $value is different, key: $key\n";
-                    $column_params[$key] = $form_value;
-                }
-            }
-            echo "</pre>";
-
-            $columns = &$column_params;
-
-            print_r($columns);
-        } catch (\PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
+        $column_params = [];
+        print_r($user_old);
+        echo "<pre>";
+        foreach ($user_old as $key => $value) {
+            $form_value = $this->form_edit->$key;
+            echo "value: $value, key: $key, form: " . $form_value . "\n";
+            if ($value != $form_value && $key === 'verified' || $key === 'rents') {
+                echo "1 $value is different, key: $key\n";
+                $column_params[$key] = $form_value;
+            } else if ($value != $form_value && $this->inputs[$key][1]) {
+                echo "2 $value is different, key: $key\n";
+                $column_params[$key] = $form_value;
+            } else if ($value != $form_value && isset($form_value) && !empty($form_value)) {
+                echo "3 $value is different, key: $key\n";
+                $column_params[$key] = $form_value;
             }
         }
+        echo "</pre>";
+
+        $columns = &$column_params;
+
+        print_r($columns);
 
         if (count($columns) < 1) {
             Utils::addInfoMessage('Brak zmian');
         } else {
             if (!App::getMessages()->isError()) {
-                try {
-                    if (isset($columns['role_name'])) {
-                        print_r(App::getDB()->debug()->get('user_role', 'id_user_role'
-                                        , [
-                                    'role_name' => $columns['role_name']
-                        ]));
-                        $user_role = App::getDB()->get('user_role', 'id_user_role', [
-                            'role_name' => $columns['role_name']
-                        ]);
-                        print_r(App::getDB()->debug()->update('user', [
-                                    'id_user_role' => $user_role
-                                        ], [
-                                    'id_user' => $this->form_edit->id_user
-                        ]));
+                if (isset($columns['role_name'])) {
+                    $user_role = DBUtils::get('user_role', null, 'id_user_role', [
+                                'role_name' => $columns['role_name']
+                    ]);
 
-                        App::getDB()->update('user', [
-                            'id_user_role' => $user_role
-                                ], [
-                            'id_user' => $this->form_edit->id_user
-                        ]);
-                        unset($columns['role_name']);
-                    }
-                    print_r($columns);
+                    DBUtils::update('user', [
+                        'id_user_role' => $user_role
+                            ], [
+                        'id_user' => $this->form_edit->id_user
+                    ], true);
 
-                    if (count($columns) > 0) {
-                        print_r(App::getDB()->debug()->update('user', $columns, [
-                                    'id_user' => $this->form_edit->id_user
-                        ]));
-
-                        App::getDB()->update('user', $columns, [
-                            'id_user' => $this->form_edit->id_user
-                        ]);
-                    }
-
-//                    App::getDB()->update('car', $columns, [
-//                        'id_car' => $this->form_edit->id_car
-//                    ]);
-
-                    Utils::addInfoMessage('Zapisano!');
-                } catch (\PDOException $ex) {
-                    Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-                    if (App::getConf()->debug) {
-                        Utils::addErrorMessage($ex->getMessage());
-                    }
+                    unset($columns['role_name']);
                 }
+                print_r($columns);
+
+                if (count($columns) > 0) {
+                    DBUtils::update('user', $columns, [
+                        'id_user' => $this->form_edit->id_user
+                    ], true);
+                }
+
+                Utils::addInfoMessage('Zapisano!');
             }
         }
 

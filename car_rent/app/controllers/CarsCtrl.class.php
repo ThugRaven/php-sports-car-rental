@@ -11,6 +11,7 @@ use app\transfer\User;
 use app\forms\CarsForm;
 use app\forms\RentForm;
 use core\Validator;
+use core\DBUtils;
 
 class CarsCtrl {
 
@@ -44,93 +45,33 @@ class CarsCtrl {
         $this->form->type = ParamUtils::getFromRequest('transmission_type');
         $this->form->drive = ParamUtils::getFromRequest('drive');
 
-        try {
-            $brands = App::getDB()->select('car', '@brand', [
-                'ORDER' => 'brand'
-            ]);
-//            print_r(App::getDB()->debug()->select('car', '@brand', [
-//                        'ORDER' => 'brand'
-//            ]));
-        } catch (PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
-            }
-        }
+        $brands = DBUtils::select('car', null, '@brand', [
+                    'ORDER' => 'brand'
+        ]);
 
 //        print_r($brands);
 //        print_r($this->form->brand);
         App::getSmarty()->assign('brands', $brands);
         App::getSmarty()->assign('orders', $this->orders);
 
-        if (isset($this->form->brand) && !empty($this->form->brand)) {
-            $this->search_params['brand'] = $this->form->brand;
-        }
+        $this->search_params = DBUtils::prepareParam($this->form->brand, 'brand', $this->search_params);
+        $this->search_params = DBUtils::prepareParam($this->form->model, 'model[~]', $this->search_params);
+        $this->search_params = DBUtils::prepareParam($this->form->type, 'transmission_type', $this->search_params);
+        $this->search_params = DBUtils::prepareParam($this->form->drive, 'drive', $this->search_params);
 
-        if (isset($this->form->model) && !empty($this->form->model)) {
-            $this->search_params['model[~]'] = $this->form->model;
-        }
+        $where = DBUtils::prepareWhere($this->search_params, $this->form->order, ['brand', 'model']);
 
-        if (isset($this->form->type) && !empty($this->form->type)) {
-            $this->search_params['transmission_type'] = $this->form->type;
-        }
+        $this->records = DBUtils::select('car', [
+                    '[><]car_price' => 'id_car_price'
+                        ], [
+                    'car.id_car',
+                    'car.brand',
+                    'car.model',
+                    'car.eng_power',
+                    'car.eng_torque',
+                    'car_price.price_deposit'
+                        ], $where);
 
-        if (isset($this->form->drive) && !empty($this->form->drive)) {
-            $this->search_params['drive'] = $this->form->drive;
-        }
-
-//        print_r($this->form->order);
-        if (!empty($this->form->order)) {
-            $order_params = explode('-', $this->form->order);
-//            print_r($order_params);
-            $order_params[$order_params[0]] = strtoupper($order_params[1]);
-            unset($order_params[0]);
-            unset($order_params[1]);
-//            print_r($order_params);
-        }
-
-        $num_params = count($this->search_params);
-        if ($num_params > 1) {
-            $where = ['AND' => &$this->search_params];
-        } else {
-            $where = &$this->search_params;
-        }
-
-        if (isset($order_params) && count($order_params) > 0) {
-            $where['ORDER'] = $order_params;
-        } else {
-            $where['ORDER'] = ['brand', 'model'];
-        }
-//        print_r($where);
-
-        try {
-//            print_r(App::getDB()->debug()->select('car', [
-//                        '[><]car_price' => 'id_car_price'
-//                            ], [
-//                        'car.id_car',
-//                        'car.brand',
-//                        'car.model',
-//                        'car.eng_power',
-//                        'car.eng_torque',
-//                        'car_price.price_deposit'
-//                            ], $where));
-
-            $this->records = App::getDB()->select('car', [
-                '[><]car_price' => 'id_car_price'
-                    ], [
-                'car.id_car',
-                'car.brand',
-                'car.model',
-                'car.eng_power',
-                'car.eng_torque',
-                'car_price.price_deposit'
-                    ], $where);
-        } catch (PDOException $ex) {
-            Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-            if (App::getConf()->debug) {
-                Utils::addErrorMessage($ex->getMessage());
-            }
-        }
         for ($i = 0; $i < count($this->records); $i++) {
             $this->records[$i]['brand_url'] = trim($this->records[$i]['brand']);
             $this->records[$i]['model_url'] = trim($this->records[$i]['model']);
@@ -159,35 +100,29 @@ class CarsCtrl {
             $this->form_rent->rent_start = (new \DateTime('now', new \DateTimeZone('Europe/Warsaw')))->format('Y-m-d\TH:i');
             $this->form_rent->rent_end = (new \DateTime('+1 day', new \DateTimeZone('Europe/Warsaw')))->format('Y-m-d\TH:i');
 
-            try {
-                $this->records = App::getDB()->get('car', [
-                    '[><]car_price' => 'id_car_price'
-                        ], '*', $where);
 
-                if (empty($this->records)) {
-                    Utils::addErrorMessage('Brak pojazdu o podanym ID!');
-                    SessionUtils::storeMessages();
-                    return false;
-                }
+            $this->records = DBUtils::get('car', [
+                        '[><]car_price' => 'id_car_price'
+                            ], '*', $where);
 
-                $this->records['brand_url'] = trim($this->records['brand']);
-                $this->records['model_url'] = trim($this->records['model']);
-                $this->records['brand_url'] = strtolower($this->records['brand_url']);
-                $this->records['model_url'] = strtolower($this->records['model_url']);
-                $this->records['brand_url'] = preg_replace('/\s+/', '-', $this->records['brand_url']);
-                $this->records['model_url'] = preg_replace('/\s+/', '-', $this->records['model_url']);
-
-                if ($brand !== $this->records['brand_url'] || $model !== $this->records['model_url']) {
-                    App::getRouter()->redirectTo("car/{$this->form_rent->id_car}/{$this->records['brand_url']}/{$this->records['model_url']}");
-                }
-                App::getSmarty()->assign('form', $this->form_rent);
-                $this->assignSmarty();
-            } catch (PDOException $ex) {
-                Utils::addErrorMessage('Wystąpił błąd podczas pobierania rekordów');
-                if (App::getConf()->debug) {
-                    Utils::addErrorMessage($ex->getMessage());
-                }
+            if (empty($this->records)) {
+                Utils::addErrorMessage('Brak pojazdu o podanym ID!');
+                SessionUtils::storeMessages();
+                return false;
             }
+
+            $this->records['brand_url'] = trim($this->records['brand']);
+            $this->records['model_url'] = trim($this->records['model']);
+            $this->records['brand_url'] = strtolower($this->records['brand_url']);
+            $this->records['model_url'] = strtolower($this->records['model_url']);
+            $this->records['brand_url'] = preg_replace('/\s+/', '-', $this->records['brand_url']);
+            $this->records['model_url'] = preg_replace('/\s+/', '-', $this->records['model_url']);
+
+            if ($brand !== $this->records['brand_url'] || $model !== $this->records['model_url']) {
+                App::getRouter()->redirectTo("car/{$this->form_rent->id_car}/{$this->records['brand_url']}/{$this->records['model_url']}");
+            }
+            App::getSmarty()->assign('form', $this->form_rent);
+            $this->assignSmarty();
         }
 
         return !App::getMessages()->isError();
