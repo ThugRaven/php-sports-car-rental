@@ -74,13 +74,12 @@ class DashboardCarsCtrl {
         $this->form->order = ParamUtils::getFromRequest('order');
         $this->form->type = ParamUtils::getFromRequest('transmission_type');
         $this->form->drive = ParamUtils::getFromRequest('drive');
+        $this->form->page_size = ParamUtils::getFromRequest('page_size');
 
         $brands = DBUtils::select('car', null, '@brand', [
                     'ORDER' => 'brand'
         ]);
 
-        print_r($brands);
-        print_r($this->form->brand);
         App::getSmarty()->assign('brands', $brands);
         App::getSmarty()->assign('orders', $this->orders);
 
@@ -90,6 +89,9 @@ class DashboardCarsCtrl {
         $this->search_params = DBUtils::prepareParam($this->form->drive, 'drive', $this->search_params);
 
         $where = DBUtils::prepareWhere($this->search_params, $this->form->order, ['brand', 'model']);
+
+        $numOfRecords = DBUtils::count('car', $where);
+        $where['LIMIT'] = DBUtils::preparePagination($numOfRecords, $this->form->page_size);
 
         $this->records = DBUtils::select('car', [
                     '[><]car_price' => 'id_car_price'
@@ -101,6 +103,8 @@ class DashboardCarsCtrl {
                     'car.eng_torque',
                     'car_price.price_deposit'
                         ], $where);
+
+        App::getSmarty()->assign('pageRecords', count($this->records));
 
         for ($i = 0; $i < count($this->records); $i++) {
             $this->records[$i]['brand_url'] = trim($this->records[$i]['brand']);
@@ -257,11 +261,11 @@ class DashboardCarsCtrl {
                 if ($this->type === 'car') {
                     DBUtils::update('car', $columns, [
                         'id_car' => $this->form_edit->id_car
-                    ], true);
+                            ], true);
                 } else if ($this->type === 'car_price') {
                     DBUtils::update('car_price', $columns, [
                         'id_car_price' => $this->form_edit->id_car_price
-                    ], true);
+                            ], true);
                 }
 
                 Utils::addInfoMessage('Zapisano!');

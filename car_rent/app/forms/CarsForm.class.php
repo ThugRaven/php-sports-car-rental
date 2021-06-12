@@ -10,5 +10,6 @@ class CarsForm {
     public $order;
     public $transmission_type;
     public $drive;
+    public $page_size;
 
 }

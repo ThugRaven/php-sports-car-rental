@@ -47,43 +47,63 @@
                     {/strip}
                 {/foreach}
             </select>
+            <label for="id_page_size">Liczba rekordów na stronę: </label>
+            <select name="page_size" id="id_page_size">
+                <option value="10" {if $form->page_size == '10'}selected{/if}>10</option>
+                <option value="25" {if $form->page_size == '25'}selected{/if}>25</option>
+                <option value="50" {if $form->page_size == '50'}selected{/if}>50</option>
+                <option value="100" {if $form->page_size == '100'}selected{/if}>100</option>
+            </select>
             <br />
-            <input type="submit" value="Szukaj" class="primary">
-                <input type="reset" value="Wyczyść" class="primary">
-                    </form>
+            <input type="submit" value="Szukaj" class="primary"/>
+            <input type="reset" value="Wyczyść" class="primary"/>
 
+            {if $numOfRecords > 0}
+                <div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Samochodu</th>
+                                <th>Marka</th>
+                                <th>Model</th>
+                                <th>Moc silnika</th>
+                                <th>Moment obrotowy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {foreach $records as $r}
+                                {strip}
+                                    <tr>
+                                        <td>{$r['id_car']}</td>
+                                        <td>{$r['brand']}</td>
+                                        <td>{$r['model']}</td>
+                                        <td>{$r['eng_power']}</td>
+                                        <td>{$r['eng_torque']}</td>
+                                        <td><a href="{url action='car' id=$r['id_car'] brand=$r['brand_url'] model=$r['model_url']}">Strona pojazdu</a></td>
+                                        <td><a href="{url action='dashboardCarEdit' id=$r['id_car']}">Edytuj</a></td>
+                                    </tr>
+                                {/strip}
+                            {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+
+                <form method="post">
                     <div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID Samochodu</th>
-                                    <th>Marka</th>
-                                    <th>Model</th>
-                                    <th>Moc silnika</th>
-                                    <th>Moment obrotowy</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {foreach $records as $r}
-                                    {strip}
-                                        <tr>
-                                            <td>{$r['id_car']}</td>
-                                            <td>{$r['brand']}</td>
-                                            <td>{$r['model']}</td>
-                                            <td>{$r['eng_power']}</td>
-                                            <td>{$r['eng_torque']}</td>
-                                            <td><a href="{url action='car' id=$r['id_car'] brand=$r['brand_url'] model=$r['model_url']}">Strona pojazdu</a></td>
-                                            <td><a href="{url action='dashboardCarEdit' id=$r['id_car']}">Edytuj</a></td>
-                                        </tr>
-                                    {/strip}
-                                {/foreach}
-                            </tbody>
-                        </table>
+                        Liczba rekordów {$pageRecords} z {$numOfRecords}
+                        <br />
+                        <button formaction="{url action='dashboardCars' p=$pagination->firstPage}">|<</button>
+                        <button formaction="{url action='dashboardCars' p=$pagination->page - 1}"><</button>
+                        Strona {$pagination->page} z {$pagination->lastPage}
+                        <button formaction="{url action='dashboardCars' p=$pagination->page + 1}">></button>
+                        <button formaction="{url action='dashboardCars' p=$pagination->lastPage}">>|</button>
                     </div>
+                </form>
+            {/if}
 
-                    {include file='messages.tpl'}
+            {include file='messages.tpl'}
 
 
-                    </body>
+    </body>
 
-                    </html>
+</html>
