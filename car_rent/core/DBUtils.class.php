@@ -5,7 +5,7 @@ namespace core;
 class DBUtils {
 
     public static function prepareParam($param, $column, $search_params) {
-        if (isset($param) && !empty($param)) {
+        if (isset($param) && strlen($param) > 0) {
             $search_params[$column] = $param;
         }
 
@@ -50,6 +50,51 @@ class DBUtils {
         }
 
         return $where;
+    }
+
+    private static function getLastPage($numOfRecords, $pageSize) {
+        $lastPage = 1;
+
+        while ($numOfRecords > 0) {
+            $numOfRecords -= $pageSize;
+            $lastPage++;
+        }
+
+        return $lastPage;
+    }
+
+    public static function preparePagination($numOfRecords, $pageSize, $defaultSize = 10, $debug = false) {
+        App::getSmarty()->assign('numOfRecords', $numOfRecords);
+        if ($numOfRecords <= 0) {
+            return false;
+        }
+
+        if (!isset($pageSize) && empty($pageSize)) {
+            $pageSize = $defaultSize;
+        }
+
+        $lastPage = self::getLastPage($numOfRecords, $pageSize);
+
+        $page = ParamUtils::getFromCleanURL(1);
+        if (!isset($page) || $page < 1) {
+            $page = 1;
+        } else if ($page >= $lastPage) {
+            $page = $lastPage - 1;
+        }
+
+        $offset = $pageSize * ($page - 1);
+
+        $where['LIMIT'] = [$offset, $pageSize];
+
+        $pagination = new \app\transfer\Pagination($page, 1, $lastPage - 1);
+        App::getSmarty()->assign('pagination', $pagination);
+        App::getSmarty()->assign('pageSize', $pageSize);
+
+        if ($debug) {
+            print_r($where);
+        }
+
+        return $where['LIMIT'];
     }
 
     public static function select($table, $join, $columns, $where = null, $debug = false) {
@@ -102,7 +147,7 @@ class DBUtils {
             }
         }
     }
-    
+
     public static function delete($table, $where, $debug = false) {
         try {
             App::getDB()->delete($table, $where);
@@ -158,6 +203,23 @@ class DBUtils {
         }
 
         return $records;
+    }
+
+    public static function count($table, $where, $debug = false) {
+        try {
+            $count = App::getDB()->count($table, $where);
+
+            if ($debug) {
+                print_r(App::getDB()->last());
+            }
+        } catch (\PDOException $ex) {
+            Utils::addErrorMessage('Wystąpił błąd podczas zliczania rekordów');
+            if (App::getConf()->debug) {
+                Utils::addErrorMessage($ex->getMessage());
+            }
+        }
+
+        return $count;
     }
 
 }
