@@ -7,6 +7,7 @@ App::getRouter()->setDefaultRoute('main');
 App::getRouter()->setLoginRoute('login');
 
 Utils::addRoute('main', 'MainCtrl');
+Utils::addRoute('mainContent', 'MainCtrl');
 
 Utils::addRoute('account', 'AccountCtrl', ['customer', 'employee', 'admin']);
 Utils::addRoute('accountEdit', 'AccountCtrl', ['customer', 'employee', 'admin']);

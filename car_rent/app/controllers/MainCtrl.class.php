@@ -13,7 +13,7 @@ class MainCtrl {
 
     private $records;
 
-    public function action_main() {
+    public function processMain() {
         $car_index = ParamUtils::getFromCleanURL(1);
         if (!isset($car_index)) {
             $car_index = 1;
@@ -34,7 +34,7 @@ class MainCtrl {
                     'main_page[>]' => 0,
                     'ORDER' => 'main_page'
         ]);
-        
+
         if ($car_index > count($this->records) || $car_index < 1) {
             $car_index = 1;
         }
@@ -54,12 +54,24 @@ class MainCtrl {
         App::getSmarty()->assign('car', $car);
         App::getSmarty()->assign('car_index', $car_index);
         App::getSmarty()->assign('cars', count($this->records));
-        $this->generateView();
+        App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
+        return !App::getMessages()->isError();
     }
 
-    public function generateView() {
-        App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
-        App::getSmarty()->display('MainView.tpl');
+    public function action_main() {
+        if ($this->processMain()) {
+            App::getSmarty()->display('MainView.tpl');
+        } else {
+            App::getRouter()->redirectTo('main');
+        }
+    }
+
+    public function action_mainContent() {
+        if ($this->processMain()) {
+            App::getSmarty()->display('MainViewContent.tpl');
+        } else {
+            App::getRouter()->redirectTo('main');
+        }
     }
 
 }
