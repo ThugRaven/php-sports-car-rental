@@ -54,7 +54,7 @@ body {
 }
 
 .body__image {
-    background-image: url("/assets/R8-2.jpg");
+    /*background-image: url("/assets/R8-2.jpg");*/
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -99,6 +99,11 @@ main {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(5, 1fr);
+}
+
+a{
+    text-decoration: none;
+    padding: 0;
 }
 
 /* SIDE NAV BAR */
@@ -323,6 +328,7 @@ header {
     margin: 0 4em;
     border-radius: 2em;
     cursor: pointer;
+    font-size: 0.95em;
 }
 
 .button--rent {
@@ -349,7 +355,7 @@ header {
 /* MAIN */
 .car {
     grid-column: 1 / 4;
-    grid-row: 1 / 5;
+    grid-row: 1 / 6;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -401,6 +407,7 @@ header {
 
 .stats__text {
     font-size: 0.9em;
+    font-weight: bold;
     color: var(--clr-primary-200);
     margin-top: 0.5em;
 }
@@ -415,6 +422,11 @@ header {
     color: var(--clr-primary-200);
     font-weight: 500;
     margin: 2em 0;
+}
+
+.price{
+    color: var(--clr-accent);
+    font-weight: bold;
 }
 
 .button--car {
@@ -497,7 +509,7 @@ header {
 
 .car__image {
     /* display: none; */
-    background-image: url("/assets/R8-2.jpg");
+    /*    background-image: url("/assets/R8-2.jpg");*/
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

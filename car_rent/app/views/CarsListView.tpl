@@ -55,11 +55,9 @@
             <input type="reset" value="Wyczyść" class="primary"/>
         </form>
 
-        {if $numOfRecords > 0}
-            <div id='table'>
-                {include file="CarsListTable.tpl"}
-            </div>
-        {/if}
+        <div id='table'>
+            {include file="CarsListTable.tpl"}
+        </div>
 
         {include file='messages.tpl'}
 
