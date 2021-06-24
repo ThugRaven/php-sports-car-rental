@@ -72,7 +72,7 @@
 
 <div class="swiper__container">
     <div class="swiper__slide swiper__slide--active">
-        <div class="car__image" style="background-image: url('{$conf->app_url}/assets/img/{$car['model_url']}_highres.jpg');"></div>
+        <div class="swiper__image" style="background-image: url('{$conf->app_url}/assets/img/{$car['model_url']}_highres.jpg');"></div>
     </div>
     <div class="swiper__slide"><div class="car__image2"></div></div>
     <div class="swiper__slide">Slide 3</div>

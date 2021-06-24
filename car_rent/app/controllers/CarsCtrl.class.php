@@ -59,6 +59,7 @@ class CarsCtrl {
         $this->search_params = DBUtils::prepareParam($this->form->model, 'model[~]', $this->search_params);
         $this->search_params = DBUtils::prepareParam($this->form->type, 'transmission_type', $this->search_params);
         $this->search_params = DBUtils::prepareParam($this->form->drive, 'drive', $this->search_params);
+        $this->search_params = DBUtils::prepareParam(1, 'rentable', $this->search_params);
 
         $where = DBUtils::prepareWhere($this->search_params, $this->form->order, ['brand', 'model']);
 
@@ -71,8 +72,14 @@ class CarsCtrl {
                     'car.id_car',
                     'car.brand',
                     'car.model',
+                    'car.eng_displacement',
+                    'car.eng_info',
                     'car.eng_power',
                     'car.eng_torque',
+                    'car.time_100',
+                    'car.top_speed',
+                    'car.transmission_type',
+                    'car.drive',
                     'car_price.price_deposit'
                         ], $where);
 

@@ -219,6 +219,7 @@
         <main id="content">
             {include file="MainViewContent.tpl"}
         </main>
+
         <script src="{$conf->app_url}/js/script.js"></script>
         <script src="{$conf->app_url}/js/functions.js"></script>
     </body>
