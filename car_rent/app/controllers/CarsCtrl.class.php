@@ -95,6 +95,7 @@ class CarsCtrl {
         }
 //        print_r($this->records);
         App::getSmarty()->assign('form', $this->form);
+        App::getSmarty()->assign('page_title', 'Samochody');
         $this->assignSmarty();
         return !App::getMessages()->isError();
     }
@@ -135,6 +136,7 @@ class CarsCtrl {
                 App::getRouter()->redirectTo("car/{$this->form_rent->id_car}/{$this->records['brand_url']}/{$this->records['model_url']}");
             }
             App::getSmarty()->assign('form', $this->form_rent);
+            App::getSmarty()->assign('page_title', "{$this->records['brand']}  {$this->records['model']}");
             $this->assignSmarty();
         }
 

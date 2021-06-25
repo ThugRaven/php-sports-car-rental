@@ -733,3 +733,130 @@ header {
     align-items: center;
     justify-content: space-between;
 }
+
+/* LOGIN/REGISTER */
+.login__layout,
+.register__layout {
+    grid-column: 1 / 6;
+    grid-row: 1 / 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login__form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 30%;
+}
+
+.form__label--sign {
+    font-weight: 500;
+    margin: 0.5em 0;
+}
+
+.input__text--sign {
+    font-size: 1.2em;
+    padding: 0.5em 1em;
+    width: 100%;
+}
+
+.button--sign {
+    margin: 0;
+    margin-top: 1em;
+    font-size: 1em;
+    padding: 0.8em 0em;
+    border-radius: 0.25em;
+}
+
+.sign-tip {
+    margin: 1em 0;
+}
+
+.sign-tip a {
+    color: var(--clr-accent);
+    font-weight: bold;
+}
+
+/* REGISTER */
+.register__layout {
+    flex-wrap: wrap;
+}
+
+.register__form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 40%;
+}
+
+.register__double {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1em;
+    margin: 0;
+}
+
+.register__half{
+    display: flex;
+    flex-direction: column;
+    margin: 0.5em 0;
+}
+
+/* MESSAGES SIGN */
+.msgs__list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.msgs__item {
+    display: flex;
+    align-items: center;
+    padding: 0.5em 0.75em;
+    margin: 0em;
+    margin-top: 1em;
+    border-radius: 0.25em;
+    border: 0.05em solid transparent;
+}
+
+.msgs__item--error {
+    /* background-color: #f6a7a3; */
+    background-color: var(--bg-primary-dark);
+    border-color: #8f120d;
+    color: #f6a7a3;
+}
+
+.msgs__item--info {
+    /* background-color: #a8f1c6; */
+    background-color: var(--bg-primary-dark);
+    border-color: #178443;
+    color: #a8f1c6;
+}
+
+.msgs__icon {
+    width: 1em;
+    height: 1em;
+    min-width: 1em;
+    min-height: 1em;
+    margin-right: 0.5em;
+}
+
+.msgs__icon--error {
+    fill: #f6a7a3;
+}
+
+.msgs__icon--info {
+    fill: #a8f1c6;
+}
+
+/* MESSAGES NORMAL */
+.msgs--normal {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 0.5em;
+}

@@ -37,9 +37,6 @@ class RegisterCtrl {
             'max_length' => 72,
             'validator_message' => 'Maksymalna długość hasła to 72 znaków!'
         ]);
-        $this->form->password_v = $this->v->validateFromRequest('password_v', [
-            'trim' => true,
-        ]);
         $this->form->email = $this->v->validateFromRequest('email', [
             'trim' => true,
             'required' => true,
@@ -81,11 +78,6 @@ class RegisterCtrl {
     }
 
     public function validate() {
-        if (strcmp($this->form->password_v, $this->form->password) != 0) {
-            Utils::addErrorMessage('Hasła nie są takie same!');
-            return false;
-        }
-
         return !App::getMessages()->isError();
     }
 
@@ -127,6 +119,7 @@ class RegisterCtrl {
     public function generateView() {
         App::getSmarty()->assign('form', $this->form);
         App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
+        App::getSmarty()->assign('page_title', "Rejestracja");
 
         App::getSmarty()->display('RegisterView.tpl');
     }

@@ -1,35 +1,107 @@
-<!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+{extends file="main.tpl"}
 
-    <head>
-        <meta charset="utf-8"/>
-        <title>Rejestracja</title>
-    </head>
+{block name=content}
+    <div class="register__layout">
+        <form action="{url action='register'}" method="post" class="register__form">
+            <h1>Zarejestruj się</h1>
+            <div class="register__double">
+                <div class="register__half">
+                    <label for="id_login" class="form__label form__label--sign"
+                           >Login</label
+                    >
+                    <input
+                        id="id_login"
+                        type="text"
+                        name="login"
+                        class="input__text input__text--sign"
+                        value="{$form->login}"
+                        />
+                </div>
+                <div class="register__half">
+                    <label for="id_password" class="form__label form__label--sign"
+                           >Hasło</label
+                    >
+                    <input
+                        id="id_password"
+                        type="password"
+                        name="password"
+                        class="input__text input__text--sign"
+                        value="{$form->password}"
+                        />
+                </div>
+            </div>
+            <div class="register__double">
+                <div class="register__half">
+                    <label for="id_name" class="form__label form__label--sign"
+                           >Imię</label
+                    >
+                    <input
+                        id="id_name"
+                        type="text"
+                        name="name"
+                        class="input__text input__text--sign"
+                        value="{$form->name}"
+                        />
+                </div>
+                <div class="register__half">
+                    <label for="id_surname" class="form__label form__label--sign"
+                           >Nazwisko</label
+                    >
+                    <input
+                        id="id_surname"
+                        type="text"
+                        name="surname"
+                        class="input__text input__text--sign"
+                        value="{$form->surname}"
+                        />
+                </div>
+            </div>
+            <div class="register__double">
+                <div class="register__half">
+                    <label for="id_phone_number" class="form__label form__label--sign"
+                           >Numer telefonu</label
+                    >
+                    <input
+                        id="id_phone_number"
+                        type="text"
+                        name="phone_number"
+                        class="input__text input__text--sign"
+                        value="{$form->phone_number}"
+                        />
+                </div>
+                <div class="register__half">
+                    <label for="id_email" class="form__label form__label--sign"
+                           >E-Mail</label
+                    >
+                    <input
+                        id="id_email"
+                        type="text"
+                        name="email"
+                        class="input__text input__text--sign"
+                        value="{$form->email}"
+                        />
+                </div>
+            </div>
+            <label for="id_birth_date" class="form__label form__label--sign"
+                   >Data urodzenia</label
+            >
+            <input
+                id="id_birth_date"
+                type="date"
+                name="birth_date"
+                class="input__text input__text--sign"
+                value="{$form->birth_date}"
+                />
+            {include file='messages_form.tpl'}
+            <input
+                type="submit"
+                value="Zarejestruj"
+                class="button button--form button--submit button--sign"
+                />
 
-    <body>
-
-        <form action="{url action='register'}" method="post">
-            <label for="id_login" class="label">Login: </label>
-            <input id="id_login" type="text" name="login" value="{$form->login}"/><br />
-            <label for="id_pass" class="label">Hasło: </label>
-            <input id="id_pass" type="password" name="password" value="{$form->password}" /><br />
-            <label for="id_pass_v" class="label">Powtórz hasło: </label>
-            <input id="id_pass_v" type="password" name="password_v" value="{$form->password_v}" /><br />
-            <label for="id_email" class="label">E-Mail: </label>
-            <input id="id_email" type="email" name="email" value="{$form->email}" /><br />
-            <label for="id_name" class="label">Imię: </label>
-            <input id="id_name" type="text" name="name" value="{$form->name}" /><br />
-            <label for="id_surname" class="label">Nazwisko: </label>
-            <input id="id_surname" type="text" name="surname" value="{$form->surname}" /><br />
-            <label for="id_phone_number" class="label">Numer telefonu: </label>
-            <input id="id_phone_number" type="text" name="phone_number" value="{$form->phone_number}" /><br />
-            <label for="id_birth_date" class="label">Data urodzenia: </label>
-            <input id="id_birth_date" type="date" name="birth_date" value="{$form->birth_date}" /><br />
-            <br />
-            <input type="submit" value="Zarejestruj" class="primary">
+            <span class="sign-tip"
+                  >Posiadasz już konto? <a href="{url action='login'}">Zaloguj się</a></span
+            >
         </form>
-
-        {include file='messages.tpl'}
-    </body>
-
-</html>
+    </div>
+{/block}

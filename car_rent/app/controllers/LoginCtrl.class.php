@@ -30,7 +30,6 @@ class LoginCtrl {
         }
         if (SessionUtils::loadObject('user', true) !== null) {
             Utils::addErrorMessage('Jesteś już zalogowany');
-            SessionUtils::storeMessages();
             return false;
         }
 
@@ -68,6 +67,7 @@ class LoginCtrl {
 
     public function action_login() {
         $this->getParams();
+        App::getSmarty()->assign('page_title', "Logowanie");
 
         if ($this->validate()) {
             App::getRouter()->redirectTo('main');

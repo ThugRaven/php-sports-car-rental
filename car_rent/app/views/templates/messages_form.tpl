@@ -1,4 +1,4 @@
-<div class="msgs msgs--normal">
+<div class="msgs msgs--sign">
     {if $msgs->isError()}
         <ul class="msgs__list msgs__list--errors">
             {foreach $msgs->getMessages() as $msg}

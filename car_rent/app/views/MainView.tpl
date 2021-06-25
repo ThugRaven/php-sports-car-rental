@@ -193,6 +193,27 @@
                             <a href="{url action='login'}" class="nav__link">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
+                                    enable-background="new 0 0 24 24"
+                                    height="24px"
+                                    viewBox="0 0 24 24"
+                                    width="24px"
+                                    class="nav__icon"
+                                    >
+                                <g><rect fill="none" height="24" width="24" /></g>
+                                <g>
+                                <path
+                                    d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z"
+                                    />
+                                </g>
+                                </svg>
+                                <span class="link__text">Zaloguj się</span>
+                            </a>
+                            <span class="link__tooltip">Zaloguj się</span>
+                        </li>
+                        <li class="nav__item">
+                            <a href="{url action='registration'}" class="nav__link">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
                                     height="24px"
                                     viewBox="0 0 24 24"
                                     width="24px"
@@ -203,9 +224,9 @@
                                     d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
                                     />
                                 </svg>
-                                <span class="link__text">Zaloguj się</span>
+                                <span class="link__text">Zarejestruj się</span>
                             </a>
-                            <span class="link__tooltip">Zaloguj się</span>
+                            <span class="link__tooltip">Zarejestruj się</span>
                         </li>
                     {/if}
                 </div>
@@ -218,6 +239,7 @@
 
         <main id="content">
             {include file="MainViewContent.tpl"}
+            {include file="messages.tpl"}
         </main>
 
         <script src="{$conf->app_url}/js/script.js"></script>
