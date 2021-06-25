@@ -1,8 +1,8 @@
 :root {
     /* --color-primary: #4a4e54;
-    --color-primary-200: hsl(216, 6%, 70%);
-    --color-primary-dark: #1b2029;
-    --color-primary-dark-700: hsl(219, 21%, 25%); */
+--color-primary-200: hsl(216, 6%, 70%);
+--color-primary-dark: #1b2029;
+--color-primary-dark-700: hsl(219, 21%, 25%); */
 
     --clr-primary: #36393f;
     --clr-primary-200: hsl(220, 8%, 70%);
@@ -56,7 +56,6 @@ body {
 }
 
 .body__image {
-    /*background-image: url("/assets/R8-2.jpg");*/
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -200,7 +199,7 @@ a {
 
 .nav__icon {
     /* width: 2rem;
-    min-width: 2rem; */
+min-width: 2rem; */
     margin: 0 calc((var(--side-nav-width) - var(--side-nav-icon-size)) / 2);
     fill: hsl(0, 0%, 100%, 0.7);
     width: var(--side-nav-icon-size);
@@ -391,10 +390,6 @@ header {
     font-size: 3em;
 }
 
-.car__model {
-    white-space: nowrap;
-}
-
 .car__brand {
     font-size: 10em;
     font-weight: bold;
@@ -406,6 +401,7 @@ header {
     color: transparent;
     -webkit-text-stroke-color: white;
     -webkit-text-stroke-width: 0.02em;
+    white-space: nowrap;
 }
 
 .stats__list {
@@ -448,7 +444,7 @@ header {
     margin: 2em 0;
 }
 
-.price{
+.price {
     color: var(--clr-accent);
     font-weight: bold;
 }
@@ -481,8 +477,8 @@ header {
 .swiper__slide {
     display: none;
     /* display: flex;
-    justify-content: center;
-    align-items: center; */
+justify-content: center;
+align-items: center; */
     position: relative;
     z-index: -1;
 }
@@ -533,7 +529,6 @@ header {
 
 .swiper__image {
     /* display: none; */
-    background-image: url("/assets/R8-2.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -709,26 +704,46 @@ header {
     font-weight: normal;
     display: flex;
     flex-wrap: wrap;
+    text-align: center;
 }
 
 .button--rect {
+    padding: 1em 1.8em;
+}
+
+.button--empty {
     background-color: transparent;
     color: var(--clr-accent-400);
     border: 0.15em solid var(--clr-accent);
     font-weight: bolder;
-    padding: 1em 1.8em;
     text-transform: uppercase;
     font-size: 0.95em;
     transition: border-color 150ms ease;
 }
 
-.button--rect:hover{
+.button--empty:hover {
     background-color: var(--clr-primary-dark-800);
     color: white;
     border-color: var(--clr-primary-dark-800);
 }
 
-.cars__actions{
+.button--full {
+    background-color: var(--clr-accent);
+    color: white;
+    border: 0.15em solid var(--clr-accent);
+    font-weight: bolder;
+    text-transform: uppercase;
+    font-size: 0.95em;
+    transition: border-color 150ms ease;
+}
+
+.button--full:hover {
+    background-color: var(--clr-primary-dark-800);
+    color: white;
+    border-color: var(--clr-primary-dark-800);
+}
+
+.cars__actions {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -738,7 +753,7 @@ header {
 .login__layout,
 .register__layout {
     grid-column: 1 / 6;
-    grid-row: 1 / 5;
+    grid-row: 1 / 6;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -798,7 +813,7 @@ header {
     margin: 0;
 }
 
-.register__half{
+.register__half {
     display: flex;
     flex-direction: column;
     margin: 0.5em 0;
@@ -861,14 +876,246 @@ header {
     margin: 0.5em;
 }
 
-/* CONTACTS */
-.contacts {
+/* CONTACT */
+.contact__layout {
     grid-column: 1 / 6;
-    grid-row: 1 / 5;
+    grid-row: 1 / 6;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 1.5em;
     line-height: 1.5em;
+}
+
+/* CAR */
+.car__layout {
+    grid-column: 1 / 6;
+    grid-row: 1 / 6;
+}
+
+.car__header {
+    position: relative;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 2.5em;
+}
+
+.car__header .car__model {
+    white-space: normal;
+}
+
+.car__image {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0.4;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    filter: blur(0.08em) grayscale(0.6);
+}
+
+.car__stats {
+    margin-top: 2.5em;
+}
+
+.car__stats .stats__list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1em;
+}
+
+.car__stats .stats__item {
+    align-items: center;
+    margin: 0.05em;
+}
+
+.car__stats .stats__icon {
+    width: 2.5em;
+    height: 2.5em;
+}
+
+.car__stats .stats__text {
+    font-size: 1.2em;
+}
+
+.car__stats .stats__value {
+    margin-top: 0.5em;
+    font-size: 1em;
+    font-weight: normal;
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.car__prices {
+    border-collapse: collapse;
+    margin: auto;
+}
+
+.car__prices td,
+.car__prices th {
+    padding: 1em 5em;
+}
+
+.car__prices td {
+    text-align: center;
+}
+
+.car__prices tbody tr:nth-child(odd) {
+    background-color: var(--bg-primary-dark);
+}
+
+.car__prices td:first-child {
+    font-weight: bold;
+    border-right: 0.05em solid var(--clr-accent);
+}
+
+.car__prices thead {
+    border-bottom: 0.05em solid var(--clr-accent);
+}
+
+.car__prices th:first-child {
+    border-right: 0.05em solid var(--clr-accent);
+}
+
+.heading {
+    text-align: center;
+}
+
+.car__rent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rent__text {
+    margin: 0.5em;
+    font-size: 1.25em;
+}
+
+.car__buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 1em;
+}
+
+.car__button {
+    margin: 1em;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    width: 50%;
+}
+
+/* RENT DEPOSIT/ RENT */
+.deposit__layout {
+    grid-column: 1 / 6;
+    grid-row: 1 / 6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.deposit__variants {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.deposit__variant {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: var(--bg-primary-dark);
+    margin: 1em;
+    border-radius: 0.5em;
+    border: 0.05em solid var(--clr-primary-dark-700);
+}
+
+.deposit__name {
+    background-color: var(--clr-primary-dark-700);
+    text-transform: uppercase;
+    font-size: 1.25em;
+    padding: 0.5em 1.25em;
+    text-align: center;
+}
+
+.deposit__price-txt {
+    font-weight: bold;
+    padding: 1em;
+    text-align: center;
+}
+
+.deposit__price {
+    font-size: 2em;
+    font-weight: bold;
+    border-bottom: 0.1em solid var(--clr-accent);
+    padding: 0em;
+    text-align: center;
+}
+
+.button--deposit {
+    margin: 1.25em;
+}
+
+.rent__layout {
+    grid-column: 1 / 6;
+    grid-row: 1 / 6;
+    display: flex;
+    flex-direction: column;
+}
+
+.rent__summary {
+    align-self: center;
+}
+
+.rent__list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.rent__item {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+}
+
+.rent__item .rent__text {
+    font-weight: bold;
+    margin: 0.5em 0em;
+}
+
+.rent__value {
+    text-align: center;
+}
+
+.rent__price {
+    font-size: 2.5em;
+    font-weight: bold;
+    border-bottom: 0.1em solid var(--clr-accent);
+    padding: 0em;
+    text-align: center;
+}
+
+.rent__payment {
+    align-self: center;
+    font-size: 1.5em;
 }

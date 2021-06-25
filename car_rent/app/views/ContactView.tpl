@@ -1,7 +1,7 @@
 {extends file="main.tpl"}
 
 {block name=content}
-    <div class="contacts">
+    <div class="contact__layout">
         <h1>Kontakt</h1>
         <div>
             <h2>Car Rent</h2>

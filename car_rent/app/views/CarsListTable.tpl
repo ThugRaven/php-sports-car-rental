@@ -103,7 +103,7 @@
                             </ul>
                         </div>
                         <div class="cars__actions">
-                            <a href="{url action='car' id=$r['id_car'] brand=$r['brand_url'] model=$r['model_url']}" class="button button--rect">Zarezerwuj</a>
+                            <a href="{url action='car' id=$r['id_car'] brand=$r['brand_url'] model=$r['model_url']}" class="button button--rect button--empty">Zarezerwuj</a>
                             <span class="cars__prices">już od <span class="price">{$r['price_deposit']} zł </span>za dobę!</span>
                         </div>
                     </div>

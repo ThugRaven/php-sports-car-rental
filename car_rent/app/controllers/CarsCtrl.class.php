@@ -96,6 +96,7 @@ class CarsCtrl {
 //        print_r($this->records);
         App::getSmarty()->assign('form', $this->form);
         App::getSmarty()->assign('page_title', 'Samochody');
+        App::getSmarty()->assign('records', $this->records);
         $this->assignSmarty();
         return !App::getMessages()->isError();
     }
@@ -135,8 +136,10 @@ class CarsCtrl {
             if ($brand !== $this->records['brand_url'] || $model !== $this->records['model_url']) {
                 App::getRouter()->redirectTo("car/{$this->form_rent->id_car}/{$this->records['brand_url']}/{$this->records['model_url']}");
             }
+
             App::getSmarty()->assign('form', $this->form_rent);
             App::getSmarty()->assign('page_title', "{$this->records['brand']}  {$this->records['model']}");
+            App::getSmarty()->assign('car', $this->records);
             $this->assignSmarty();
         }
 
@@ -169,7 +172,6 @@ class CarsCtrl {
 
     public function assignSmarty() {
         App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
-        App::getSmarty()->assign('records', $this->records);
     }
 
 }
