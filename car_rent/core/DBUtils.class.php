@@ -205,11 +205,15 @@ class DBUtils {
         return $records;
     }
 
-    public static function count($table, $where, $debug = false) {
+    public static function count($table, $join, $columns, $where = false, $debug = false) {
         try {
-            $count = App::getDB()->count($table, $where);
+            if (isset($join)) {
+                $count = App::getDB()->count($table, $join, $columns, $where);
+            } else {
+                $count = App::getDB()->count($table, $columns);
+            }
 
-            if ($debug) {
+            if ($debug || (!isset($join) && $where)) {
                 print_r(App::getDB()->last());
             }
         } catch (\PDOException $ex) {

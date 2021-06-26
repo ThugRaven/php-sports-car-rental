@@ -90,7 +90,9 @@ class DashboardCarsCtrl {
 
         $where = DBUtils::prepareWhere($this->search_params, $this->form->order, ['brand', 'model']);
 
-        $numOfRecords = DBUtils::count('car', $where);
+        $numOfRecords = DBUtils::count('car', [
+                    '[><]car_price' => 'id_car_price'
+                        ], '*', $where);
         $where['LIMIT'] = DBUtils::preparePagination($numOfRecords, $this->form->page_size);
 
         $this->records = DBUtils::select('car', [
