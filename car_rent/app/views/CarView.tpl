@@ -5,8 +5,8 @@
     <div class="car__layout">
         <div class="car__header">
             <div class="car__image" style="background-image: url('{$conf->app_url}/assets/img/{$car['model_url']}_thumb.jpg');"></div>
-            <span class="car__brand">{$car["brand"]}</span>
-            <span class="car__model">{$car["model"]}</span>
+            <span class="car__brand">{$car['brand']}</span>
+            <span class="car__model">{$car['model']}</span>
         </div>
         <div class="car__stats">
             <ul class="stats__list">

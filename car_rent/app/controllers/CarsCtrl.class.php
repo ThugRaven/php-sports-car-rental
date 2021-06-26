@@ -118,7 +118,30 @@ class CarsCtrl {
 
             $this->records = DBUtils::get('car', [
                         '[><]car_price' => 'id_car_price'
-                            ], '*', $where);
+                            ], [
+                        'car.id_car',
+                        'car.brand',
+                        'car.model',
+                        'car.eng_displacement',
+                        'car.eng_info',
+                        'car.eng_power',
+                        'car.eng_torque',
+                        'car.time_100',
+                        'car.top_speed',
+                        'car.transmission_type',
+                        'car.drive',
+                        'car.fuel_type',
+                        'car.fuel_capacity',
+                        'car.fuel_consumption',
+                        'car.doors',
+                        'car.seats',
+                        'car.weight',
+                        'car_price.price_deposit',
+                        'car_price.price_no_deposit',
+                        'car_price.km_limit',
+                        'car_price.additional_km',
+                        'car_price.deposit'
+                            ], $where);
 
             if (empty($this->records)) {
                 Utils::addErrorMessage('Brak pojazdu o podanym ID!');
