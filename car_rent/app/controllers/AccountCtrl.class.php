@@ -14,6 +14,7 @@ class AccountCtrl {
 
     private $form;
     private $records;
+    private $rents;
 
     public function __construct() {
         $this->form = new AccountEditForm();
@@ -46,11 +47,22 @@ class AccountCtrl {
                     'login' => $this->form->login
         ]);
 
+        $id_user = DBUtils::get('user', null, 'id_user', [
+                    'login' => SessionUtils::loadObject('user', true)->login]
+        );
+        $where['id_user'] = $id_user;
+        $this->rents = DBUtils::select('rent', [
+                    '[><]rent_status' => 'id_rent_status',
+                    '[><]car' => 'id_car'
+                        ], '*', $where);
+
         return !App::getMessages()->isError();
     }
 
     public function action_account() {
         $this->validate();
+        App::getSmarty()->assign('account', $this->records);
+        App::getSmarty()->assign('rents', $this->rents);
         $this->generateView();
     }
 
@@ -181,7 +193,7 @@ class AccountCtrl {
         App::getSmarty()->assign('form', $this->form);
         App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
 
-        App::getRouter()->redirectTo('main');
+        App::getRouter()->redirectTo('account/' . SessionUtils::loadObject('user', true)->login);
     }
 
 //    public function action_accountDelete() {

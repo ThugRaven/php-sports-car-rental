@@ -246,6 +246,7 @@ min-width: 2rem; */
 .nav__item:hover,
 .nav__item--active {
     background-color: var(--clr-side-bar-hover);
+    transition: background-color 150ms ease;
 }
 
 .nav__item:hover .nav__icon {
@@ -344,6 +345,7 @@ header {
     cursor: pointer;
     color: white;
     font-weight: 600;
+    text-align: center;
     border: 0;
     transition: background-color 150ms ease;
 }
@@ -359,7 +361,7 @@ header {
     background-color: var(--clr-accent);
     letter-spacing: 0.15ch;
     box-shadow: hsl(358, 84%, 56%, 0.2) 0em 1em 3em 0.5em;
-    transition: transform 150ms ease;
+    transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease;
 }
 
 .button--rent:hover,
@@ -453,7 +455,7 @@ header {
     background-color: hsl(220, 8%, 23%, 0.5);
     margin: 0;
     padding: 1.4em 3.5em;
-    transition: transform 150ms ease;
+    transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease;
 }
 
 .button--car:hover,
@@ -718,7 +720,7 @@ align-items: center; */
     font-weight: bolder;
     text-transform: uppercase;
     font-size: 0.95em;
-    transition: border-color 150ms ease;
+    transition: border-color 150ms ease, background-color 150ms ease;
 }
 
 .button--empty:hover {
@@ -734,7 +736,7 @@ align-items: center; */
     font-weight: bolder;
     text-transform: uppercase;
     font-size: 0.95em;
-    transition: border-color 150ms ease;
+    transition: border-color 150ms ease, background-color 150ms ease;
 }
 
 .button--full:hover {
@@ -1070,7 +1072,7 @@ align-items: center; */
 
 .button--radio {
     margin: 1.25em;
-    transition: transform 150ms ease;
+    transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease;
 }
 
 input[type="radio"]:checked + .button--radio {
@@ -1143,3 +1145,85 @@ input[type="radio"]:checked + .button--radio {
     align-self: center;
     font-size: 1.5em;
 }
+
+/* ACCOUNT */
+.account__layout {
+    grid-column: 1 / 6;
+    grid-row: 1 / 6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: auto;
+    width: 100%;
+}
+
+.account__icon {
+    width: 8em;
+    height: 8em;
+    fill: white;
+}
+
+.account__person {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.account__verified {
+    font-weight: bold;
+    border-bottom: 0.05em solid var(--clr-accent);
+}
+
+.account__email {
+    color: var(--clr-primary-200);
+    padding: 1em;
+}
+
+.account__link {
+    color: white;
+    font-weight: bold;
+    font-size: 1.25em;
+    transition: color 150ms ease;
+}
+
+.account__link:hover {
+    color: var(--clr-primary-200);
+}
+
+.account__table-name {
+    font-weight: bold;
+    font-size: 2em;
+    margin-top: 1em;
+}
+
+.account__rents {
+    margin: 1em;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.account__rents td,
+.account__rents th {
+    padding: 0.5em 1em;
+}
+
+.account__rents td {
+    text-align: center;
+}
+
+.account__rents tbody tr:nth-child(odd) {
+    background-color: var(--bg-primary-dark);
+}
+
+.account__rents thead {
+    border-bottom: 0.05em solid var(--clr-accent);
+}
+
+.account-edit__layout {
+    grid-column: 1 / 6;
+    grid-row: 1 / 6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+

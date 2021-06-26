@@ -99,7 +99,7 @@
                 <div class="nav__account-info">
                     {if !empty($user->role)}
                         <li class="nav__item">
-                            <a href="#" class="nav__link">
+                            <a href="{url action='accountEdit' login=$user->login}" class="nav__link">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     enable-background="new 0 0 24 24"
