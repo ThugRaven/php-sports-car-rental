@@ -26,7 +26,8 @@ Utils::addRoute('carsList', 'CarsCtrl');
 Utils::addRoute('car', 'CarsCtrl');
 
 Utils::addRoute('rent', 'RentCtrl', ['customer', 'employee', 'admin']);
-Utils::addRoute('rented', 'RentCtrl', ['customer', 'employee', 'admin']);
+Utils::addRoute('rentSummary', 'RentCtrl', ['customer', 'employee', 'admin']);
+Utils::addRoute('rentFinal', 'RentCtrl', ['customer', 'employee', 'admin']);
 
 Utils::addRoute('dashboard', 'DashboardCtrl', ['employee', 'admin']);
 Utils::addRoute('dashboardMock', 'DashboardMockCtrl', ['admin']);

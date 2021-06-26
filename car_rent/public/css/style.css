@@ -1018,22 +1018,23 @@ align-items: center; */
 }
 
 /* RENT DEPOSIT/ RENT */
-.deposit__layout {
+.rent-options__layout {
     grid-column: 1 / 6;
     grid-row: 1 / 6;
     display: flex;
     justify-content: center;
-    align-items: center;
     flex-direction: column;
 }
 
-.deposit__variants {
+.deposit__variants,
+.payment__variants {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.deposit__variant {
+.deposit__variant,
+.payment__variant {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1044,17 +1045,19 @@ align-items: center; */
     border: 0.05em solid var(--clr-primary-dark-700);
 }
 
-.deposit__name {
+.deposit__name,
+.payment__name {
     background-color: var(--clr-primary-dark-700);
     text-transform: uppercase;
     font-size: 1.25em;
-    padding: 0.5em 1.25em;
+    padding: 0.5em 0em;
+    width: 100%;
     text-align: center;
 }
 
 .deposit__price-txt {
     font-weight: bold;
-    padding: 1em;
+    padding: 1.25em;
     text-align: center;
 }
 
@@ -1062,12 +1065,33 @@ align-items: center; */
     font-size: 2em;
     font-weight: bold;
     border-bottom: 0.1em solid var(--clr-accent);
-    padding: 0em;
     text-align: center;
 }
 
-.button--deposit {
+.button--radio {
     margin: 1.25em;
+    transition: transform 150ms ease;
+}
+
+input[type="radio"]:checked + .button--radio {
+    background-color: var(--clr-primary-dark-800);
+    color: white;
+    border-color: var(--clr-primary-dark-800);
+    transform: scale(0.95);
+}
+
+.deposit__radio,
+.payment__radio {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+.payment__icon {
+    width: 3em;
+    height: 3em;
+    fill: white;
+    margin: 1.25em;
+    margin-bottom: 0;
 }
 
 .rent__layout {
