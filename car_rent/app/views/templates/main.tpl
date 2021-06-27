@@ -205,7 +205,6 @@
         <main id="content">
             {block name=content}
             {/block}
-            {include file="messages.tpl"}
         </main>
 
         <script src="{$conf->app_url}/js/script.js"></script>

@@ -50,11 +50,21 @@ class AccountCtrl {
         $id_user = DBUtils::get('user', null, 'id_user', [
                     'login' => SessionUtils::loadObject('user', true)->login]
         );
+
         $where['id_user'] = $id_user;
+        $where['ORDER'] = ['create_time' => 'DESC'];
         $this->rents = DBUtils::select('rent', [
                     '[><]rent_status' => 'id_rent_status',
-                    '[><]car' => 'id_car'
+                    '[><]car' => 'id_car',
                         ], '*', $where);
+        for ($i = 0; $i < count($this->rents); $i++) {
+            $this->rents[$i]['brand_url'] = trim($this->rents[$i]['brand']);
+            $this->rents[$i]['model_url'] = trim($this->rents[$i]['model']);
+            $this->rents[$i]['brand_url'] = strtolower($this->rents[$i]['brand_url']);
+            $this->rents[$i]['model_url'] = strtolower($this->rents[$i]['model_url']);
+            $this->rents[$i]['brand_url'] = preg_replace('/\s+/', '-', $this->rents[$i]['brand_url']);
+            $this->rents[$i]['model_url'] = preg_replace('/\s+/', '-', $this->rents[$i]['model_url']);
+        }
 
         return !App::getMessages()->isError();
     }

@@ -38,10 +38,10 @@
                     {foreach $rents as $r}
                         {strip}
                             <tr>
-                                <td>{$r['brand']} {$r['model']}</td>
+                                <td><a href="{url action='car' id=$r['id_car'] brand=$r['brand_url'] model=$r['model_url']}" class="link">{$r['brand']} {$r['model']}</a></td>
                                 <td>{$r['rent_start']}</td>
                                 <td>{$r['rent_end']}</td>
-                                <td>{if $r['status'] === 'active'}Aktywny{else if $r['status'] === 'completed'}Zakończony{/if}</td>
+                                {if $r['status'] === 'active'}<td class="td td--positive">Aktywny</td>{else if $r['status'] === 'completed'}<td class="td td--negative">Zakończony</td>{/if}
                                 <td>{$r['distance']} km</td>
                                 <td>{if $r['deposit'] == '1'}Tak{else if $r['deposit'] == '0'}Nie{/if}</td>
                                 <td>{$r['total_price']} zł</td>
