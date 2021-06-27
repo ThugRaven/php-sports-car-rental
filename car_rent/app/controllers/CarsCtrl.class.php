@@ -147,7 +147,6 @@ class CarsCtrl {
 
             if (empty($this->records)) {
                 Utils::addErrorMessage('Brak pojazdu o podanym ID!');
-                SessionUtils::storeMessages();
                 return false;
             }
 
@@ -175,7 +174,8 @@ class CarsCtrl {
         if ($this->processCars()) {
             App::getSmarty()->display('CarsListView.tpl');
         } else {
-//            App::getRouter()->redirectTo('main');
+            SessionUtils::storeMessages();
+            App::getRouter()->redirectTo('main');
         }
     }
 
@@ -183,6 +183,7 @@ class CarsCtrl {
         if ($this->processCars()) {
             App::getSmarty()->display('CarsListTable.tpl');
         } else {
+            SessionUtils::storeMessages();
             App::getRouter()->redirectTo('main');
         }
     }
@@ -191,7 +192,8 @@ class CarsCtrl {
         if ($this->processCar()) {
             App::getSmarty()->display('CarView.tpl');
         } else {
-            App::getRouter()->redirectTo('cars');
+            SessionUtils::storeMessages();
+            App::getRouter()->redirectTo('main');
         }
     }
 

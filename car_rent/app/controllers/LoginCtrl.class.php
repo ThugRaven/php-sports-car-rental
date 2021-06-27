@@ -80,8 +80,6 @@ class LoginCtrl {
         session_unset();
         session_destroy();
 
-//        Utils::addInfoMessage('Poprawnie wylogowano z systemu');
-
         App::getRouter()->redirectTo('main');
     }
 

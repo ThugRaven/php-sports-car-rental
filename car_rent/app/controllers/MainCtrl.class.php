@@ -59,11 +59,8 @@ class MainCtrl {
     }
 
     public function action_main() {
-        if ($this->processMain()) {
-            App::getSmarty()->display('MainView.tpl');
-        } else {
-            App::getRouter()->redirectTo('main');
-        }
+        $this->processMain();
+        App::getSmarty()->display('MainView.tpl');
     }
 
     public function action_mainContent() {

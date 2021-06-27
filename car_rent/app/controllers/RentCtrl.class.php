@@ -34,9 +34,6 @@ class RentCtrl {
         if ($date_diff->h > 0) {
             $days++;
         }
-        echo $days;
-        echo '\n';
-        print_r($this->form);
 
         $this->form->id_user = DBUtils::get('user', null, 'id_user', [
                     'login' => SessionUtils::loadObject('user', true)->login]
@@ -50,13 +47,17 @@ class RentCtrl {
                     'car_price.price_deposit',
                     'car_price.price_no_deposit'
                         ], $where);
+
+        if (empty($this->records)) {
+            Utils::addErrorMessage('Brak pojazdu o podanym ID!');
+            return false;
+        }
         App::getSmarty()->assign('car', $this->records);
 
         $rent = new Rent($this->form->id_car, $this->form->id_user, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s'), $days, '', '', '');
         SessionUtils::storeObject('rent', $rent);
-        print_r($rent);
+        App::getSmarty()->assign('page_title', "Wynajem - Opcje");
 
-        SessionUtils::storeMessages();
         return !App::getMessages()->isError();
     }
 
@@ -98,9 +99,8 @@ class RentCtrl {
         $rent = new Rent($this->rent->id_car, $this->rent->id_user, $this->rent->rent_start, $this->rent->rent_end, $this->rent->rent_diff, $this->rent->deposit, $this->rent->total_price, $this->rent->payment_type);
         SessionUtils::storeObject('rent', $rent);
         App::getSmarty()->assign('rent', $rent);
-        print_r($rent);
+        App::getSmarty()->assign('page_title', "Wynajem - Podsumowanie");
 
-        SessionUtils::storeMessages();
         return !App::getMessages()->isError();
     }
 
@@ -164,7 +164,6 @@ class RentCtrl {
             }
         }
 
-        SessionUtils::storeMessages();
         return !App::getMessages()->isError();
     }
 
@@ -177,6 +176,7 @@ class RentCtrl {
             $this->assignSmarty();
             App::getSmarty()->display('RentOptionsView.tpl');
         } else {
+            SessionUtils::storeMessages();
             App::getRouter()->redirectTo('main');
         }
     }
@@ -186,6 +186,7 @@ class RentCtrl {
             $this->assignSmarty();
             App::getSmarty()->display('RentSummaryView.tpl');
         } else {
+            SessionUtils::storeMessages();
             App::getRouter()->redirectTo('main');
         }
     }
@@ -193,8 +194,10 @@ class RentCtrl {
     public function action_rentFinal() {
         if ($this->processRentFinal()) {
             $this->assignSmarty();
+            SessionUtils::storeMessages();
             App::getRouter()->redirectTo('account/' . SessionUtils::loadObject('user', true)->login);
         } else {
+            SessionUtils::storeMessages();
             App::getRouter()->redirectTo('main');
         }
     }
