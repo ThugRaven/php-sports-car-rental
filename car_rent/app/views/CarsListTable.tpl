@@ -1,4 +1,6 @@
 {if $numOfRecords > 0}
+    {include file="pagination_top.tpl"}
+
     <ul class="cars__list">
         {foreach $records as $r}
             {strip}
@@ -112,21 +114,7 @@
         {/foreach}
     </ul>
 
-    <form method="post">
-        <div>
-            Liczba rekordów {$pageRecords} z {$numOfRecords}
-            <br />
-            <button onclick="ajaxPostForm('cars-form', '{url action='carsList' p=$pagination->firstPage}', 'cars-table');
-                    return false;">|<</button>
-            <button onclick="ajaxPostForm('cars-form', '{url action='carsList' p=$pagination->page - 1}', 'cars-table');
-                    return false;"><</button>
-            Strona {$pagination->page} z {$pagination->lastPage}
-            <button onclick="ajaxPostForm('cars-form', '{url action='carsList' p=$pagination->page + 1}', 'cars-table');
-                    return false;">></button>
-            <button onclick="ajaxPostForm('cars-form', '{url action='carsList' p=$pagination->lastPage}', 'cars-table');
-                    return false;">>|</button>
-        </div>
-    </form>
+    {include file="pagination_bottom.tpl"}
 {else}
     Brak samochodów o podanych kryteriach!
 {/if}
