@@ -48,6 +48,18 @@ class RentCtrl {
                     'car_price.price_no_deposit'
                         ], $where);
 
+        $where['OR'] = ['rent_start[<>]' => [$this->form->rent_start, $this->form->rent_end],
+            'rent_end[<>]' => [$this->form->rent_start, $this->form->rent_end]];
+
+        $isNotAvailable = DBUtils::has('rent', [
+                    '[><]car' => 'id_car'
+                        ], $where);
+
+        if ($isNotAvailable) {
+            Utils::addErrorMessage('Podany pojazd jest w tym czasie zarezerwowany!');
+            return false;
+        }
+
         if (empty($this->records)) {
             Utils::addErrorMessage('Brak pojazdu o podanym ID!');
             return false;
