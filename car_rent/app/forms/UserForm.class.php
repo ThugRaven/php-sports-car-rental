@@ -8,5 +8,6 @@ class UserForm {
     public $order;
     public $verified;
     public $role_name;
+    public $page_size;
 
 }

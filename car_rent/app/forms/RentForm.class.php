@@ -11,6 +11,6 @@ class RentForm {
     public $total_price;
     public $deposit;
     public $payment_type;
-    public $step;
+    public $page_size;
 
 }

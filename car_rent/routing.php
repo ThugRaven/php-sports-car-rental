@@ -46,5 +46,6 @@ Utils::addRoute('dashboardCarSave', 'DashboardCarsCtrl', ['employee', 'admin']);
 Utils::addRoute('dashboardCarBlock', 'DashboardCarsCtrl', ['employee', 'admin']);
 
 Utils::addRoute('dashboardUsers', 'DashboardUsersCtrl', ['employee', 'admin']);
+Utils::addRoute('dashboardUsersList', 'DashboardUsersCtrl', ['employee', 'admin']);
 Utils::addRoute('dashboardUserEdit', 'DashboardUsersCtrl', ['employee', 'admin']);
 Utils::addRoute('dashboardUserSave', 'DashboardUsersCtrl', ['employee', 'admin']);

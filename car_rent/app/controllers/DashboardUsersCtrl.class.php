@@ -27,11 +27,18 @@ class DashboardUsersCtrl {
         $this->form_edit = new UserEditForm();
         $this->search_params = [];
         $this->orders = [
-            array('', 'Alfabetycznie'),
-            array('user.id_user-desc', 'ID malejąco'),
-            array('user.id_user-asc', 'ID rosnąco'),
-            array('user.rents-desc', 'Liczba wypożyczeń malejąco'),
-            array('user.rents-asc', 'Liczba wypożyczeń rosnąco')
+            array('', 'Login: A-Z'),
+            array('user.login-desc', 'Login: Z-A'),
+            array('user.id_user-desc', 'ID: malejąco'),
+            array('user.id_user-asc', 'ID: rosnąco'),
+            array('user.rents-desc', 'Liczba wypożyczeń: malejąco'),
+            array('user.rents-asc', 'Liczba wypożyczeń: rosnąco'),
+            array('user.verified-desc', 'Zweryfikowany: malejąco'),
+            array('user.verified-asc', 'Zweryfikowany: rosnąco'),
+            array('user.create_time-desc', 'Data utworzenia: od najnowszych'),
+            array('user.create_time-asc', 'Data utworzenia: od najstarszych'),
+            array('user.birth_date-desc', 'Data urodzenia: od najmłodszych'),
+            array('user.birth_date-asc', 'Data urodzenia: od najstarszych'),
         ];
         $this->inputs = [
             'id_user' => ['ID Użytkownika', false],
@@ -42,7 +49,7 @@ class DashboardUsersCtrl {
             'name' => ['Imię', false],
             'surname' => ['Nazwisko', false],
             'phone_number' => ['Numer telefonu', false],
-            'rents' => ['Liczba wypożyczeń', false],
+            'rents' => ['Liczba wypożyczeń', true],
             'verified' => ['Zweryfikowany', false],
             'birth_date' => ['Data urodzenia', false],
             'create_time' => ['Data utworzenia konta', false],
@@ -56,11 +63,10 @@ class DashboardUsersCtrl {
         $this->form->order = ParamUtils::getFromRequest('order');
         $this->form->verified = ParamUtils::getFromRequest('verified');
         $this->form->role_name = ParamUtils::getFromRequest('role_name');
+        $this->form->page_size = ParamUtils::getFromRequest('page_size');
 
         $roles = DBUtils::select('user_role', null, 'role_name');
 
-        print_r($roles);
-        print_r($this->form->role_name);
         App::getSmarty()->assign('roles', $roles);
         App::getSmarty()->assign('orders', $this->orders);
 
@@ -68,12 +74,18 @@ class DashboardUsersCtrl {
         $this->search_params = DBUtils::prepareParam($this->form->verified, 'verified', $this->search_params);
         $this->search_params = DBUtils::prepareParam($this->form->role_name, 'role_name', $this->search_params);
 
-        $where = DBUtils::prepareWhere($this->search_params, $this->form->order, 'id_user');
+        $where = DBUtils::prepareWhere($this->search_params, $this->form->order, 'login');
+
+        $numOfRecords = DBUtils::count('user', [
+                    '[><]user_role' => 'id_user_role'
+                        ], '*', $where);
+        $where['LIMIT'] = DBUtils::preparePagination($numOfRecords, $this->form->page_size);
 
         $this->records = DBUtils::select('user', [
                     '[><]user_role' => 'id_user_role'
                         ], [
                     'user.id_user',
+                    'user.email',
                     'user.login',
                     'user.name',
                     'user.surname',
@@ -84,7 +96,13 @@ class DashboardUsersCtrl {
                     'user_role.role_name'
                         ], $where);
 
+        App::getSmarty()->assign('pageRecords', count($this->records));
+
         App::getSmarty()->assign('form', $this->form);
+        App::getSmarty()->assign('page_title', 'Dashboard - Użytkownicy');
+        App::getSmarty()->assign('form_name', 'dash-users-form');
+        App::getSmarty()->assign('form_action', 'dashboardUsersList');
+        App::getSmarty()->assign('form_table', 'dash-users-table');
         $this->assignSmarty();
         return !App::getMessages()->isError();
     }
@@ -123,14 +141,14 @@ class DashboardUsersCtrl {
                         ], [
                     'id_user' => $this->form_edit->id_user
         ]);
-        print_r($this->user);
 
         $roles = DBUtils::select('user_role', null, 'role_name');
 
         App::getSmarty()->assign('roles', $roles);
         App::getSmarty()->assign('inputs', $this->inputs);
         App::getSmarty()->assign('users', $this->user);
-        print_r($this->inputs);
+        App::getSmarty()->assign('page_title', 'Dashboard - Użytkownicy - Edycja');
+
         $this->assignSmarty();
         return !App::getMessages()->isError();
     }
@@ -184,7 +202,7 @@ class DashboardUsersCtrl {
         foreach ($user_old as $key => $value) {
             $form_value = $this->form_edit->$key;
             echo "value: $value, key: $key, form: " . $form_value . "\n";
-            if ($value != $form_value && $key === 'verified' || $key === 'rents') {
+            if ($value != $form_value && $key === 'verified') {
                 echo "1 $value is different, key: $key\n";
                 $column_params[$key] = $form_value;
             } else if ($value != $form_value && $this->inputs[$key][1]) {
@@ -214,7 +232,7 @@ class DashboardUsersCtrl {
                         'id_user_role' => $user_role
                             ], [
                         'id_user' => $this->form_edit->id_user
-                    ], true);
+                            ], true);
 
                     unset($columns['role_name']);
                 }
@@ -223,7 +241,7 @@ class DashboardUsersCtrl {
                 if (count($columns) > 0) {
                     DBUtils::update('user', $columns, [
                         'id_user' => $this->form_edit->id_user
-                    ], true);
+                            ], true);
                 }
 
                 Utils::addInfoMessage('Zapisano!');
@@ -244,6 +262,15 @@ class DashboardUsersCtrl {
         }
     }
 
+    public function action_dashboardUsersList() {
+        if ($this->processDashUsers()) {
+            App::getSmarty()->display('DashboardUsersTable.tpl');
+        } else {
+            SessionUtils::storeMessages();
+            App::getRouter()->redirectTo('main');
+        }
+    }
+
     public function action_dashboardUserEdit() {
         if ($this->processDashUserEdit()) {
             App::getSmarty()->display('DashboardUserEditView.tpl');
@@ -254,7 +281,7 @@ class DashboardUsersCtrl {
 
     public function action_dashboardUserSave() {
         if ($this->processDashUserSave()) {
-//            App::getRouter()->redirectTo('dashboardUsers');
+            App::getRouter()->redirectTo('dashboardUsers');
         } else {
 //            App::getRouter()->redirectTo('dashboardUsers');
         }

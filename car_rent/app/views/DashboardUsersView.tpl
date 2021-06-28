@@ -1,85 +1,68 @@
-<!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+{extends file="main.tpl"}
 
-    <head>
-        <meta charset="utf-8"/>
-        <title>Dashboard - Użytkownicy</title>
-    </head>
-
-    <body>
-
-        <a href="{url action='dashboard'}">Dashboard</a>
-        <a href="{url action='dashboardStats'}">Statystki</a>
-        <a href="{url action='dashboardRents'}">Wynajmy</a>
-        <a href="{url action='dashboardCars'}">Samochody</a>
-        <a href="{url action='dashboardUsers'}">Użytkownicy</a>
-
-        <form action="{url action='dashboardUsers'}" method="post">
-            <label for="id_role_name">Role: </label>
-            <select name="role_name" id="id_role_name">
-                <option value="">Wszystkie role</option>
-                {foreach $roles as $r}
-                    {strip}
-                        <option value="{$r}" {if $form->role_name == $r}selected{/if}>{$r}</option>
-                    {/strip}
-                {/foreach}
-            </select>
-            <label for="id_login">Login: </label>
-            <input id="id_login" type="text" name="login" value="{$form->login}"/>
-            {*<label for="id_verified">Zweryfikowany</label>*}
-            {*<input type="checkbox" id="id_verified" name="verified" {if $car['rentable']}checked{/if}/>*}
-            <label for="id_order">Sortuj: </label>
-            <select name="order" id="id_order">
-                {foreach $orders as $o}
-                    {strip}
-                        <option value="{$o[0]}" {if $form->order == $o[0]}selected{/if}>{$o[1]}</option>
-                    {/strip}
-                {/foreach}
-            </select>
-            <br />
-            <input type="submit" value="Szukaj" class="primary">
-                <input type="reset" value="Wyczyść" class="primary">
-                    </form>
-
-                    <div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ID Użytkownika</th>
-                                    <th>Login</th>
-                                    <th>Imię</th>
-                                    <th>Nazwisko</th>
-                                    <th>Numer telefonu</th>
-                                    <th>Liczba wypożyczeń</th>
-                                    <th>Zweryfikowany</th>
-                                    <th>Data utworzenia</th>
-                                    <th>Rola</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {foreach $records as $r}
-                                    {strip}
-                                        <tr>
-                                            <td>{$r['id_user']}</td>
-                                            <td>{$r['login']}</td>
-                                            <td>{$r['name']}</td>
-                                            <td>{$r['surname']}</td>
-                                            <td>{$r['phone_number']}</td>
-                                            <td>{$r['rents']}</td>
-                                            <td>{$r['verified']}</td>
-                                            <td>{$r['create_time']}</td>
-                                            <td>{$r['role_name']}</td>
-                                            <td><a href="{url action='dashboardUserEdit' id=$r['id_user']}">Edytuj</a></td>
-                                        </tr>
-                                    {/strip}
-                                {/foreach}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    {include file='messages.tpl'}
-
-
-                    </body>
-
-                    </html>
+{block name=content}
+    <div class="form__header">
+        <form id="dash-users-form" onsubmit="ajaxPostForm('dash-users-form', '{url action='dashboardUsersList'}', 'dash-users-table');
+                return false;">
+            <div class="form__forms">
+                <h1 class="heading">Dashboard - Użytkownicy</h1>
+                <ul class="form__list">
+                    <li class="form__item">
+                        <label for="id_role_name" class="form__label">Role</label>
+                        <select name="role_name" id="id_role_name" class="input__select">
+                            <option value="">Wszystkie role</option>
+                            {foreach $roles as $r}
+                                {strip}
+                                    <option value="{$r}" {if $form->role_name == $r}selected{/if}>{$r}</option>
+                                {/strip}
+                            {/foreach}
+                        </select>
+                    </li>
+                    <li class="form__item">
+                        <label for="id_login" class="form__label">Login</label>
+                        <input id="id_login" type="text" name="login" value="{$form->login}" class="input__text"/>
+                    </li>
+                    <li class="form__item">
+                        <label for="id_order" class="form__label">Sortuj</label>
+                        <select name="order" id="id_order" class="input__select">
+                            {foreach $orders as $o}
+                                {strip}
+                                    <option value="{$o[0]}" {if $form->order == $o[0]}selected{/if}>{$o[1]}</option>
+                                {/strip}
+                            {/foreach}
+                        </select>
+                    </li>
+                    <li class="form__item">
+                        <label for="id_page_size" class="form__label">Rekordy</label>
+                        <select
+                            name="page_size"
+                            id="id_page_size"
+                            class="input__select"
+                            >
+                            <option value="10" {if $form->page_size == '10'}selected{/if}>10</option>
+                            <option value="25" {if $form->page_size == '25'}selected{/if}>25</option>
+                            <option value="50" {if $form->page_size == '50'}selected{/if}>50</option>
+                            <option value="100" {if $form->page_size == '100'}selected{/if}>100</option>
+                        </select>
+                    </li>
+                </ul>
+            </div>
+            <div class="form__buttons">
+                <input
+                    type="submit"
+                    value="Szukaj"
+                    class="button button--rounded button--form button--submit"
+                    />
+                <input
+                    type="reset"
+                    value="Wyczyść"
+                    class="button button--rounded button--form button--reset"
+                    />
+            </div>
+        </form>
+    </div>
+    <div class="cars__grid" id="dash-users-table">
+        {include file="DashboardUsersTable.tpl"}
+    </div>
+    {include file='messages.tpl'}
+{/block}
