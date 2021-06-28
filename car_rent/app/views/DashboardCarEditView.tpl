@@ -22,14 +22,12 @@
                         {/if}
                         {if $k === 'rentable'}
                             <li class="form__item form__item--dash">
-
                                 <label for="id_{$k}" class="form__label">{$inputs[$k][0]}: </label>
                                 <input type="checkbox" id="id_{$k}" name="{$k}" {if $car['rentable']}checked{/if}/>
                             </li>
                             {continue}
                         {/if}
                         <li class="form__item form__item--dash">
-
                             <label for="id_{$k}" class="form__label">{$inputs[$k][0]}: </label>
                             <input type="text" id="id_{$k}" name="{$k}" value="{$v}" {if $k === 'id_car'}disabled{/if} class="input__text"/>
                         </li>

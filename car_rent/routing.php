@@ -35,6 +35,7 @@ Utils::addRoute('dashboardMock', 'DashboardMockCtrl', ['admin']);
 Utils::addRoute('dashboardStats', 'DashboardCtrl', ['employee', 'admin']);
 
 Utils::addRoute('dashboardRents', 'DashboardRentsCtrl', ['employee', 'admin']);
+Utils::addRoute('dashboardRentsList', 'DashboardRentsCtrl', ['employee', 'admin']);
 Utils::addRoute('dashboardRentEdit', 'DashboardRentsCtrl', ['employee', 'admin']);
 Utils::addRoute('dashboardRentSave', 'DashboardRentsCtrl', ['employee', 'admin']);
 

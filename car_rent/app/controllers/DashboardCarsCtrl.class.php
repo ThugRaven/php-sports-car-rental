@@ -157,6 +157,7 @@ class DashboardCarsCtrl {
         App::getSmarty()->assign('car', $this->car);
         App::getSmarty()->assign('car_price', $this->car_price);
         App::getSmarty()->assign('car_prices', $car_prices);
+        App::getSmarty()->assign('page_title', 'Dashboard - Samochody - Edycja');
         $this->assignSmarty();
         return !App::getMessages()->isError();
     }
@@ -326,7 +327,7 @@ class DashboardCarsCtrl {
         if ($this->processDashCars()) {
             App::getSmarty()->display('DashboardCarsView.tpl');
         } else {
-            App::getRouter()->redirectTo('dashboard');
+            App::getRouter()->redirectTo('main');
         }
     }
 
@@ -335,7 +336,7 @@ class DashboardCarsCtrl {
             App::getSmarty()->display('DashboardCarsTable.tpl');
         } else {
             SessionUtils::storeMessages();
-            App::getRouter()->redirectTo('dashboard');
+            App::getRouter()->redirectTo('main');
         }
     }
 

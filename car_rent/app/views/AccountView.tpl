@@ -42,9 +42,9 @@
                                 <td>{$r['rent_start']}</td>
                                 <td>{$r['rent_end']}</td>
                                 {if $r['status'] === 'active'}<td class="td td--positive">Aktywny</td>{else if $r['status'] === 'completed'}<td class="td td--negative">Zakończony</td>{/if}
-                                <td>{$r['distance']} km</td>
+                                <td>{$r['distance']}&nbsp;km</td>
                                 <td>{if $r['deposit'] == '1'}Tak{else if $r['deposit'] == '0'}Nie{/if}</td>
-                                <td>{$r['total_price']} zł</td>
+                                <td>{$r['total_price']}&nbsp;zł</td>
                                 <td>{if $r['payment_type'] === 'card'}Karta{else if $r['payment_type'] === 'money'}Gotówka{/if}</td>
                             </tr>
                         {/strip}

@@ -26,14 +26,14 @@ class DashboardRentsCtrl {
         $this->search_params = [];
         $this->orders = [
 //            array('', 'Alfabetycznie'),
-            array('rent.id_rent-asc', 'ID rosnąco'),
-            array('rent.id_rent-desc', 'ID malejąco'),
-            array('rent.create_time-desc', 'Najnowsze'),
-            array('rent.create_time-asc', 'Najstarsze'),
-            array('rent.distance-desc', 'Najdłuższe'),
-            array('rent.distance-asc', 'Najkrótsze'),
-            array('rent.total_price-desc', 'Najdroższe'),
-            array('rent.total_price-asc', 'Najtańsze')
+            array('rent.id_rent-asc', 'ID: rosnąco'),
+            array('rent.id_rent-desc', 'ID: malejąco'),
+            array('rent.create_time-desc', 'Czas dodania: od najnowszych'),
+            array('rent.create_time-asc', 'Czas dodania: od najstarszych'),
+            array('rent.distance-desc', 'Dystans: od najdłuższych'),
+            array('rent.distance-asc', 'Dystans: od najkrótszych'),
+            array('rent.total_price-desc', 'Cena: od najdroższych'),
+            array('rent.total_price-asc', 'Cena: od najtańszych')
         ];
         $this->inputs = [
             'id_rent' => ['ID Wynajmu', false],
@@ -58,8 +58,9 @@ class DashboardRentsCtrl {
         $this->form->order = ParamUtils::getFromRequest('order');
         $this->form->deposit = ParamUtils::getFromRequest('deposit');
         $this->form->payment_type = ParamUtils::getFromRequest('payment_type');
+        $this->form->page_size = ParamUtils::getFromRequest('page_size');
 
-        $cars = DBUtils::select('car', null, ['id_car', 'brand', 'model'], null, true);
+        $cars = DBUtils::select('car', null, ['id_car', 'brand', 'model'], null);
 
         App::getSmarty()->assign('cars', $cars);
         App::getSmarty()->assign('orders', $this->orders);
@@ -71,13 +72,35 @@ class DashboardRentsCtrl {
         $this->search_params = DBUtils::prepareParam($this->form->deposit, 'deposit', $this->search_params);
         $this->search_params = DBUtils::prepareParam($this->form->payment_type, 'payment_type', $this->search_params);
 
-        $where = DBUtils::prepareWhere($this->search_params, $this->form->order, 'id_rent', true);
+        $where = DBUtils::prepareWhere($this->search_params, $this->form->order, 'id_rent');
+
+        $numOfRecords = DBUtils::count('rent', [
+                    '[><]rent_status' => 'id_rent_status',
+                    '[><]car' => 'id_car'
+                        ], '*', $where);
+        $where['LIMIT'] = DBUtils::preparePagination($numOfRecords, $this->form->page_size);
 
         $this->records = DBUtils::select('rent', [
-                    '[><]rent_status' => 'id_rent_status'
-                        ], '*', $where, true);
+                    '[><]rent_status' => 'id_rent_status',
+                    '[><]car' => 'id_car'
+                        ], '*', $where);
+
+        App::getSmarty()->assign('pageRecords', count($this->records));
+
+        for ($i = 0; $i < count($this->records); $i++) {
+            $this->records[$i]['brand_url'] = trim($this->records[$i]['brand']);
+            $this->records[$i]['model_url'] = trim($this->records[$i]['model']);
+            $this->records[$i]['brand_url'] = strtolower($this->records[$i]['brand_url']);
+            $this->records[$i]['model_url'] = strtolower($this->records[$i]['model_url']);
+            $this->records[$i]['brand_url'] = preg_replace('/\s+/', '-', $this->records[$i]['brand_url']);
+            $this->records[$i]['model_url'] = preg_replace('/\s+/', '-', $this->records[$i]['model_url']);
+        }
 
         App::getSmarty()->assign('form', $this->form);
+        App::getSmarty()->assign('page_title', 'Dashboard - Wynajmy');
+        App::getSmarty()->assign('form_name', 'dash-rents-form');
+        App::getSmarty()->assign('form_action', 'dashboardRentsList');
+        App::getSmarty()->assign('form_table', 'dash-rents-table');
         $this->assignSmarty();
         return !App::getMessages()->isError();
     }
@@ -93,7 +116,7 @@ class DashboardRentsCtrl {
 
         $isValid = DBUtils::has('rent', null, [
                     'id_rent' => $this->form_edit->id_rent
-                        ], true);
+        ]);
 
         if (!$isValid) {
             Utils::addErrorMessage('Brak podanego wynajmu');
@@ -113,17 +136,14 @@ class DashboardRentsCtrl {
                     'payment_type',
                         ], [
                     'id_rent' => $this->form_edit->id_rent
-                        ], true);
+        ]);
 
-        $rent_statuses = DBUtils::select('rent_status', null, ['id_rent_status', 'status'], true);
-
-        print_r($this->rent);
-        print_r($rent_statuses);
+        $rent_statuses = DBUtils::select('rent_status', null, ['id_rent_status', 'status']);
 
         App::getSmarty()->assign('inputs', $this->inputs);
         App::getSmarty()->assign('rent', $this->rent);
         App::getSmarty()->assign('rent_statuses', $rent_statuses);
-        print_r($this->inputs);
+        App::getSmarty()->assign('page_title', 'Dashboard - Wynajmy - Edycja');
         $this->assignSmarty();
         return !App::getMessages()->isError();
     }
@@ -203,7 +223,16 @@ class DashboardRentsCtrl {
         if ($this->processDashRents()) {
             App::getSmarty()->display('DashboardRentsView.tpl');
         } else {
-            App::getRouter()->redirectTo('dashboard');
+            App::getRouter()->redirectTo('main');
+        }
+    }
+
+    public function action_dashboardRentsList() {
+        if ($this->processDashRents()) {
+            App::getSmarty()->display('DashboardRentsTable.tpl');
+        } else {
+            SessionUtils::storeMessages();
+            App::getRouter()->redirectTo('main');
         }
     }
 
@@ -217,7 +246,7 @@ class DashboardRentsCtrl {
 
     public function action_dashboardRentSave() {
         if ($this->processDashRentSave()) {
-//            App::getRouter()->redirectTo('dashboardRents');
+            App::getRouter()->redirectTo('dashboardRents');
 //            App::getSmarty()->display('DashboardCarEditView.tpl');
         } else {
 //            App::getRouter()->redirectTo('dashboardRents');
