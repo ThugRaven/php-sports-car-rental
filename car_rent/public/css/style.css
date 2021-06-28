@@ -563,7 +563,7 @@ align-items: center; */
 .form__forms {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
 }
 
 .form__buttons {
@@ -577,7 +577,7 @@ align-items: center; */
     margin: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
 }
 
 .form__item {
@@ -1171,7 +1171,7 @@ input[type="radio"]:checked + .button--radio {
     font-size: 1.5em;
 }
 
-/* ACCOUNT */
+/* ACCOUNT/TABLE */
 .account__layout {
     grid-column: 1 / 6;
     grid-row: 1 / 6;
@@ -1221,26 +1221,30 @@ input[type="radio"]:checked + .button--radio {
     margin-top: 1em;
 }
 
-.account__rents {
+.table {
     margin: 1em;
     border-collapse: collapse;
     width: 100%;
 }
 
-.account__rents td,
-.account__rents th {
+.table--dash {
+    margin: 0em;
+}
+
+.table td,
+.table th {
     padding: 1em;
 }
 
-.account__rents td {
+.table td {
     text-align: center;
 }
 
-.account__rents tbody tr:nth-child(odd) {
+.table tbody tr:nth-child(odd) {
     background-color: var(--bg-primary-dark);
 }
 
-.account__rents thead {
+.table thead {
     border-bottom: 0.05em solid var(--clr-accent);
 }
 

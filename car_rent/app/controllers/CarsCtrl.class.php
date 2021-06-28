@@ -98,6 +98,9 @@ class CarsCtrl {
 //        print_r($this->records);
         App::getSmarty()->assign('form', $this->form);
         App::getSmarty()->assign('page_title', 'Samochody');
+        App::getSmarty()->assign('form_name', 'cars-form');
+        App::getSmarty()->assign('form_action', 'carsList');
+        App::getSmarty()->assign('form_table', 'cars-table');
         App::getSmarty()->assign('records', $this->records);
         $this->assignSmarty();
         return !App::getMessages()->isError();

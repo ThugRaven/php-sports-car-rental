@@ -25,6 +25,7 @@ class CarEditForm {
     public $fuel_capacity;
     public $fuel_consumption;
     public $rentable;
+    public $main_page;
     public $price_deposit;
     public $price_no_deposit;
     public $km_limit;

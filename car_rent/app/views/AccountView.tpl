@@ -21,7 +21,7 @@
         <a href="{url action='accountEdit' login=$user->login}" class="account__link">Edytuj konto</a>
         <span class="account__table-name">Moje wynajmy - {$account['rents']}</span>
         {if count($rents) > 0}
-            <table class="account__rents">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>Pojazd</th>

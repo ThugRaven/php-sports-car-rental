@@ -27,15 +27,20 @@ class DashboardCarsCtrl {
         $this->form_edit = new CarEditForm();
         $this->search_params = [];
         $this->orders = [
-            array('', 'Alfabetycznie'),
-            array('car.id_car-desc', 'ID malejąco'),
-            array('car.id_car-asc', 'ID rosnąco'),
-            array('car_price.price_deposit-desc', 'Cena od największej'),
-            array('car_price.price_deposit-asc', 'Cena od najmniejszej'),
-            array('car.eng_power-desc', 'Moc silnika malejąco'),
-            array('car.eng_power-asc', 'Moc silnika rosnąco'),
-            array('car.eng_torque-desc', 'Moment obrotowy malejąco'),
-            array('car.eng_torque-asc', 'Moment obrotowy rosnąco')
+            array('', 'Nazwa: A-Z'),
+            array('car.brand-desc', 'Nazwa: Z-A'),
+            array('car.id_car-desc', 'ID: malejąco'),
+            array('car.id_car-asc', 'ID: rosnąco'),
+            array('car_price.price_deposit-desc', 'Cena: od najdroższych'),
+            array('car_price.price_deposit-asc', 'Cena: od najtańszych'),
+            array('car.eng_power-desc', 'Moc silnika: od największej'),
+            array('car.eng_power-asc', 'Moc silnika: od najmniejszej'),
+            array('car.eng_torque-desc', 'Moment obrotowy: malejąco'),
+            array('car.eng_torque-asc', 'Moment obrotowy rosnąco'),
+            array('car.rentable-asc', 'Wypożyczalne: malejąco'),
+            array('car.rentable-desc', 'Wypożyczalne: rosnąco'),
+            array('car.main_page-asc', 'Galeria: malejąco'),
+            array('car.main_page-desc', 'Galeria: rosnąco')
         ];
         $this->inputs = [
             'id_car' => ['ID Samochodu', false],
@@ -59,6 +64,7 @@ class DashboardCarsCtrl {
             'fuel_capacity' => ['Pojemność paliwa', true],
             'fuel_consumption' => ['Zużycie paliwa', true],
             'rentable' => ['Wypożyczalny', false],
+            'main_page' => ['Galeria', true],
             'price_deposit' => ['Cena z kaucją', false],
             'price_no_deposit' => ['Cena bez kaucji', false],
             'km_limit' => ['Limit kilometrów', false],
@@ -97,14 +103,7 @@ class DashboardCarsCtrl {
 
         $this->records = DBUtils::select('car', [
                     '[><]car_price' => 'id_car_price'
-                        ], [
-                    'car.id_car',
-                    'car.brand',
-                    'car.model',
-                    'car.eng_power',
-                    'car.eng_torque',
-                    'car_price.price_deposit'
-                        ], $where);
+                        ], '*', $where);
 
         App::getSmarty()->assign('pageRecords', count($this->records));
 
@@ -118,6 +117,10 @@ class DashboardCarsCtrl {
         }
 //        print_r($this->records);
         App::getSmarty()->assign('form', $this->form);
+        App::getSmarty()->assign('page_title', 'Dashboard - Samochody');
+        App::getSmarty()->assign('form_name', 'dash-cars-form');
+        App::getSmarty()->assign('form_action', 'dashboardCarsList');
+        App::getSmarty()->assign('form_table', 'dash-cars-table');
         $this->assignSmarty();
         return !App::getMessages()->isError();
     }
@@ -191,6 +194,7 @@ class DashboardCarsCtrl {
             $this->form_edit->fuel_capacity = ParamUtils::getFromRequest('fuel_capacity');
             $this->form_edit->fuel_consumption = ParamUtils::getFromRequest('fuel_consumption');
             $this->form_edit->rentable = ParamUtils::getFromRequest('rentable');
+            $this->form_edit->main_page = ParamUtils::getFromRequest('main_page');
 
 
             $isValid = DBUtils::has('car', null, [
@@ -280,10 +284,62 @@ class DashboardCarsCtrl {
         return !App::getMessages()->isError();
     }
 
+    public function processDashCarBlock() {
+        $this->form_edit->id_car = $this->v->validateFromCleanURL(1, [
+            'trim' => true,
+            'required' => true,
+            'required_message' => 'ID samochodu jest wymagane',
+            'int' => true,
+            'validator_message' => 'ID samochodu musi być liczbą całkowitą'
+        ]);
+
+        $isValid = DBUtils::has('car', null, [
+                    'id_car' => $this->form_edit->id_car
+        ]);
+
+        if (!$isValid) {
+            Utils::addErrorMessage('Brak podanego samochodu');
+            return false;
+        }
+
+        $rentable = DBUtils::get('car', null, 'rentable', [
+                    'id_car' => $this->form_edit->id_car
+        ]);
+
+        if ($rentable) {
+            DBUtils::update('car', [
+                'rentable' => 0
+                    ], [
+                'id_car' => $this->form_edit->id_car
+                    ], true);
+            Utils::addInfoMessage('Pomyślnie zablokowano pojazd!');
+        } else {
+            DBUtils::update('car', [
+                'rentable' => 1
+                    ], [
+                'id_car' => $this->form_edit->id_car
+                    ], true);
+            Utils::addInfoMessage('Pomyślnie odblokowano pojazd!');
+        }
+
+        $this->assignSmarty();
+        SessionUtils::storeMessages();
+        return !App::getMessages()->isError();
+    }
+
     public function action_dashboardCars() {
         if ($this->processDashCars()) {
             App::getSmarty()->display('DashboardCarsView.tpl');
         } else {
+            App::getRouter()->redirectTo('dashboard');
+        }
+    }
+
+    public function action_dashboardCarsList() {
+        if ($this->processDashCars()) {
+            App::getSmarty()->display('DashboardCarsTable.tpl');
+        } else {
+            SessionUtils::storeMessages();
             App::getRouter()->redirectTo('dashboard');
         }
     }
@@ -302,6 +358,12 @@ class DashboardCarsCtrl {
 //            App::getSmarty()->display('DashboardCarEditView.tpl');
         } else {
 //            App::getRouter()->redirectTo('dashboardCars');
+        }
+    }
+
+    public function action_dashboardCarBlock() {
+        if ($this->processDashCarBlock()) {
+            App::getRouter()->redirectTo('dashboardCars');
         }
     }
 

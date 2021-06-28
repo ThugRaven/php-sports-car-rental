@@ -5,7 +5,7 @@
         <form id="cars-form" onsubmit="ajaxPostForm('cars-form', '{url action='carsList'}', 'cars-table');
                 return false;">
             <div class="form__forms">
-                <h1>Samochody</h1>
+                <h1 class="heading">Samochody</h1>
                 <ul class="form__list">
                     <li class="form__item">
                         <label for="id_brand" class="form__label">Marka</label>
