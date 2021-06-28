@@ -1,7 +1,7 @@
 <form method="post" class="pagination__layout">
     <div class="pagination__bottom">
         <div class="pagination__pages">
-            <button onclick="ajaxPostForm('cars-form', '{url action='carsList' p=$pagination->page - 1}', 'cars-table');
+            <button onclick="ajaxPostForm('{$form_name}', '{url action=$form_action p=$pagination->page - 1}', '{$form_table}');
                     return false;" class="
                     pagination__button
                     {if $pagination->page - 1 < $pagination->firstPage}
@@ -23,7 +23,7 @@
             </button>
             {if $pagination->page != $pagination->firstPage}
                 <button
-                    onclick="ajaxPostForm('cars-form', '{url action='carsList' p=$pagination->firstPage}', 'cars-table');
+                    onclick="ajaxPostForm('{$form_name}', '{url action=$form_action p=$pagination->firstPage}', '{$form_table}');
                             return false;"
                     class="pagination__button pagination__button--page"
                     >
@@ -32,7 +32,7 @@
             {/if}
             {if $pagination->page - 1 > $pagination->firstPage}
                 <button
-                    onclick="ajaxPostForm('cars-form', '{url action='carsList' p=$pagination->page - 1}', 'cars-table');
+                    onclick="ajaxPostForm('{$form_name}', '{url action=$form_action p=$pagination->page - 1}', '{$form_table}');
                             return false;"
                     class="pagination__button pagination__button--page"
                     >
@@ -51,7 +51,7 @@
             </button>
             {if $pagination->page + 1 < $pagination->lastPage}
                 <button
-                    onclick="ajaxPostForm('cars-form', '{url action='carsList' p=$pagination->page + 1}', 'cars-table');
+                    onclick="ajaxPostForm('{$form_name}', '{url action=$form_action p=$pagination->page + 1}', '{$form_table}');
                             return false;"
                     class="pagination__button pagination__button--page"
                     >
@@ -60,14 +60,14 @@
             {/if}
             {if $pagination->page != $pagination->lastPage}
                 <button
-                    onclick="ajaxPostForm('cars-form', '{url action='carsList' p=$pagination->lastPage}', 'cars-table');
+                    onclick="ajaxPostForm('{$form_name}', '{url action=$form_action p=$pagination->lastPage}', '{$form_table}');
                             return false;"
                     class="pagination__button pagination__button--page"
                     >
                     {$pagination->lastPage}
                 </button>
             {/if}
-            <button onclick="ajaxPostForm('cars-form', '{url action='carsList' p=$pagination->page + 1}', 'cars-table');
+            <button onclick="ajaxPostForm('{$form_name}', '{url action=$form_action p=$pagination->page + 1}', '{$form_table}');
                     return false;" class="
                     pagination__button
                     {if $pagination->page + 1 > $pagination->lastPage}

@@ -2,7 +2,7 @@
     <div class="pagination__top">
         <span class="pagination__results">1 - {$pageRecords} z {$numOfRecords} wyników</span>
         <div class="pagination__pages">
-            <button onclick="ajaxPostForm('cars-form', '{url action='carsList' p=$pagination->page - 1}', 'cars-table');
+            <button onclick="ajaxPostForm('{$form_name}', '{url action=$form_action p=$pagination->page - 1}', '{$form_table}');
                     return false;" 
                     class="
                     pagination__button
@@ -28,11 +28,11 @@
                 name="page"
                 value="{$pagination->page}"
                 class="pagination__input"
-                onchange="ajaxPostForm('cars-form', '{url action='carsList'}/' + this.form.page.value, 'cars-table');
+                onchange="ajaxPostForm('{$form_name}', '{url action=$form_action}/' + this.form.page.value, '{$form_table}');
                         return false;"
                 />
             z {$pagination->lastPage}
-            <button onclick="ajaxPostForm('cars-form', '{url action='carsList' p=$pagination->page + 1}', 'cars-table');
+            <button onclick="ajaxPostForm('{$form_name}', '{url action=$form_action p=$pagination->page + 1}', '{$form_table}');
                     return false;" class="
                     pagination__button
                     {if $pagination->page + 1 > $pagination->lastPage}
