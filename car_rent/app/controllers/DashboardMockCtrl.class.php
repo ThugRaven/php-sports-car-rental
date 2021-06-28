@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use core\App;
 use DateTime;
+use core\Utils;
+use core\SessionUtils;
 
 class DashboardMockCtrl {
 
@@ -17,7 +19,9 @@ class DashboardMockCtrl {
         $enable = false;
 
         if (!$enable) {
-            return false;
+            Utils::addInfoMessage('Generowanie danych jest aktualnie wyłączone!');
+            SessionUtils::storeMessages();
+            App::getRouter()->redirectTo('dashboard');
         }
 
         $rent_raw = file_get_contents(App::getConf()->app_url . '/mock_data/rent_mock_raw.json');
@@ -49,7 +53,7 @@ class DashboardMockCtrl {
         for ($i = 0; $i < count($rent_raw); $i++) {
             // Clear rent_end
             $rent_raw[$i]['rent_end'] = substr($rent_raw[$i]['rent_end'], 0, 19);
-           
+
             // Input id_rent_status
             $rent_start = new DateTime($rent_raw[$i]['rent_start']);
             $rent_start->format('Y-m-d H:i:s');
@@ -95,8 +99,11 @@ class DashboardMockCtrl {
 
         file_put_contents('mock_data/rent_sql.txt', $rent_sql);
         file_put_contents('mock_data/user_sql.txt', $user_sql);
-        
+
         echo 'Done';
+        App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
+        App::getSmarty()->assign('page_title', 'Dashboard - Mock Data');
+        App::getSmarty()->display('DashboardMockView.tpl');
     }
 
 }

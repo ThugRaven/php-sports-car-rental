@@ -1388,7 +1388,7 @@ input[type="radio"]:checked + .button--radio {
     fill: white;
 }
 
-/* DASHBOARD EDIT */
+/* DASHBOARD */
 .edit__layout {
     grid-column: 1 / 6;
     grid-row: 1 / 6;
@@ -1405,6 +1405,55 @@ input[type="radio"]:checked + .button--radio {
 
 .dash__button {
     margin: 1em 0em;
+}
+
+.dash-main__layout {
+    grid-column: 1 / 6;
+    grid-row: 1 / 6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.dash__list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dash__item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    margin: 2em;
+}
+
+.dash__item:hover .dash__icon {
+    fill: white;
+}
+
+.dash__item:hover .dash__name {
+    color: white;
+}
+
+.dash__icon {
+    width: 5em;
+    height: 5em;
+    fill: hsl(0, 0%, 100%, 0.7);
+}
+
+.dash__name {
+    text-align: center;
+    white-space: nowrap;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: hsl(0, 0%, 100%, 0.7);
 }
 
 
