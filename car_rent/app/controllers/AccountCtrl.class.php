@@ -66,6 +66,7 @@ class AccountCtrl {
             $this->rents[$i]['model_url'] = preg_replace('/\s+/', '-', $this->rents[$i]['model_url']);
         }
 
+        App::getSmarty()->assign('page_title', "Moje Konto");
         return !App::getMessages()->isError();
     }
 
@@ -107,6 +108,7 @@ class AccountCtrl {
 
         App::getSmarty()->assign('form', $this->form);
         App::getSmarty()->assign('user', SessionUtils::loadObject('user', true));
+        App::getSmarty()->assign('page_title', "Moje Konto - Ustawienia");
 
         App::getSmarty()->display('AccountEditView.tpl');
     }

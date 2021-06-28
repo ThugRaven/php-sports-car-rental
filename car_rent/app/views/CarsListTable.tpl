@@ -5,13 +5,11 @@
         {foreach $records as $r}
             {strip}
                 <li class="cars__item">
-                    <a href="{url action='car' id=$r['id_car'] brand=$r['brand_url'] model=$r['model_url']}">
-                        <img
-                            src="{$conf->app_url}/assets/img/{$r['model_url']}_thumb.jpg"
-                            alt="Samochód - {$r['brand']} {$r['model']}"
-                            class="cars__img"
-                            />
-                    </a>
+                    <img
+                        src="{$conf->app_url}/assets/img/{$r['model_url']}_thumb.jpg"
+                        alt="Samochód - {$r['brand']} {$r['model']}"
+                        class="cars__img"
+                        />
                     <div class="cars__info">
                         <a href="{url action='car' id=$r['id_car'] brand=$r['brand_url'] model=$r['model_url']}" class="cars__link">
                             <span class="cars__car">{$r['brand']} {$r['model']}</span>

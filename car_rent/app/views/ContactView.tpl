@@ -11,8 +11,9 @@
                 Tel. +48 123 456 789<br />
                 Pn. - Pt.: 8:00- 23:00<br />
                 Sb.: 8:00 - 18:00<br />
-                E-Mail: car@rent.pl
+                E-Mail: car@rent.pl<br />
             </p>
+            <span><a href="https://github.com/ThugRaven/PHP_JPDSI_Projekt" target="_blank" class="link">Github</a></span>
         </div>
     </div>
 {/block}
