@@ -580,6 +580,12 @@ align-items: center; */
     justify-content: flex-end;
 }
 
+.form__list--dash {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.25em;
+}
+
 .form__item {
     display: flex;
     flex-direction: column;
@@ -608,6 +614,11 @@ align-items: center; */
     border-color: var(--clr-accent);
     outline: 0;
     box-shadow: 0 0 0 0.25em hsl(358, 84%, 56%, 0.25);
+}
+
+.input__text:disabled {
+    background-color: var(--bg-primary);
+    opacity: 0.5;
 }
 
 .button--form {
@@ -1375,3 +1386,24 @@ input[type="radio"]:checked + .button--radio {
     height: 3em;
     fill: white;
 }
+
+/* DASHBOARD EDIT */
+.edit__layout {
+    grid-column: 1 / 6;
+    grid-row: 1 / 6;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: auto;
+}
+
+.dash__form {
+    display: flex;
+    flex-direction: column;
+}
+
+.dash__button {
+    margin: 1em 0em;
+}
+
+

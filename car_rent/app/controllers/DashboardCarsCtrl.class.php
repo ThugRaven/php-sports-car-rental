@@ -69,7 +69,7 @@ class DashboardCarsCtrl {
             'price_no_deposit' => ['Cena bez kaucji', false],
             'km_limit' => ['Limit kilometrów', false],
             'deposit' => ['Kaucja', false],
-            'additional_km' => ['Koszt dodatkowego kilometra', false],
+            'additional_km' => ['Koszt dodatkowego km', false],
         ];
         $this->v = new Validator();
     }
@@ -153,15 +153,10 @@ class DashboardCarsCtrl {
 
         $car_prices = DBUtils::select('car_price', null, 'id_car_price');
 
-        print_r($this->car);
-        print_r($this->car_price);
-        print_r($car_prices);
-
         App::getSmarty()->assign('inputs', $this->inputs);
         App::getSmarty()->assign('car', $this->car);
         App::getSmarty()->assign('car_price', $this->car_price);
         App::getSmarty()->assign('car_prices', $car_prices);
-        print_r($this->inputs);
         $this->assignSmarty();
         return !App::getMessages()->isError();
     }

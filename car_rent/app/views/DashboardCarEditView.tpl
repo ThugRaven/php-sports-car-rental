@@ -1,67 +1,74 @@
-<!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+{extends file="main.tpl"}
 
-    <head>
-        <meta charset="utf-8"/>
-        <title>Dashboard - Samochody - Edycja</title>
-    </head>
+{block name=content}
+    <div class="edit__layout">
+        <form action="{url action='dashboardCarSave' type='car'}" method="post" class="dash__form">
+            <h1 class="heading">Edycja pojazdu</h1>
+            <ul class="form__list form__list--dash">
+                {foreach from = $car key = k item = v}
+                    {strip}
+                        {if $k === 'id_car_price'}
+                            <li class="form__item form__item--dash">
+                                <label for="id_{$k}" class="form__label">{$inputs[$k][0]}: </label>
+                                <select name="{$k}" id="id_{$k}" class="input__select">
+                                    {foreach $car_prices as $c}
+                                        {strip}
+                                            <option value="{$c}" {if $car_price['id_car_price'] === $c}selected{/if}>{$c}</option>
+                                        {/strip}
+                                    {/foreach}
+                                </select>
+                            </li>
+                            {continue}
+                        {/if}
+                        {if $k === 'rentable'}
+                            <li class="form__item form__item--dash">
 
-    <body>
-        <h3>Edycja pojazdu</h3>
-        <form action="{url action='dashboardCarSave' type='car'}" method="post">
-            {foreach from = $car key = k item = v}
-                {strip}
-                    {if $k === 'id_car_price'}
-                        <label for="id_{$k}">{$inputs[$k][0]}: </label>
-                        <select name="{$k}" id="id_{$k}">
-                            {foreach $car_prices as $c}
-                                {strip}
-                                    <option value="{$c}" {if $car_price['id_car_price'] === $c}selected{/if}>{$c}</option>
-                                {/strip}
-                            {/foreach}
-                        </select><br />
-                        {continue}
-                    {/if}
-                    {if $k === 'rentable'}
-                        <label for="id_{$k}">{$inputs[$k][0]}: </label>
-                        <input type="checkbox" id="id_{$k}" name="{$k}" {if $car['rentable']}checked{/if}/>
-                        {continue}
-                    {/if}
-                    <label for="id_{$k}" class="label">{$inputs[$k][0]}: </label>
-                    <input type="text" id="id_{$k}" name="{$k}" value="{$v}" {if $k === 'id_car'}disabled{/if}/><br />
-                {/strip}
-            {/foreach}
+                                <label for="id_{$k}" class="form__label">{$inputs[$k][0]}: </label>
+                                <input type="checkbox" id="id_{$k}" name="{$k}" {if $car['rentable']}checked{/if}/>
+                            </li>
+                            {continue}
+                        {/if}
+                        <li class="form__item form__item--dash">
+
+                            <label for="id_{$k}" class="form__label">{$inputs[$k][0]}: </label>
+                            <input type="text" id="id_{$k}" name="{$k}" value="{$v}" {if $k === 'id_car'}disabled{/if} class="input__text"/>
+                        </li>
+                    {/strip}
+                {/foreach}
+            </ul>
 
             <input type="hidden" name="id_car" value="{$car['id_car']}" />
-            <br />
-            <input type="submit" value="Zapisz" class="primary">
+            <input type="submit" value="Zapisz" class="button button--rect button--full dash__button">
         </form>
-        <h3>Edycja cen</h3>
-        <form action="{url action='dashboardCarSave' type='car_price'}" method="post">
-            {foreach from = $car_price key = k item = v}
-                {strip}
-                    {if $k === 'id_car_price'}
-                        <label for="id_{$k}">{$inputs[$k][0]}: </label>
-                        <select name="{$k}" id="id_{$k}">
-                            {foreach $car_prices as $c}
-                                {strip}
-                                    <option value="{$c}" {if $car_price['id_car_price'] === $c}selected{/if}>{$c}</option>
-                                {/strip}
-                            {/foreach}
-                        </select><br />
-                        {continue}
-                    {/if}
-                    <label for="id_{$k}" class="label">{$inputs[$k][0]}: </label>
-                    <input type="text" id="id_{$k}" name="{$k}" value="{$v}"/><br />
-                {/strip}
-            {/foreach}
-            <br />
-            <input type="submit" value="Zapisz" class="primary">
+        <form action="{url action='dashboardCarSave' type='car_price'}" method="post" class="dash__form">
+            <h1 class="heading">Edycja cen</h1>
+            <ul class="form__list form__list--dash">
+                {foreach from = $car_price key = k item = v}
+                    {strip}
+                        {if $k === 'id_car_price'}
+                            <li class="form__item form__item--dash">
+                                <label for="id_{$k}" class="form__label">{$inputs[$k][0]}: </label>
+                                <select name="{$k}" id="id_{$k}" class="input__select">
+                                    {foreach $car_prices as $c}
+                                        {strip}
+                                            <option value="{$c}" {if $car_price['id_car_price'] === $c}selected{/if}>{$c}</option>
+                                        {/strip}
+                                    {/foreach}
+                                </select>
+                            </li>
+                            {continue}
+                        {/if}
+                        <li class="form__item form__item--dash">
+                            <label for="id_{$k}" class="form__label">{$inputs[$k][0]}: </label>
+                            <input type="text" id="id_{$k}" name="{$k}" value="{$v}" class="input__text"/>
+                        </li>
+                    {/strip}
+                {/foreach}
+            </ul>
+            <input type="submit" value="Zapisz" class="button button--rect button--full dash__button">
+            <a href="{url action='dashboardCars'}" class="button button--rect button--empty dash__button">Wróć do listy</a>
         </form>
+    </div>
 
-        <a href="{url action='main'}">Wróć na stronę główną</a>
-
-        {include file='messages.tpl'}
-    </body>
-
-</html>
+    {include file='messages.tpl'}
+{/block}
