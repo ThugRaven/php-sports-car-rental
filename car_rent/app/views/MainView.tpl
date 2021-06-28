@@ -21,17 +21,17 @@
         <header>
             <div class="nav-bar">
                 <ul class="nav-bar__nav">
-                    <li class="main__item">
+                    <li class="main__item {if $action === 'main'}main__item--active{/if}">
                         <a href="{url action='main'}" class="item__link">Strona główna</a>
                     </li>
-                    <li class="main__item">
+                    <li class="main__item {if $action === 'cars'}main__item--active{/if}">
                         <a href="{url action='cars'}" class="item__link">Samochody</a>
                     </li>
-                    <li class="main__item">
+                    <li class="main__item {if $action === 'contact'}main__item--active{/if}">
                         <a href="{url action='contact'}" class="item__link">Kontakt</a>
                     </li>
                     {if \core\RoleUtils::inRole('admin')}
-                        <li class="main__item">
+                        <li class="main__item {if $action === 'dashboard'}main__item--active{/if}">
                             <a href="{url action='dashboard'}" class="item__link">Dashboard</a>
                         </li>
                     {/if}
@@ -74,9 +74,6 @@
             <ul class="side-nav__nav">
                 <li class="nav__logo">
                     <a href="{url action='main'}" class="nav__link">
-                        <!-- <span class="material-icons nav__icon nav__icon--logo md-48">
-                                directions_car
-                        </span> -->
                         <svg
                             width="16"
                             height="13"
@@ -96,14 +93,11 @@
                         </svg>
 
                         <span class="link__text">Car Rent</span>
-                        <!-- <span class="material-icons nav__icon nav__icon--menu md-48">
-                                menu
-                        </span> -->
                     </a>
                 </li>
 
                 {if \core\RoleUtils::inRole('admin')}
-                    <li class="nav__item">
+                    <li class="nav__item {if $action === 'dashboard'}nav__item--active{/if}">
                         <a href="{url action='dashboard'}" class="nav__link">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +116,7 @@
                         </a>
                         <span class="link__tooltip">Dashboard</span>
                     </li>
-                    <li class="nav__item">
+                    <li class="nav__item {if $action === 'dashboardCars'}nav__item--active{/if}">
                         <a href="{url action='dashboardCars'}" class="nav__link">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -143,7 +137,7 @@
                         </a>
                         <span class="link__tooltip">Samochody</span>
                     </li>
-                    <li class="nav__item">
+                    <li class="nav__item {if $action === 'dashboardRents'}nav__item--active{/if}">
                         <a href="{url action='dashboardRents'}" class="nav__link">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -174,7 +168,7 @@
                         </a>
                         <span class="link__tooltip">Wynajmy</span>
                     </li>
-                    <li class="nav__item">
+                    <li class="nav__item {if $action === 'dashboardUsers'}nav__item--active{/if}">
                         <a href="{url action='dashboardUsers'}" class="nav__link">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -216,7 +210,7 @@
 
                 <div class="nav__account-info">
                     {if !empty($user->role)}
-                        <li class="nav__item">
+                        <li class="nav__item {if $action === 'accountEdit'}nav__item--active{/if}">
                             <a href="{url action='accountEdit' login=$user->login}" class="nav__link">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -224,6 +218,7 @@
                                     height="24px"
                                     viewBox="0 0 24 24"
                                     width="24px"
+                                    fill="#000000"
                                     class="nav__icon"
                                     >
                                 <g>
@@ -238,13 +233,14 @@
                             <span class="link__tooltip">Ustawienia</span>
                         </li>
 
-                        <li class="nav__item">
+                        <li class="nav__item {if $action === 'account'}nav__item--active{/if}">
                             <a href="{url action='account' login=$user->login}" class="nav__link">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     height="24px"
                                     viewBox="0 0 24 24"
                                     width="24px"
+                                    fill="#000000"
                                     class="nav__icon"
                                     >
                                 <path d="M0 0h24v24H0z" fill="none" />
@@ -264,6 +260,7 @@
                                     height="24px"
                                     viewBox="0 0 24 24"
                                     width="24px"
+                                    fill="#000000"
                                     class="nav__icon"
                                     >
                                 <path d="M0 0h24v24H0z" fill="none" />
@@ -276,13 +273,14 @@
                             <span class="link__tooltip">Wyloguj się</span>
                         </li>
                     {else}
-                        <li class="nav__item">
+                        <li class="nav__item {if $action === 'registration'}nav__item--active{/if}">
                             <a href="{url action='registration'}" class="nav__link">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     height="24px"
                                     viewBox="0 0 24 24"
                                     width="24px"
+                                    fill="#000000"
                                     class="nav__icon"
                                     >
                                 <path d="M0 0h24v24H0z" fill="none" />
@@ -294,7 +292,7 @@
                             </a>
                             <span class="link__tooltip">Zarejestruj się</span>
                         </li>
-                        <li class="nav__item">
+                        <li class="nav__item {if $action === 'login'}nav__item--active{/if}">
                             <a href="{url action='login'}" class="nav__link">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -302,6 +300,7 @@
                                     height="24px"
                                     viewBox="0 0 24 24"
                                     width="24px"
+                                    fill="#000000"
                                     class="nav__icon"
                                     >
                                 <g><rect fill="none" height="24" width="24" /></g>

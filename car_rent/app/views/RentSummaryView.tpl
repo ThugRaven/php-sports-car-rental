@@ -28,7 +28,7 @@
                 </li>
                 <li class="rent__item">
                     <span class="rent__text">Kaucja</span>
-                    <span class="rent__value">{if $rent->deposit === 'deposit'}Tak{else if $rent->deposit === 'no_deposit'}Nie{/if}</span>
+                    <span class="rent__value">{if $rent->deposit === 'deposit'}Tak - {$car['deposit']}&nbsp;zł{else if $rent->deposit === 'no_deposit'}Nie{/if}</span>
                 </li>
                 <li class="rent__item">
                     <span class="rent__text">Łączny koszt wynajmu</span>

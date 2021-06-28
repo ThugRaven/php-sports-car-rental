@@ -25,7 +25,6 @@ class DashboardRentsCtrl {
         $this->form_edit = new RentEditForm();
         $this->search_params = [];
         $this->orders = [
-//            array('', 'Alfabetycznie'),
             array('rent.id_rent-asc', 'ID: rosnąco'),
             array('rent.id_rent-desc', 'ID: malejąco'),
             array('rent.create_time-desc', 'Czas dodania: od najnowszych'),
@@ -240,16 +239,15 @@ class DashboardRentsCtrl {
         if ($this->processDashRentEdit()) {
             App::getSmarty()->display('DashboardRentEditView.tpl');
         } else {
-//            App::getRouter()->redirectTo('dashboardCars');
+            App::getRouter()->redirectTo('main');
         }
     }
 
     public function action_dashboardRentSave() {
         if ($this->processDashRentSave()) {
             App::getRouter()->redirectTo('dashboardRents');
-//            App::getSmarty()->display('DashboardCarEditView.tpl');
         } else {
-//            App::getRouter()->redirectTo('dashboardRents');
+            App::getRouter()->redirectTo('main');
         }
     }
 

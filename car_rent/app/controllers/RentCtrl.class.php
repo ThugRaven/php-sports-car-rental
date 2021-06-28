@@ -5,7 +5,6 @@ namespace app\controllers;
 use core\App;
 use core\Utils;
 use core\ParamUtils;
-use core\RoleUtils;
 use core\SessionUtils;
 use app\transfer\Rent;
 use app\forms\RentForm;
@@ -94,7 +93,8 @@ class RentCtrl {
                     'car.brand',
                     'car.model',
                     'car_price.price_deposit',
-                    'car_price.price_no_deposit'
+                    'car_price.price_no_deposit',
+                    'car_price.deposit'
                         ], $where);
 
         $this->records['model_url'] = trim($this->records['model']);

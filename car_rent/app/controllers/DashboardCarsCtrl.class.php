@@ -5,9 +5,7 @@ namespace app\controllers;
 use core\App;
 use core\Utils;
 use core\ParamUtils;
-use core\RoleUtils;
 use core\SessionUtils;
-use app\transfer\User;
 use app\forms\CarsForm;
 use app\forms\CarEditForm;
 use core\Validator;
@@ -115,7 +113,6 @@ class DashboardCarsCtrl {
             $this->records[$i]['brand_url'] = preg_replace('/\s+/', '-', $this->records[$i]['brand_url']);
             $this->records[$i]['model_url'] = preg_replace('/\s+/', '-', $this->records[$i]['model_url']);
         }
-//        print_r($this->records);
         App::getSmarty()->assign('form', $this->form);
         App::getSmarty()->assign('page_title', 'Dashboard - Samochody');
         App::getSmarty()->assign('form_name', 'dash-cars-form');
@@ -344,16 +341,15 @@ class DashboardCarsCtrl {
         if ($this->processDashCarEdit()) {
             App::getSmarty()->display('DashboardCarEditView.tpl');
         } else {
-//            App::getRouter()->redirectTo('dashboardCars');
+            App::getRouter()->redirectTo('main');
         }
     }
 
     public function action_dashboardCarSave() {
         if ($this->processDashCarSave()) {
             App::getRouter()->redirectTo('dashboardCars');
-//            App::getSmarty()->display('DashboardCarEditView.tpl');
         } else {
-//            App::getRouter()->redirectTo('dashboardCars');
+            App::getRouter()->redirectTo('main');
         }
     }
 

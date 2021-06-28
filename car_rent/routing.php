@@ -13,7 +13,6 @@ Utils::addRoute('contact', 'ContactCtrl');
 Utils::addRoute('account', 'AccountCtrl', ['customer', 'employee', 'admin']);
 Utils::addRoute('accountEdit', 'AccountCtrl', ['customer', 'employee', 'admin']);
 Utils::addRoute('accountSave', 'AccountCtrl', ['customer', 'employee', 'admin']);
-//Utils::addRoute('accountDelete', 'AccountCtrl', ['customer', 'employee', 'admin']);
 
 Utils::addRoute('login', 'LoginCtrl');
 Utils::addRoute('logout', 'LoginCtrl');
@@ -31,8 +30,6 @@ Utils::addRoute('rentFinal', 'RentCtrl', ['customer', 'employee', 'admin']);
 
 Utils::addRoute('dashboard', 'DashboardCtrl', ['employee', 'admin']);
 Utils::addRoute('dashboardMock', 'DashboardMockCtrl', ['admin']);
-
-Utils::addRoute('dashboardStats', 'DashboardCtrl', ['employee', 'admin']);
 
 Utils::addRoute('dashboardRents', 'DashboardRentsCtrl', ['employee', 'admin']);
 Utils::addRoute('dashboardRentsList', 'DashboardRentsCtrl', ['employee', 'admin']);

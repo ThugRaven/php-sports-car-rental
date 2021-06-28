@@ -5,9 +5,7 @@ namespace app\controllers;
 use core\App;
 use core\Utils;
 use core\ParamUtils;
-use core\RoleUtils;
 use core\SessionUtils;
-use app\transfer\User;
 use app\forms\UserForm;
 use app\forms\UserEditForm;
 use core\Validator;
@@ -27,10 +25,10 @@ class DashboardUsersCtrl {
         $this->form_edit = new UserEditForm();
         $this->search_params = [];
         $this->orders = [
-            array('', 'Login: A-Z'),
-            array('user.login-desc', 'Login: Z-A'),
             array('user.id_user-desc', 'ID: malejąco'),
             array('user.id_user-asc', 'ID: rosnąco'),
+            array('user.login-asc', 'Login: A-Z'),
+            array('user.login-desc', 'Login: Z-A'),
             array('user.rents-desc', 'Liczba wypożyczeń: malejąco'),
             array('user.rents-asc', 'Liczba wypożyczeń: rosnąco'),
             array('user.verified-desc', 'Zweryfikowany: malejąco'),
@@ -275,7 +273,7 @@ class DashboardUsersCtrl {
         if ($this->processDashUserEdit()) {
             App::getSmarty()->display('DashboardUserEditView.tpl');
         } else {
-            App::getRouter()->redirectTo('dashboardUsers');
+            App::getRouter()->redirectTo('main');
         }
     }
 
@@ -283,7 +281,7 @@ class DashboardUsersCtrl {
         if ($this->processDashUserSave()) {
             App::getRouter()->redirectTo('dashboardUsers');
         } else {
-//            App::getRouter()->redirectTo('dashboardUsers');
+            App::getRouter()->redirectTo('main');
         }
     }
 
