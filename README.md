@@ -2,7 +2,7 @@
 
 Sports car rental website made using Amelia PHP framework and Smarty template engine
 
-![Project image](/project_images/img_1.png)
+![Project image](/project_images/img_01.png)
 
 **[More images](project_images/)**
 
