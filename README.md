@@ -1,4 +1,4 @@
-# PHP_JPDSI_Projekt
+# Sports Car Rental
 
 Sports car rental website made using Amelia PHP framework and Smarty template engine
 
